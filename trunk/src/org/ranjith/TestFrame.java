@@ -3,6 +3,7 @@ package org.ranjith;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Font;
+import java.awt.GradientPaint;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.text.NumberFormat;
@@ -11,11 +12,16 @@ import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
+import javax.swing.JTextField;
 import javax.swing.JViewport;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
+
+import org.ranjith.swing.EndButton;
 import org.ranjith.swing.QTable;
 import org.ranjith.swing.EmbossedLabel;
+import org.ranjith.swing.RoundButton;
+import org.ranjith.swing.SimpleGradientPanel;
 import org.ranjith.swing.SwingRConstants;
 
 /*
@@ -24,20 +30,35 @@ import org.ranjith.swing.SwingRConstants;
 public class TestFrame extends JFrame {
 
     QTable table = null;
-
     public TestFrame() {
         super("Test frame");
         List expenses = getExpenses();
         String[] cols = {"Type", "Date", "Sub Type", "Amount Spent"};
         String[] props = {"category", "date", "subCategory", "amount"};
         getContentPane().setLayout(new BorderLayout());
+        
+
         JScrollPane scrollPane = getTablePane(expenses, cols, props);
         JScrollPane categoryScrollPane = getOptionsPane();
 
         JSplitPane splitPane = getSplitPane(scrollPane, categoryScrollPane);
         getContentPane().add(splitPane, BorderLayout.CENTER);
+        SimpleGradientPanel topGradientPanel = getTopPanel();
+        getContentPane().add(topGradientPanel,BorderLayout.NORTH);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(800, 640);
+    }
+
+    private SimpleGradientPanel getTopPanel() {
+        SimpleGradientPanel topGradientPanel = new SimpleGradientPanel();
+        topGradientPanel.add(new EndButton("New"));
+        topGradientPanel.add(new RoundButton("Save"));
+        topGradientPanel.add(new RoundButton("Open"));
+        EmbossedLabel label = new EmbossedLabel("Showing Records from ");
+        JTextField text = new JTextField(20);
+        text.setBorder(null);
+        topGradientPanel.add(label); topGradientPanel.add(text);
+        return topGradientPanel;
     }
 
     private JSplitPane getSplitPane(JScrollPane scrollPane, JScrollPane categoryScrollPane) {
