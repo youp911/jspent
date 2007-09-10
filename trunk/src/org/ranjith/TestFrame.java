@@ -18,6 +18,9 @@ import org.ranjith.swing.QTable;
 import org.ranjith.swing.EmbossedLabel;
 import org.ranjith.swing.SwingRConstants;
 
+/*
+ *  $Id:$
+ */
 public class TestFrame extends JFrame {
 
     QTable table = null;
