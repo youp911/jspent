@@ -3,11 +3,11 @@ package org.ranjith;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Font;
-import java.awt.GradientPaint;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.text.NumberFormat;
 import java.util.List;
+
 import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
@@ -17,9 +17,8 @@ import javax.swing.JViewport;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 
-import org.ranjith.swing.EndButton;
-import org.ranjith.swing.QTable;
 import org.ranjith.swing.EmbossedLabel;
+import org.ranjith.swing.QTable;
 import org.ranjith.swing.RoundButton;
 import org.ranjith.swing.SimpleGradientPanel;
 import org.ranjith.swing.SwingRConstants;
@@ -51,9 +50,9 @@ public class TestFrame extends JFrame {
 
     private SimpleGradientPanel getTopPanel() {
         SimpleGradientPanel topGradientPanel = new SimpleGradientPanel();
-        topGradientPanel.add(new EndButton("New"));
-        topGradientPanel.add(new RoundButton("Save"));
-        topGradientPanel.add(new RoundButton("Open"));
+        topGradientPanel.add(new RoundButton("1"));
+        topGradientPanel.add(new RoundButton("2"));
+        topGradientPanel.add(new RoundButton("3"));
         EmbossedLabel label = new EmbossedLabel("Showing Records from ");
         JTextField text = new JTextField(20);
         text.setBorder(null);
