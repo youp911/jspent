@@ -1,6 +1,7 @@
 package org.ranjith;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
@@ -10,8 +11,10 @@ import java.text.NumberFormat;
 import java.util.List;
 
 import javax.swing.ImageIcon;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JList;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextField;
@@ -24,6 +27,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import org.ranjith.swing.EmbossedLabel;
 import org.ranjith.swing.GlassToolBar;
 import org.ranjith.swing.QTable;
+import org.ranjith.swing.RoundButton;
 import org.ranjith.swing.SimpleGradientPanel;
 import org.ranjith.swing.SwingRConstants;
 import org.ranjith.swing.ToolBarButton;
@@ -42,10 +46,10 @@ public class TestFrame extends JFrame {
         getContentPane().setLayout(new BorderLayout());
         
 
-        JScrollPane scrollPane = getTablePane(expenses, cols, props);
+        JPanel rightPanel = getTablePane(expenses, cols, props);
         JScrollPane categoryScrollPane = getOptionsPane();
 
-        JSplitPane splitPane = getSplitPane(scrollPane, categoryScrollPane);
+        JSplitPane splitPane = getSplitPane(rightPanel, categoryScrollPane);
         getContentPane().add(splitPane, BorderLayout.CENTER);
         SimpleGradientPanel topGradientPanel = getTopPanel();
         getContentPane().add(topGradientPanel,BorderLayout.NORTH);
@@ -73,7 +77,7 @@ public class TestFrame extends JFrame {
         return topGradientPanel;
     }
 
-    private JSplitPane getSplitPane(JScrollPane scrollPane, JScrollPane categoryScrollPane) {
+    private JSplitPane getSplitPane(JComponent scrollPane, JComponent categoryScrollPane) {
         JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
         splitPane.setDividerSize(1);
         splitPane.setDividerLocation(160);
@@ -83,7 +87,10 @@ public class TestFrame extends JFrame {
         return splitPane;
     }
 
-    private JScrollPane getTablePane(List expenses, String[] cols, String[] props) {
+    private JPanel getTablePane(List expenses, String[] cols, String[] props) {
+        JPanel rightPanel = new JPanel();
+        rightPanel.setLayout(new BorderLayout());
+        
         table = new QTable(expenses, cols, props);
         table.setPreferredWidth(2, 20);
         table.setCellRenderer(3, new CurrencyRenderer());
@@ -91,10 +98,24 @@ public class TestFrame extends JFrame {
         table.setIsAlternateRowHightLighted(true);
         //XXX
         table.setBorder(null);
+
         JScrollPane scrollPane = new JScrollPane(table);
         //XXX
         scrollPane.setBorder(null);
-        return scrollPane;
+        rightPanel.add(scrollPane,BorderLayout.CENTER);
+        rightPanel.add(getActionPanel(),BorderLayout.SOUTH);
+        return rightPanel;
+    }
+
+    private Component getActionPanel() {
+        SimpleGradientPanel actionPanel = new SimpleGradientPanel(new Color(0x505866),new Color(0x7B8596));
+        RoundButton rb1 = new RoundButton("Add Expense");
+        RoundButton rb2 = new RoundButton("Add Income");
+        RoundButton rb3 = new RoundButton("Close");
+        actionPanel.add(rb1);
+        actionPanel.add(rb2);
+        actionPanel.add(rb3);
+        return actionPanel;
     }
 
     private JScrollPane getOptionsPane() {
