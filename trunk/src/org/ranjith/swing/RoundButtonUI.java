@@ -1,6 +1,8 @@
 package org.ranjith.swing;
+import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Composite;
 import java.awt.FontMetrics;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
@@ -11,6 +13,7 @@ import java.awt.RenderingHints;
 
 import javax.swing.AbstractButton;
 import javax.swing.ButtonModel;
+import javax.swing.Icon;
 import javax.swing.JComponent;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicButtonUI;
@@ -73,12 +76,55 @@ public class RoundButtonUI extends BasicButtonUI{
         	//g2.fillRect(0, 0, getWidth(), getHeight());
         g2.fillRoundRect(1,1,width-3,height-3,arc,arc);
         g2.setPaint(oldPaint);
+        paintIcon(g2, button, isRollover,isSelected);
     }
+    private void paintIcon(Graphics2D g2, AbstractButton b, boolean isRollover,
+            boolean isSelected) {
+        int x;
+        int y;
+        Icon vIcon = null;
+
+        if (isSelected && isRollover)
+        {
+            vIcon = b.getRolloverSelectedIcon();
+        }
+        else if (isSelected)
+        {
+            vIcon = b.getSelectedIcon();
+        }
+        else if (isRollover)
+        {
+            vIcon = b.getRolloverIcon();
+        }
+
+        if (vIcon == null)
+        {
+            vIcon = b.getIcon();
+        }
+
+        if (vIcon != null)
+        {
+            x = (b.getWidth() - vIcon.getIconWidth()) / 2 + 1;
+            y = (b.getHeight() - vIcon.getIconHeight()) / 2;
+
+            Composite vComposite = g2.getComposite();
+            if (!b.isEnabled())
+            {
+                g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .5f));
+            }
+
+            vIcon.paintIcon(b, g2, x, y);
+
+            if (!b.isEnabled())
+            {
+                g2.setComposite(vComposite);
+            }
+        }
+    }    
     private void paintButtonBorder(Graphics2D g2,int x, int y, int width, int height, boolean isPressed, boolean isRollover, boolean isSelected) {
     	g2.setColor(Color.WHITE);
     	g2.drawRoundRect(1,1,width-3,height-3,30,30);
     }
-
     private void paintText( Graphics g, String text, Color color, int w, int h, boolean isPressed, boolean isRollover, boolean isSelected) {
         // String size
         FontMetrics fm = g.getFontMetrics();

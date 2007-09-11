@@ -138,6 +138,12 @@ public class ToolBarButtonUI extends BasicButtonUI {
 
         g2.setClip(vOldClip);
 
+        paintIcon(g2, b, isRollover, isSelected);
+    }
+    private void paintIcon(Graphics2D g2, AbstractButton b, boolean isRollover,
+            boolean isSelected) {
+        int x;
+        int y;
         Icon vIcon = null;
 
         if (isSelected && isRollover)
