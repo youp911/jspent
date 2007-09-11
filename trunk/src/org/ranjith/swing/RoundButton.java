@@ -18,11 +18,10 @@ public class RoundButton extends JButton {
     private void buildUI(){
         //No border/no box
         setBorderPainted(false);
+        setOpaque(false);
         getUI().uninstallUI(this);
         ComponentUI ui = RoundButtonUI.createUI(this);
         setUI(ui);
-        
         setForeground(Color.WHITE);
-        //putClientProperty(SwingUtilities2.AA_TEXT_PROPERTY_KEY, new Boolean(true));
     }
 }
