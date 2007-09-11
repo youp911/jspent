@@ -11,23 +11,23 @@ import java.text.NumberFormat;
 import java.util.List;
 
 import javax.swing.ImageIcon;
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
-import javax.swing.JTextField;
-import javax.swing.JToolBar;
 import javax.swing.JViewport;
 import javax.swing.SwingConstants;
-import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import org.ranjith.swing.EmbossedLabel;
 import org.ranjith.swing.GlassToolBar;
 import org.ranjith.swing.QTable;
 import org.ranjith.swing.RoundButton;
+import org.ranjith.swing.RoundButtonComboBox;
 import org.ranjith.swing.SimpleGradientPanel;
 import org.ranjith.swing.SwingRConstants;
 import org.ranjith.swing.ToolBarButton;
@@ -37,19 +37,21 @@ import org.ranjith.swing.ToolBarButton;
  */
 public class TestFrame extends JFrame {
 
-    QTable table = null;
+    private QTable table = null;
+    private JSplitPane splitPane;
+    String[] cols = {"Type", "Date", "Sub Type", "Amount Spent"};
+    String[] props = {"category", "date", "subCategory", "amount"};
+    
     public TestFrame() {
         super("Test frame");
         List expenses = getExpenses();
-        String[] cols = {"Type", "Date", "Sub Type", "Amount Spent"};
-        String[] props = {"category", "date", "subCategory", "amount"};
+
         getContentPane().setLayout(new BorderLayout());
         
-
         JPanel rightPanel = getTablePane(expenses, cols, props);
         JScrollPane categoryScrollPane = getOptionsPane();
-
-        JSplitPane splitPane = getSplitPane(rightPanel, categoryScrollPane);
+        
+        splitPane = getSplitPane(rightPanel, categoryScrollPane);
         getContentPane().add(splitPane, BorderLayout.CENTER);
         SimpleGradientPanel topGradientPanel = getTopPanel();
         getContentPane().add(topGradientPanel,BorderLayout.NORTH);
@@ -109,9 +111,10 @@ public class TestFrame extends JFrame {
 
     private Component getActionPanel() {
         SimpleGradientPanel actionPanel = new SimpleGradientPanel(new Color(0x505866),new Color(0x7B8596));
-        RoundButton rb1 = new RoundButton("Add Expense");
+        RoundButton rb1 = new RoundButton("Add Saving");
         RoundButton rb2 = new RoundButton("Add Income");
         RoundButton rb3 = new RoundButton("Close");
+        rb1.addActionListener(new AddSavingsListener(this));
         actionPanel.add(rb1);
         actionPanel.add(rb2);
         actionPanel.add(rb3);
@@ -146,7 +149,37 @@ public class TestFrame extends JFrame {
         TestFrame frame = new TestFrame();
         frame.setVisible(true);
     }
-
+    
+    public void showAddSavings() {
+        //splitPane.remove(1);
+        
+        SimpleGradientPanel addSavingsForm = new SimpleGradientPanel(new Color(0x505866),new Color(0x7B8596));
+        JPanel typeComboPanel = new JPanel();
+        typeComboPanel.setOpaque(false);
+        JLabel label1 = new JLabel("Please Choose a Savings type to begin: ");
+        label1.setForeground(Color.WHITE);
+        typeComboPanel.add(label1);
+        RoundButtonComboBox savingsTypeCombo = new RoundButtonComboBox(new String[]{"Bank Account","Bond"});
+        savingsTypeCombo.addActionListener(new SavingsTypeListener(this));
+        typeComboPanel.add(savingsTypeCombo);
+        addSavingsForm.add(typeComboPanel);
+        RoundButton cancelButton = new RoundButton("Cancel");
+        cancelButton.addActionListener(new GoBackAction(this));
+        addSavingsForm.add(cancelButton);
+        splitPane.setRightComponent(addSavingsForm);
+        splitPane.setDividerLocation(160);
+    }
+    public void restoreUI() {
+        splitPane.setRightComponent(getTablePane(getExpenses(), cols, props));
+        splitPane.setDividerLocation(160);
+    }
+    
+    public void setForm(JComponent component) {
+        splitPane.setRightComponent(component);
+        splitPane.setDividerLocation(160);
+    }
+    
+    //------------------------------------
     class TestAdapter extends MouseAdapter {
 
         public TestAdapter() {
@@ -172,4 +205,5 @@ public class TestFrame extends JFrame {
             setText(format.format(amount));
         }
     }
+
 }
