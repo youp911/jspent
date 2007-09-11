@@ -65,12 +65,10 @@ public class RoundButtonUI extends BasicButtonUI{
         g2.setStroke(new BasicStroke(1.3f));
         //set rendering hint for anti alias
         //fill rounded rectangle
-
-        //g2.setPaint(new GradientPaint(1,1,gradientStart,1+height,1+width,gradientEnd));
         if(!isPressed) {
-        	g2.setPaint(new GradientPaint(x,y,Color.LIGHT_GRAY,x,height,Color.GRAY));
+        	g2.setPaint(new GradientPaint(x,y,Color.LIGHT_GRAY,x,height,Color.BLACK));
         }else {
-        	g2.setPaint(new GradientPaint(x,y,Color.GRAY,x,height,Color.LIGHT_GRAY));
+        	g2.setPaint(new GradientPaint(x,y,Color.BLACK,x,height,Color.LIGHT_GRAY));
         }
         	//g2.fillRect(0, 0, getWidth(), getHeight());
         g2.fillRoundRect(1,1,width-3,height-3,arc,arc);

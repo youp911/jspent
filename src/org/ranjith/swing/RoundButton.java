@@ -22,5 +22,4 @@ public class RoundButton extends JButton {
         setUI(ui);
         setForeground(Color.WHITE);
     }
-    
 }
