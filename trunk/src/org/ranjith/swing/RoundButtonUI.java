@@ -13,14 +13,13 @@ import javax.swing.AbstractButton;
 import javax.swing.ButtonModel;
 import javax.swing.JComponent;
 import javax.swing.plaf.ComponentUI;
-import javax.swing.plaf.basic.BasicGraphicsUtils;
-import javax.swing.plaf.metal.MetalButtonUI;
+import javax.swing.plaf.basic.BasicButtonUI;
 
 /**
  *
  * @author XR1CTSO
  */
-public class RoundButtonUI extends MetalButtonUI{
+public class RoundButtonUI extends BasicButtonUI{
     private static final RoundButtonUI INSTANCE = new RoundButtonUI();
     public static ComponentUI createUI(JComponent b) {
         return INSTANCE;
@@ -48,6 +47,8 @@ public class RoundButtonUI extends MetalButtonUI{
 		boolean isSelected = vButtonModel.isSelected();
 
 		paintButtonBody(g2d, vButton, x, y, w, h, isPressed, isRollover, isSelected);
+		paintButtonBorder(g2d, x, y, w, h, isPressed, isRollover, isSelected);
+		paintText(g2d,vButton.getText(),vButton.getForeground(),w,h,isPressed, isRollover, isSelected);
 		g2d.dispose();
     }    
     
@@ -74,8 +75,6 @@ public class RoundButtonUI extends MetalButtonUI{
         	//g2.fillRect(0, 0, getWidth(), getHeight());
         g2.fillRoundRect(1,1,width-3,height-3,arc,arc);
         g2.setPaint(oldPaint);
-        paintButtonBorder(g2, x, y, width, height, isPressed, isRollover, isSelected);
-        paintText(g2,button.getText(),button.getForeground(),width,height,isPressed, isRollover, isSelected);
     }
     private void paintButtonBorder(Graphics2D g2,int x, int y, int width, int height, boolean isPressed, boolean isRollover, boolean isSelected) {
     	g2.setColor(Color.WHITE);

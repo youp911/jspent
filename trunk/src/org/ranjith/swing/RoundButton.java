@@ -4,8 +4,6 @@ import java.awt.Color;
 import javax.swing.JButton;
 import javax.swing.plaf.ComponentUI;
 
-//import com.sun.java.swing.SwingUtilities2;
-
 public class RoundButton extends JButton {
     public RoundButton() {
         super();
@@ -24,4 +22,5 @@ public class RoundButton extends JButton {
         setUI(ui);
         setForeground(Color.WHITE);
     }
+    
 }
