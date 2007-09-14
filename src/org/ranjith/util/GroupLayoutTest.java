@@ -8,10 +8,8 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.LayoutStyle;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
-import org.ranjith.swing.RoundButton;
 import org.ranjith.swing.SimpleGradientPanel;
 
 public class GroupLayoutTest extends JFrame {
@@ -25,12 +23,12 @@ public class GroupLayoutTest extends JFrame {
     JTextField dobTextField = new JTextField(10);
     JTextField phoneTextField = new JTextField(15);
     
-    RoundButton saveButton = new RoundButton("Save");
-    RoundButton deleteButton = new RoundButton("Delete");
-    RoundButton doneButton = new RoundButton("Done");
+    JButton saveButton = new JButton("Save");
+    JButton deleteButton = new JButton("Delete");
+    JButton doneButton = new JButton("Done");
     
     public GroupLayoutTest() {
-        SimpleGradientPanel panel = new SimpleGradientPanel();
+    	JPanel panel = new JPanel();
         JPanel buttonPanel = new JPanel();
         buttonPanel.setOpaque(false);
         
@@ -49,21 +47,64 @@ public class GroupLayoutTest extends JFrame {
          *                     ...
          *                     }                    
          */
-
+//         gl.setHorizontalGroup(
+//        		 				gl.createParallelGroup()
+//        		 					.addGroup(
+//        		 								gl.createSequentialGroup().addComponent(firstNameLabel)
+//        		 								                          .addPreferredGap(ComponentPlacement.RELATED)
+//        		 								                          .addComponent(firstNameTextField, GroupLayout.PREFERRED_SIZE,GroupLayout.DEFAULT_SIZE,GroupLayout.PREFERRED_SIZE)
+//        		 							 )
+//        		 					.addGroup(
+//        		 								gl.createSequentialGroup().addComponent(lastNameLabel)
+//        		 								                          .addPreferredGap(ComponentPlacement.RELATED)
+//        		 								                          .addComponent(lastNameTextField, GroupLayout.PREFERRED_SIZE,GroupLayout.DEFAULT_SIZE,GroupLayout.PREFERRED_SIZE)
+//        		 							 )
+//        		 				    .addGroup(
+//        		 				    			gl.createSequentialGroup().addComponent(saveButton)
+//        		 				    									  .addPreferredGap(ComponentPlacement.RELATED)
+//        		 				    			                          .addComponent(deleteButton)
+//        		 				    			                          .addGap(40,40,40)
+//        		 				    			                          .addComponent(doneButton)
+//        		 				    		 )
+//        		              );
+//        gl.setVerticalGroup(
+//        					  gl.createParallelGroup()
+//        					  		.addGroup(
+//        					  					gl.createSequentialGroup().addGroup(gl.createParallelGroup(GroupLayout.Alignment.BASELINE)
+//        					  							                                  .addComponent(firstNameLabel)
+//        					  							                                  .addComponent(firstNameTextField)
+//        					  							                                             
+//        					  							                           )
+//					  							                           .addGroup(gl.createParallelGroup(GroupLayout.Alignment.BASELINE)
+//					  							                                  .addComponent(lastNameLabel)
+//					  							                                  .addComponent(lastNameTextField)
+//					  							                                             
+//					  							                           )
+//        					  							                  .addGroup(
+//        					  							                		    gl.createParallelGroup(GroupLayout.Alignment.BASELINE)
+//        					  							                		          .addComponent(saveButton)
+//        					  							                		          .addComponent(deleteButton)
+//        					  							                		          .addComponent(doneButton)
+//        					  							                		   )
+//        					  				 )
+//        		           );
+         
           gl.setHorizontalGroup(
              gl.createSequentialGroup().
                  addGroup(gl.createParallelGroup(GroupLayout.Alignment.TRAILING).addComponent(firstNameLabel)
                                                   .addComponent(lastNameLabel)
                                                   .addComponent(dobLabel)
-                                                  .addComponent(phoneLabel)
+                                                  .addComponent(phoneLabel).addGroup(gl.createSequentialGroup().addComponent(saveButton))
                          ).
                  addGroup(gl.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(firstNameTextField,GroupLayout.PREFERRED_SIZE,GroupLayout.DEFAULT_SIZE,GroupLayout.PREFERRED_SIZE)
                                                      .addComponent(lastNameTextField,GroupLayout.PREFERRED_SIZE,GroupLayout.DEFAULT_SIZE,GroupLayout.PREFERRED_SIZE)
                                                      .addComponent(dobTextField,GroupLayout.PREFERRED_SIZE,GroupLayout.DEFAULT_SIZE,GroupLayout.PREFERRED_SIZE)
                                                      .addComponent(phoneTextField,GroupLayout.PREFERRED_SIZE,GroupLayout.DEFAULT_SIZE,GroupLayout.PREFERRED_SIZE)
+                                                     .addGroup(gl.createSequentialGroup().addComponent(deleteButton).addComponent(doneButton))
+                                                )
                                                      
-                         )
-           );
+          );
+
         
         gl.setVerticalGroup(
             gl.createSequentialGroup().addGroup(
@@ -78,6 +119,11 @@ public class GroupLayoutTest extends JFrame {
                    ).addGroup(
                    gl.createParallelGroup(GroupLayout.Alignment.BASELINE)
                        .addComponent(phoneLabel).addComponent(phoneTextField)
+                   ).addGroup(
+                   gl.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                   		.addComponent(saveButton)
+                   		.addComponent(deleteButton)
+                   		.addComponent(doneButton)
                    )
 
            );     
