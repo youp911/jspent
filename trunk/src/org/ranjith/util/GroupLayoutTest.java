@@ -29,8 +29,6 @@ public class GroupLayoutTest extends JFrame {
     
     public GroupLayoutTest() {
     	JPanel panel = new JPanel();
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.setOpaque(false);
         
         GroupLayout gl = new GroupLayout(panel);
         panel.setLayout(gl);
@@ -95,15 +93,26 @@ public class GroupLayoutTest extends JFrame {
                                                   .addComponent(lastNameLabel)
                                                   .addComponent(dobLabel)
                                                   .addComponent(phoneLabel).addGroup(gl.createSequentialGroup().addComponent(saveButton))
+                                                     .addGroup(
+                                                            gl.createSequentialGroup()
+                                                              .addComponent(saveButton)
+                                                              )
+                                                 
                          ).
                  addGroup(gl.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(firstNameTextField,GroupLayout.PREFERRED_SIZE,GroupLayout.DEFAULT_SIZE,GroupLayout.PREFERRED_SIZE)
                                                      .addComponent(lastNameTextField,GroupLayout.PREFERRED_SIZE,GroupLayout.DEFAULT_SIZE,GroupLayout.PREFERRED_SIZE)
                                                      .addComponent(dobTextField,GroupLayout.PREFERRED_SIZE,GroupLayout.DEFAULT_SIZE,GroupLayout.PREFERRED_SIZE)
                                                      .addComponent(phoneTextField,GroupLayout.PREFERRED_SIZE,GroupLayout.DEFAULT_SIZE,GroupLayout.PREFERRED_SIZE)
-                                                     .addGroup(gl.createSequentialGroup().addComponent(deleteButton).addComponent(doneButton))
-                                                )
-                                                     
-          );
+                                                     .addGroup(
+                                                            gl.createSequentialGroup()
+                                                              .addComponent(deleteButton)
+                                                              .addGap(60)
+                                                              .addComponent(doneButton)
+                                                            )                                                     
+
+                         )
+                         
+           );
 
         
         gl.setVerticalGroup(
@@ -121,19 +130,16 @@ public class GroupLayoutTest extends JFrame {
                        .addComponent(phoneLabel).addComponent(phoneTextField)
                    ).addGroup(
                    gl.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                   		.addComponent(saveButton)
-                   		.addComponent(deleteButton)
-                   		.addComponent(doneButton)
+                       .addComponent(saveButton)
+                       .addComponent(deleteButton)
+                       .addComponent(doneButton)
                    )
 
            );     
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        buttonPanel.add(saveButton);
-        buttonPanel.add(deleteButton);
-        buttonPanel.add(doneButton);
+
         getContentPane().setLayout(new BorderLayout());
         getContentPane().add(panel,BorderLayout.CENTER);
-        getContentPane().add(buttonPanel,BorderLayout.SOUTH);
         pack();
         setVisible(true);
     }
