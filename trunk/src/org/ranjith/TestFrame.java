@@ -4,12 +4,17 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
+import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.net.URL;
 import java.text.NumberFormat;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
+import javax.swing.GroupLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
@@ -23,6 +28,7 @@ import javax.swing.JViewport;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 
+import org.ranjith.plugin.GenericPlugin;
 import org.ranjith.swing.EmbossedLabel;
 import org.ranjith.swing.GlassToolBar;
 import org.ranjith.swing.QTable;
@@ -31,6 +37,7 @@ import org.ranjith.swing.RoundButtonComboBox;
 import org.ranjith.swing.SimpleGradientPanel;
 import org.ranjith.swing.SwingRConstants;
 import org.ranjith.swing.ToolBarButton;
+import org.ranjith.util.PluginManager;
 
 /*
  *  $Id:$
@@ -41,7 +48,15 @@ public class TestFrame extends JFrame {
     private JSplitPane splitPane;
     String[] cols = {"Type", "Date", "Sub Type", "Amount Spent"};
     String[] props = {"category", "date", "subCategory", "amount"};
+    private static Map savingsPluginMap = new HashMap(1);
     
+    //savings form
+    private JPanel centerPanel,buttonPanel;
+    SimpleGradientPanel addSavingsForm;
+    
+    static {
+        loadSavingsPlugins();
+    }
     public TestFrame() {
         super("Test frame");
         List expenses = getExpenses();
@@ -153,19 +168,42 @@ public class TestFrame extends JFrame {
     public void showAddSavings() {
         //splitPane.remove(1);
         
-        SimpleGradientPanel addSavingsForm = new SimpleGradientPanel(new Color(0x505866),new Color(0x7B8596));
+        addSavingsForm = new SimpleGradientPanel(new Color(0x505866),new Color(0x7B8596));
+
         JPanel typeComboPanel = new JPanel();
+        centerPanel = new JPanel();
+        buttonPanel = new JPanel();
+        
+        GroupLayout gl = new GroupLayout(addSavingsForm);
+        addSavingsForm.setLayout(gl);
+        gl.setHorizontalGroup(
+                gl.createSequentialGroup().addGroup(
+                gl.createParallelGroup().addComponent(typeComboPanel).addComponent(centerPanel).addComponent(buttonPanel)
+                )
+                );
+       gl.setVerticalGroup(
+               gl.createParallelGroup().addComponent(typeComboPanel).addComponent(centerPanel).addComponent(buttonPanel)
+               );
         typeComboPanel.setOpaque(false);
         JLabel label1 = new JLabel("Please Choose a Savings type to begin: ");
         label1.setForeground(Color.WHITE);
         typeComboPanel.add(label1);
-        RoundButtonComboBox savingsTypeCombo = new RoundButtonComboBox(new String[]{"Bank Account","Bond"});
-        savingsTypeCombo.addActionListener(new SavingsTypeListener(this));
+        List pluginList = PluginManager.savingsPluginList("");
+        
+        RoundButtonComboBox savingsTypeCombo = new RoundButtonComboBox();
+        savingsTypeCombo.addItem("");
+        for (Iterator iterator = pluginList.iterator(); iterator.hasNext();) {
+            GenericPlugin plugin = (GenericPlugin) iterator.next();
+            savingsTypeCombo.addItem(plugin);
+        }        
+        
+        savingsTypeCombo.addActionListener(new SavingsTypeListener(this,pluginList));
+        
         typeComboPanel.add(savingsTypeCombo);
-        addSavingsForm.add(typeComboPanel);
         RoundButton cancelButton = new RoundButton("Cancel");
         cancelButton.addActionListener(new GoBackAction(this));
-        addSavingsForm.add(cancelButton);
+        typeComboPanel.add(cancelButton);
+        
         splitPane.setRightComponent(addSavingsForm);
         splitPane.setDividerLocation(160);
     }
@@ -175,9 +213,22 @@ public class TestFrame extends JFrame {
     }
     
     public void setForm(JComponent component) {
-        splitPane.setRightComponent(component);
-        splitPane.setDividerLocation(160);
+        centerPanel.setLayout(new BorderLayout());
+        centerPanel.add(component,BorderLayout.CENTER);
+       
+        buttonPanel.setLayout(new BorderLayout());
+        buttonPanel.add(new RoundButton("TEsting out"),BorderLayout.NORTH);
+    
+        
+        addSavingsForm.add(centerPanel,BorderLayout.CENTER);
+        addSavingsForm.updateUI();
     }
+    
+    private static void loadSavingsPlugins() {
+        
+    }
+
+    
     
     //------------------------------------
     class TestAdapter extends MouseAdapter {
