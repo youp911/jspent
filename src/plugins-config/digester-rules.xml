@@ -1,0 +1,15 @@
+<digester-rules>
+	<object-create-rule pattern="savings-plugins" classname="org.ranjith.util.PluginManager"/>
+	
+	<pattern value="savings-plugins/savings-plugin">
+      <object-create-rule classname="org.ranjith.plugin.GenericPlugin" />
+      <set-properties-rule>
+		  <alias attr-name="id" prop-name="id"/>
+	  </set-properties-rule>
+	  <call-method-rule pattern="display-name" methodname="setName"
+	                paramcount="0" />
+      <call-method-rule pattern="class" methodname="setClassName" 
+	                paramcount="0" />
+      <set-next-rule methodname="addPlugin" />
+   </pattern>
+</digester-rules>
