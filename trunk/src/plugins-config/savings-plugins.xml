@@ -1,0 +1,10 @@
+<savings-plugins>
+  <savings-plugin id="org.ranjith.plugin.accountsavingsplugin">
+    <display-name>Bank Account</display-name>
+    <class onDone="onDone">org.ranjith.plugin.AccountSavingsPlugin</class>
+  </savings-plugin>
+  <savings-plugin id="org.ranjith.plugin.bondsavingsplugin">
+    <display-name>Bond</display-name>
+    <class onDone="onDone">org.ranjith.plugin.BondSavingsPlugin</class>
+  </savings-plugin>  
+</savings-plugins>
