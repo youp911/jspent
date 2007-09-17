@@ -1,0 +1,43 @@
+                      :::::::::::::::::::::::::::::::::::::::::::
+                      :THIS FOLDER WILL CONTAIN PLUGIN JAR FILES:
+                      :::::::::::::::::::::::::::::::::::::::::::
+                      
+                      * OVERVIEW
+                      
+                      Plugins are simple JAR files with classes that would implement certain plugin interfaces. 
+                      In this application, plugins wll be used in "savings" as I am not sure about types of
+                      "savings" possible. Savings plugin will basically provide the following:
+                      a) UI tile to display a "savings" form:
+                         public JComponent getAddUI() - an empty UI form to add the type of saving
+                         
+                      b) UI tile to display a "savings" data:
+                         public JComponent getEditUI(String id) - a UI form to show savings detail
+                                - this may make use of (recommended)
+                                public Map DataUtils.loadSavingsDetail(String id) - that will return
+                                a map of key-values related to the saving. The key of the Map will be based on
+                                what was used while adding the savings information using following API:
+                      c) Save 'Savings' information:
+                         public String save(Map savingsKeyValue) - API to save the information.
+                                - this may make use of (recommended)
+                                public String DataUtils.saveSavingsDetail(Map savingsKeyValue)
+                      d) Delete 'Savings' information:
+                         public boolean delete(String key) - removes savings information from datastore.
+                             
+                      * ANATOMY OF A PLUGIN (example, a plugin of type "Savings-Plugin")
+                        pluginname.jar
+                          /pluin-manifest.xml
+                             <plugin-manifest>
+                              <plugin id="org.ranjith.plugin.accountsavingsplugin" type="Savings-Plugin">
+                                 <display-name>Bank Account</display-name>
+                                 <class>org.ranjith.plugin.AccountSavingsPlugin</class>
+                              </plugin>
+                             </plugin-manfest>
+                          /package hierarchy/Classes that implement the plugin
+                          
+                      * LOCATION
+                        All plugins to be deployed under "plugins"(this) folder.       
+                       
+                             
+                             
+                       
+                                

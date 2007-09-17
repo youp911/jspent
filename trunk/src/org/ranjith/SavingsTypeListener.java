@@ -11,7 +11,7 @@ import javax.swing.JComboBox;
 import javax.swing.JComponent;
 
 import org.apache.commons.beanutils.BeanUtils;
-import org.ranjith.plugin.GenericPlugin;
+import org.ranjith.plugin.PluginInfo;
 import org.ranjith.plugin.SavingsPlugin;
 
 /**
@@ -35,13 +35,13 @@ public class SavingsTypeListener implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         JComboBox comboBox = (JComboBox) e.getSource();
-        if (comboBox.getSelectedItem() instanceof GenericPlugin) {
-            GenericPlugin plugin = (GenericPlugin) comboBox.getSelectedItem();
+        if (comboBox.getSelectedItem() instanceof PluginInfo) {
+            PluginInfo plugin = (PluginInfo) comboBox.getSelectedItem();
             try {
                 Class clazz = Class.forName(plugin.getClassName());
                 Object pluginObject = clazz.newInstance();
                 SavingsPlugin savingsPlugin = (SavingsPlugin) pluginObject;
-                testFrame.setForm(savingsPlugin.getUIComponent());
+                testFrame.setForm(savingsPlugin.getAddUI());
             } catch (Exception ex) {
                 ex.printStackTrace();
             }

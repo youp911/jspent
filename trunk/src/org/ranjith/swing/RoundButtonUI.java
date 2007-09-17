@@ -3,6 +3,7 @@ import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Composite;
+import java.awt.Dimension;
 import java.awt.FontMetrics;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
@@ -141,5 +142,6 @@ public class RoundButtonUI extends BasicButtonUI{
         g2d.setColor(color);
 	    int offset =  0;
         g2d.drawString( text, offset, offset );
-    } 
+    }
+
 }

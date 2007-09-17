@@ -11,7 +11,7 @@ import java.util.List;
 import org.apache.commons.digester.Digester;
 import org.apache.commons.digester.xmlrules.DigesterLoader;
 import org.ranjith.TestFrame;
-import org.ranjith.plugin.GenericPlugin;
+import org.ranjith.plugin.PluginInfo;
 import org.xml.sax.SAXException;
 
 /**
@@ -37,7 +37,7 @@ public class PluginManager {
        Digester digester = DigesterLoader.createDigester(PluginManager.class.getResource("../../../plugins-config/digester-rules.xml"));
        PluginManager pm = (PluginManager) digester.parse(PluginManager.class.getResource("../../../plugins-config/savings-plugins.xml").getFile());
     }
-    public void addPlugin(GenericPlugin p) {
+    public void addPlugin(PluginInfo p) {
         plugins.add(p);
     }
     
