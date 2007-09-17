@@ -3,6 +3,8 @@
  */
 package org.ranjith.plugin;
 
+import java.util.Map;
+
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -18,8 +20,6 @@ import org.ranjith.data.BankAccount;
  */
 public class AccountSavingsPlugin implements SavingsPlugin {
     private JPanel panel = new JPanel();
-    private String name;
-    private String id;
     BankAccount bankAccount;
     
     JTextField bankNameTextField = new JTextField(30);
@@ -88,32 +88,24 @@ public class AccountSavingsPlugin implements SavingsPlugin {
         JButton button = new JButton("Save");
         return button;    
     }
-    @Override
-    public String getDisplayName() {
-        return name;
-    }
-
-    @Override
-    public JComponent getUIComponent() {
-        return panel;
-    }
-
-    @Override
-    public boolean onDone() {
-        return true;
-        
-    }
-
-    @Override
-    public void setDisplayName(String displayName) {
-        this.name= displayName;
-    }
-    @Override
-    public String getId() {
-        return id;
-    }
-    @Override
-    public void setId(String id) {
-        this.id = id;
-    }
+	@Override
+	public boolean delete(String key) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	@Override
+	public JComponent getAddUI() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public JComponent getEditUI(String id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public String save(Map savingsKeyValue) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

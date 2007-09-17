@@ -7,7 +7,7 @@ package org.ranjith.plugin;
  * @author XR1CTSO
  *
  */
-public class GenericPlugin {
+public class PluginInfo {
     private String id;
     private String name;
     private String className;

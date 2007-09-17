@@ -8,9 +8,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.LayoutStyle.ComponentPlacement;
-
-import org.ranjith.swing.SimpleGradientPanel;
 
 public class GroupLayoutTest extends JFrame {
     JLabel firstNameLabel = new JLabel("First Name :");

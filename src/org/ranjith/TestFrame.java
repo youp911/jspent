@@ -28,7 +28,7 @@ import javax.swing.JViewport;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 
-import org.ranjith.plugin.GenericPlugin;
+import org.ranjith.plugin.PluginInfo;
 import org.ranjith.swing.EmbossedLabel;
 import org.ranjith.swing.GlassToolBar;
 import org.ranjith.swing.QTable;
@@ -193,7 +193,7 @@ public class TestFrame extends JFrame {
         RoundButtonComboBox savingsTypeCombo = new RoundButtonComboBox();
         savingsTypeCombo.addItem("");
         for (Iterator iterator = pluginList.iterator(); iterator.hasNext();) {
-            GenericPlugin plugin = (GenericPlugin) iterator.next();
+            PluginInfo plugin = (PluginInfo) iterator.next();
             savingsTypeCombo.addItem(plugin);
         }        
         
