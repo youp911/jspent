@@ -25,14 +25,29 @@ public class PluginManager {
     public static List savingsPluginList(String file) {
         try{
             if(plugins == null)
-                loadSavingsPlugins();
+                loadPlugins();
         }catch(Exception e) {
             e.printStackTrace();
         }
         return plugins;
     }
     
-    private static void loadSavingsPlugins() throws IOException, SAXException {
+    /**
+     * For each file in plugins dir
+     *     if file is File and ends with .jar
+     *        get manifest.xml from jar's root
+     *        parse to get plugin information.
+     *        create pluginInfo and add to MAP
+     *                                MAP {
+     *                                  key(string type) -> List of pluginInfo
+     *                                  key(string type) -> List of pluginInfo
+     *                                }
+     *        add the jar to classpath.
+     *      endif
+     * @throws IOException
+     * @throws SAXException
+     */
+    private static void loadPlugins() throws IOException, SAXException {
        plugins = new ArrayList();
        Digester digester = DigesterLoader.createDigester(PluginManager.class.getResource("../../../plugins-config/digester-rules.xml"));
        PluginManager pm = (PluginManager) digester.parse(PluginManager.class.getResource("../../../plugins-config/savings-plugins.xml").getFile());

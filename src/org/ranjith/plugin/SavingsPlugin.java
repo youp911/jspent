@@ -11,7 +11,7 @@ import javax.swing.JComponent;
  * @author XR1CTSO
  *
  */
-public interface SavingsPlugin {
+public interface SavingsPlugin extends Plugin{
 	
 	/** 
 	 * Returns UI component to display
@@ -42,4 +42,12 @@ public interface SavingsPlugin {
 	 * @return flag to indicate succesful removal.
 	 */
 	public boolean delete(String key);
+	
+	/**
+	 * Gets amount associated with this savings.
+	 * for example: In case of a bank account,
+	 * this would be the balance.
+	 * @return amount associated with the savings
+	 */
+	public double getSavingsAmount();
 }

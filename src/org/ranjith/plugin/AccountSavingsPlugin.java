@@ -108,4 +108,9 @@ public class AccountSavingsPlugin implements SavingsPlugin {
 		// TODO Auto-generated method stub
 		return null;
 	}
+    @Override
+    public double getSavingsAmount() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
 }
