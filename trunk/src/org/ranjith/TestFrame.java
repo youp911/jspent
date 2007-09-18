@@ -29,6 +29,7 @@ import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import org.ranjith.plugin.PluginInfo;
+import org.ranjith.plugin.PluginManager;
 import org.ranjith.swing.EmbossedLabel;
 import org.ranjith.swing.GlassToolBar;
 import org.ranjith.swing.QTable;
@@ -37,7 +38,6 @@ import org.ranjith.swing.RoundButtonComboBox;
 import org.ranjith.swing.SimpleGradientPanel;
 import org.ranjith.swing.SwingRConstants;
 import org.ranjith.swing.ToolBarButton;
-import org.ranjith.util.PluginManager;
 
 /*
  *  $Id:$
@@ -49,7 +49,7 @@ public class TestFrame extends JFrame {
     String[] cols = {"Type", "Date", "Sub Type", "Amount Spent"};
     String[] props = {"category", "date", "subCategory", "amount"};
     private static Map savingsPluginMap = new HashMap(1);
-    
+    PluginManager pm = PluginManager.getInstance();
     //savings form
     private JPanel centerPanel,buttonPanel;
     SimpleGradientPanel addSavingsForm;
@@ -188,7 +188,7 @@ public class TestFrame extends JFrame {
         JLabel label1 = new JLabel("Please Choose a Savings type to begin: ");
         label1.setForeground(Color.WHITE);
         typeComboPanel.add(label1);
-        List pluginList = PluginManager.savingsPluginList("");
+        List pluginList = pm.getPluginInfoList(PluginManager.PLUGIN_TYPE_SAVINGS_KEY);
         
         RoundButtonComboBox savingsTypeCombo = new RoundButtonComboBox();
         savingsTypeCombo.addItem("");
