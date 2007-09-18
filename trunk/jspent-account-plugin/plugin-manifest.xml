@@ -1,0 +1,6 @@
+<plugin-manifest>
+ <plugin type="Savings">
+    <display-name>Bank Account</display-name>
+    <class>org.ranjith.account.plugin.AccountSavingsPlugin</class>
+ </plugin>
+</plugin-manifest>
