@@ -4,9 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
-import java.awt.GridLayout;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.net.URL;
 import java.text.NumberFormat;
 import java.util.HashMap;
@@ -14,6 +11,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.DefaultListModel;
 import javax.swing.GroupLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
@@ -32,6 +30,8 @@ import org.ranjith.plugin.PluginInfo;
 import org.ranjith.plugin.PluginManager;
 import org.ranjith.swing.EmbossedLabel;
 import org.ranjith.swing.GlassToolBar;
+import org.ranjith.swing.IconListItem;
+import org.ranjith.swing.IconListItemRenderer;
 import org.ranjith.swing.QTable;
 import org.ranjith.swing.RoundButton;
 import org.ranjith.swing.RoundButtonComboBox;
@@ -49,14 +49,11 @@ public class TestFrame extends JFrame {
     String[] cols = {"Type", "Date", "Sub Type", "Amount Spent"};
     String[] props = {"category", "date", "subCategory", "amount"};
     private static Map savingsPluginMap = new HashMap(1);
-    PluginManager pm = PluginManager.getInstance();
+    private static PluginManager pm = PluginManager.getInstance();
     //savings form
     private JPanel centerPanel,buttonPanel;
     SimpleGradientPanel addSavingsForm;
-    
-    static {
-        loadSavingsPlugins();
-    }
+ 
     public TestFrame() {
         super("Test frame");
         List expenses = getExpenses();
@@ -80,17 +77,23 @@ public class TestFrame extends JFrame {
         GlassToolBar toolBar = new GlassToolBar();
 
         ToolBarButton lb = new ToolBarButton(0);
-        ToolBarButton cb = new ToolBarButton("Test2",1);
-        ToolBarButton rb = new ToolBarButton("Test3",2);
-        URL resource = TestFrame.class.getResource("../../icons/money_add.png");
-        lb.setIcon(new ImageIcon(resource,"Money"));
-        rb.setToolTipText("Save the details");
+        ToolBarButton cb = new ToolBarButton(1);
+        ToolBarButton rb = new ToolBarButton(2);
+        URL resource = TestFrame.class.getResource("../../icons/add.png");
+        lb.setIcon(new ImageIcon(resource,"Add New"));
+        resource = TestFrame.class.getResource("../../icons/application_form_add.png");
+        cb.setIcon(new ImageIcon(resource,"Modify"));
+        resource = TestFrame.class.getResource("../../icons/delete.png");
+        rb.setIcon(new ImageIcon(resource,"Delete"));
+        
         toolBar.add(lb);
         toolBar.add(cb);
         toolBar.add(rb);
         toolBar.addSeparator();
-        
-        topGradientPanel.add(toolBar,BorderLayout.PAGE_START);
+        JPanel panel = new JPanel();
+        panel.add(toolBar);
+        panel.add(new JComboBox());
+        topGradientPanel.add(panel,BorderLayout.PAGE_START);
         return topGradientPanel;
     }
 
@@ -111,7 +114,6 @@ public class TestFrame extends JFrame {
         table = new QTable(expenses, cols, props);
         table.setPreferredWidth(2, 20);
         table.setCellRenderer(3, new CurrencyRenderer());
-        table.addMouseListener(new TestAdapter());
         table.setIsAlternateRowHightLighted(true);
         //XXX
         table.setBorder(null);
@@ -125,24 +127,40 @@ public class TestFrame extends JFrame {
     }
 
     private Component getActionPanel() {
-        SimpleGradientPanel actionPanel = new SimpleGradientPanel(new Color(0x505866),new Color(0x7B8596));
-        RoundButton rb1 = new RoundButton("Add Saving");
-        RoundButton rb2 = new RoundButton("Add Income");
-        RoundButton rb3 = new RoundButton("Close");
-        rb1.addActionListener(new AddSavingsListener(this));
-        actionPanel.add(rb1);
-        actionPanel.add(rb2);
-        actionPanel.add(rb3);
+        SimpleGradientPanel actionPanel = new SimpleGradientPanel();
+        actionPanel.setLayout(new BorderLayout());
+        actionPanel.add(new JLabel("Total Expenses Amount $ " + table.sum(3)), BorderLayout.EAST);
         return actionPanel;
     }
 
     private JScrollPane getOptionsPane() {
-        JList optionsList = new JList(new String[]{"  Expenses", "  Incomes"});
+        DefaultListModel listModel = new DefaultListModel();
+        JList optionsList = new JList(listModel);
+        optionsList.setCellRenderer(new IconListItemRenderer());
+        
+        URL resource = TestFrame.class.getResource("../../icons/money_delete.png");
+        listModel.addElement(new IconListItem(new ImageIcon(resource),"Expenses"));
+
+        resource = TestFrame.class.getResource("../../icons/money_add.png");
+        listModel.addElement(new IconListItem(new ImageIcon(resource),"Incomes"));
+
+        resource = TestFrame.class.getResource("../../icons/money.png");
+        listModel.addElement(new IconListItem(new ImageIcon(resource),"Savings"));
+
+        resource = TestFrame.class.getResource("../../icons/creditcards.png");
+        listModel.addElement(new IconListItem(new ImageIcon(resource),"Liabilities"));
+        
+        resource = TestFrame.class.getResource("../../icons/report.png");
+        listModel.addElement(new IconListItem(new ImageIcon(resource),"Reports"));
+
         optionsList.setBackground(SwingRConstants.PANEL_DEEP_BACKGROUND_COLOR);
+        optionsList.setSelectedIndex(0);
+        
         JScrollPane categoryScrollPane = new JScrollPane(optionsList);
-        JViewport viewport = new JViewport();
-        viewport.setView(getHeader());
-        categoryScrollPane.setColumnHeader(viewport);
+        JViewport colHeaderViewPort = new JViewport();
+        colHeaderViewPort.setView(getHeader());
+                
+        categoryScrollPane.setColumnHeader(colHeaderViewPort);
         //XXX
         categoryScrollPane.setBorder(null);
         return categoryScrollPane;
@@ -223,26 +241,8 @@ public class TestFrame extends JFrame {
         addSavingsForm.add(centerPanel,BorderLayout.CENTER);
         addSavingsForm.updateUI();
     }
-    
-    private static void loadSavingsPlugins() {
-        
-    }
-
-    
-    
-    //------------------------------------
-    class TestAdapter extends MouseAdapter {
-
-        public TestAdapter() {
-        }
-
-        @Override
-        public void mouseClicked(MouseEvent e) {
-            Number n = table.sum(table.getColumnModel().getColumnIndexAtX(e.getX()));
-            System.out.println(n);
-        }
-    }
-
+   
+    //-------------------------------------------------------
     class CurrencyRenderer extends DefaultTableCellRenderer {
 
         @Override

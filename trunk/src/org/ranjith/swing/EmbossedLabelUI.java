@@ -9,6 +9,12 @@ import javax.swing.JLabel;
 import javax.swing.plaf.basic.BasicGraphicsUtils;
 import javax.swing.plaf.basic.BasicLabelUI;
 
+/**
+ * 
+ * @author XR1CTSO
+ * A simple UI implementation that renders an 
+ * embossed text. Only enabled text is implemented as of now.
+ */
 public class EmbossedLabelUI extends BasicLabelUI {
 	static {
 		labelUI = new EmbossedLabelUI();
