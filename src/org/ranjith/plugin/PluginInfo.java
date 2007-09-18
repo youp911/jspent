@@ -8,20 +8,20 @@ package org.ranjith.plugin;
  *
  */
 public class PluginInfo {
-    private String id;
+    private String type;
     private String name;
     private String className;
     /**
      * @return the id
      */
-    public String getId() {
-        return id;
+    public String getType() {
+        return type;
     }
     /**
      * @param id the id to set
      */
-    public void setId(String id) {
-        this.id = id;
+    public void setType(String type) {
+        this.type = type;
     }
     /**
      * @return the name
