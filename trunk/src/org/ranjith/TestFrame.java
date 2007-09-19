@@ -33,7 +33,7 @@ import org.ranjith.plugin.PluginManager;
 import org.ranjith.swing.EmbossedLabel;
 import org.ranjith.swing.GlassToolBar;
 import org.ranjith.swing.IconListItem;
-import org.ranjith.swing.IconListItemRenderer;
+import org.ranjith.swing.IconLabelListCellRenderer;
 import org.ranjith.swing.QTable;
 import org.ranjith.swing.RoundButton;
 import org.ranjith.swing.RoundButtonComboBox;
@@ -141,21 +141,21 @@ public class TestFrame extends JFrame {
         //XXX
         scrollPane.setBorder(null);
         rightPanel.add(scrollPane,BorderLayout.CENTER);
-        rightPanel.add(getActionPanel(),BorderLayout.SOUTH);
+        rightPanel.add(getBottomPanel(),BorderLayout.SOUTH);
         return rightPanel;
     }
 
-    private Component getActionPanel() {
-        SimpleGradientPanel actionPanel = new SimpleGradientPanel();
-        actionPanel.setLayout(new BorderLayout());
-        actionPanel.add(new JLabel("Total Expenses Amount $ " + table.sum(3)), BorderLayout.EAST);
-        return actionPanel;
+    private Component getBottomPanel() {
+        SimpleGradientPanel bottomPanel = new SimpleGradientPanel();       
+        bottomPanel.setLayout(new BorderLayout());
+        bottomPanel.add(new JLabel("Total Expenses Amount $ " + table.sum(3)), BorderLayout.EAST);
+        return bottomPanel;
     }
 
     private JScrollPane getOptionsPane() {
         DefaultListModel listModel = new DefaultListModel();
         JList optionsList = new JList(listModel);
-        optionsList.setCellRenderer(new IconListItemRenderer());
+        optionsList.setCellRenderer(new IconLabelListCellRenderer());
         
         URL resource = TestFrame.class.getResource("../../icons/money_delete.png");
         listModel.addElement(new IconListItem(new ImageIcon(resource),"Expenses"));
@@ -170,10 +170,10 @@ public class TestFrame extends JFrame {
         listModel.addElement(new IconListItem(new ImageIcon(resource),"Liabilities"));
         
         resource = TestFrame.class.getResource("../../icons/report.png");
-        listModel.addElement(new IconListItem(new ImageIcon(resource),"Reports"));
+        listModel.addElement(new IconListItem(new ImageIcon(resource),"Summary"));
 
         optionsList.setBackground(SwingRConstants.PANEL_DEEP_BACKGROUND_COLOR);
-        optionsList.setSelectedIndex(0);
+        optionsList.setSelectedIndex(2);
         
         JScrollPane categoryScrollPane = new JScrollPane(optionsList);
         JViewport colHeaderViewPort = new JViewport();
