@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.net.URL;
 import java.text.NumberFormat;
 import java.util.HashMap;
@@ -66,14 +68,18 @@ public class TestFrame extends JFrame {
         splitPane = getSplitPane(rightPanel, categoryScrollPane);
         getContentPane().add(splitPane, BorderLayout.CENTER);
         SimpleGradientPanel topGradientPanel = getTopPanel();
-        getContentPane().add(topGradientPanel,BorderLayout.NORTH);
+        getContentPane().add(topGradientPanel,BorderLayout.PAGE_START);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(800, 640);
     }
 
     private SimpleGradientPanel getTopPanel() {
         SimpleGradientPanel topGradientPanel = new SimpleGradientPanel();
-        topGradientPanel.setLayout(new BorderLayout());
+        GridBagLayout gridBagLayout = new GridBagLayout();
+        topGradientPanel.setLayout(gridBagLayout);
+        GridBagConstraints gbConstraints = new GridBagConstraints();
+        
+        
         GlassToolBar toolBar = new GlassToolBar();
 
         ToolBarButton lb = new ToolBarButton(0);
@@ -89,11 +95,24 @@ public class TestFrame extends JFrame {
         toolBar.add(lb);
         toolBar.add(cb);
         toolBar.add(rb);
-        toolBar.addSeparator();
+        
+        gbConstraints.fill = GridBagConstraints.HORIZONTAL;
+        gbConstraints.gridx = 0;
+        gbConstraints.gridy = 0;
+        gbConstraints.weightx = 0.5;
+        gbConstraints.anchor = GridBagConstraints.PAGE_START;
+        topGradientPanel.add(toolBar,gbConstraints);
+        
         JPanel panel = new JPanel();
-        panel.add(toolBar);
-        panel.add(new JComboBox());
-        topGradientPanel.add(panel,BorderLayout.PAGE_START);
+        panel.setOpaque(false);
+        panel.add(new EmbossedLabel("Showing records for the month of :"));
+        panel.add(new JComboBox(),BorderLayout.EAST);
+        gbConstraints.fill = GridBagConstraints.HORIZONTAL;
+        gbConstraints.gridx = 2;
+        gbConstraints.gridy = 0;
+        gbConstraints.anchor = GridBagConstraints.PAGE_END;
+        topGradientPanel.add(panel,gbConstraints);
+        
         return topGradientPanel;
     }
 
