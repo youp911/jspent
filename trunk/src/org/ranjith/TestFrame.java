@@ -1,11 +1,16 @@
 package org.ranjith;
 
+import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.KeyboardFocusManager;
+import java.awt.event.FocusEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.net.URL;
 import java.text.NumberFormat;
 import java.util.HashMap;
@@ -30,10 +35,12 @@ import javax.swing.JTextField;
 import javax.swing.JViewport;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableCellEditor;
 
 import org.ranjith.data.Expense;
 import org.ranjith.plugin.PluginInfo;
 import org.ranjith.plugin.PluginManager;
+import org.ranjith.swing.ComboBoxCellEditor;
 import org.ranjith.swing.EmbossedLabel;
 import org.ranjith.swing.FlatComboBox;
 import org.ranjith.swing.GlassToolBar;
@@ -155,7 +162,7 @@ public class TestFrame extends JFrame {
         
         table = new QTable(expenses, cols, props);
         table.setPreferredWidth(2, 20);
-        table.getColumnModel().getColumn(0).setCellEditor(new DefaultCellEditor(getExpenseCategoriesCombo()));
+        table.getColumnModel().getColumn(0).setCellEditor(getExpenseCategoriesCombo());
         table.setCellRenderer(3, new CurrencyRenderer());
         table.setIsAlternateRowHightLighted(true);
         //XXX
@@ -312,13 +319,31 @@ public class TestFrame extends JFrame {
     }
     
 
-    private FlatComboBox getExpenseCategoriesCombo() {
-    	FlatComboBox combo = new FlatComboBox();
+    private TableCellEditor getExpenseCategoriesCombo() {
+    	JComboBox combo = new JComboBox() {
+    	    @Override
+    	    protected void processEvent(AWTEvent e) {
+    	        super.processEvent(e);
+    	        getEditor().selectAll();
+    	    }
+    	    
+/*	    protected void processFocusEvent(java.awt.event.FocusEvent e) {
+	    super.processFocusEvent(e);
+	    Component focusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
+	    System.out.println("Focus owner " + (focusOwner==this));
+	    if(isDisplayable() && e.getID() == FocusEvent.FOCUS_GAINED && isPopupVisible()) {
+	        setPopupVisible(true);
+	    }
+*/    	    
+ };
     	for(String category: ExpenseService.EXPENSE_CATEGORIES){
     		combo.addItem(category);
     	}
+    	combo.setFont(SwingRConstants.DEFAULT_TEXT_FONT);
+    	combo.setEditable(true);
+    	combo.putClientProperty("JComboBox.isTableCellEditor", Boolean.TRUE);
     	
-    	return combo;
+    	return new ComboBoxCellEditor(combo);
 	}
     //-------------------------------------------------------
     class CurrencyRenderer extends DefaultTableCellRenderer {

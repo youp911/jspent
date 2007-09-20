@@ -15,6 +15,7 @@ public class Expense {
 	private String subCategory;
 	private Date date;
 	private float amount;
+	private String notes;
 	public int getId() {
 		return id;
 	}
@@ -50,5 +51,17 @@ public class Expense {
      */
     public void setDate(Date date) {
         this.date = date;
+    }
+    /**
+     * @return the notes
+     */
+    public String getNotes() {
+        return notes;
+    }
+    /**
+     * @param notes the notes to set
+     */
+    public void setNotes(String notes) {
+        this.notes = notes;
     }
 }
