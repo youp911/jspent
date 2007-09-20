@@ -142,7 +142,11 @@ public class QTableModel extends AbstractTableModel {
     public void setRows(List rows) {
         this.rows = rows;
     }
-
+	@Override
+	public boolean isCellEditable(int row, int col) {
+		// TODO Auto-generated method stub
+		return true;
+	}
     /**
      * Add values in a specified column.
      * @param columnIndex the column index of the column to be summed.
@@ -174,4 +178,6 @@ public class QTableModel extends AbstractTableModel {
             return super.getColumnClass(columnIndex);
         }
     }
+
+
 }

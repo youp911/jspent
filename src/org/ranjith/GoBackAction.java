@@ -21,6 +21,7 @@ public class GoBackAction implements ActionListener {
      */
     @Override
     public void actionPerformed(ActionEvent arg0) {
+    	testFrame.setCurrentContext(testFrame.getCurrentContext());
         testFrame.restoreUI();
     }
 
