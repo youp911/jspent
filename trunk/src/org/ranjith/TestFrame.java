@@ -13,6 +13,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.BorderFactory;
+import javax.swing.DefaultCellEditor;
 import javax.swing.DefaultListModel;
 import javax.swing.GroupLayout;
 import javax.swing.ImageIcon;
@@ -24,13 +26,16 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
+import javax.swing.JTextField;
 import javax.swing.JViewport;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 
+import org.ranjith.data.Expense;
 import org.ranjith.plugin.PluginInfo;
 import org.ranjith.plugin.PluginManager;
 import org.ranjith.swing.EmbossedLabel;
+import org.ranjith.swing.FlatComboBox;
 import org.ranjith.swing.GlassToolBar;
 import org.ranjith.swing.IconListItem;
 import org.ranjith.swing.IconLabelListCellRenderer;
@@ -39,19 +44,28 @@ import org.ranjith.swing.RoundButton;
 import org.ranjith.swing.RoundButtonComboBox;
 import org.ranjith.swing.SimpleGradientPanel;
 import org.ranjith.swing.SwingRConstants;
+import org.ranjith.swing.TestPanel;
 import org.ranjith.swing.ToolBarButton;
 
 /*
  *  $Id:$
  */
 public class TestFrame extends JFrame {
-
     private QTable table = null;
     private JSplitPane splitPane;
-    String[] cols = {"Type", "Date", "Sub Type", "Amount Spent"};
-    String[] props = {"category", "date", "subCategory", "amount"};
+    String[] cols = {"Type", "Sub Type","Date", "Amount Spent"};
+    String[] props = {"category","subCategory", "date", "amount"};
+    ToolBarButton lb = new ToolBarButton(0);
+    ToolBarButton cb = new ToolBarButton(1);
+    ToolBarButton rb = new ToolBarButton(2);
+    private JList optionsList;
     private static Map savingsPluginMap = new HashMap(1);
     private static PluginManager pm = PluginManager.getInstance();
+    public static final String EXPENSES = "Expenses";
+    public static final String INCOMES = "Incomes";
+    public static final String SAVINGS = "Savings";
+    public static final String LIABILITIES = "Liabilities";
+    public static final String SUMMARY = "Summary";
     //savings form
     private JPanel centerPanel,buttonPanel;
     SimpleGradientPanel addSavingsForm;
@@ -82,15 +96,16 @@ public class TestFrame extends JFrame {
         
         GlassToolBar toolBar = new GlassToolBar();
 
-        ToolBarButton lb = new ToolBarButton(0);
-        ToolBarButton cb = new ToolBarButton(1);
-        ToolBarButton rb = new ToolBarButton(2);
+        
         URL resource = TestFrame.class.getResource("../../icons/add.png");
         lb.setIcon(new ImageIcon(resource,"Add New"));
+        lb.addActionListener(new AddNewActionListener(this));
         resource = TestFrame.class.getResource("../../icons/application_form_add.png");
         cb.setIcon(new ImageIcon(resource,"Modify"));
+        cb.addActionListener(new ModifyActionListener(this));
         resource = TestFrame.class.getResource("../../icons/delete.png");
         rb.setIcon(new ImageIcon(resource,"Delete"));
+        cb.addActionListener(new DeleteActionListener(this));
         
         toolBar.add(lb);
         toolBar.add(cb);
@@ -103,15 +118,23 @@ public class TestFrame extends JFrame {
         gbConstraints.anchor = GridBagConstraints.PAGE_START;
         topGradientPanel.add(toolBar,gbConstraints);
         
-        JPanel panel = new JPanel();
-        panel.setOpaque(false);
-        panel.add(new EmbossedLabel("Showing records for the month of :"));
-        panel.add(new JComboBox(),BorderLayout.EAST);
+        JPanel filterPanel = new JPanel(new BorderLayout());
+        filterPanel.setOpaque(false);
+        
+        EmbossedLabel msgLabel = new EmbossedLabel("Showing records for the month of :",EmbossedLabel.TRAILING);
+        msgLabel.setFont(SwingRConstants.DEFAULT_TEXT_FONT);
+        filterPanel.add(msgLabel,BorderLayout.CENTER);
+        
+        JComboBox currentMonthCombo = new JComboBox(new String[]{"September, 2007"});
+        currentMonthCombo.setOpaque(false);
+        TestPanel dateFilter = new TestPanel();
+        filterPanel.add(dateFilter,BorderLayout.LINE_END);
+        
         gbConstraints.fill = GridBagConstraints.HORIZONTAL;
         gbConstraints.gridx = 2;
         gbConstraints.gridy = 0;
         gbConstraints.anchor = GridBagConstraints.PAGE_END;
-        topGradientPanel.add(panel,gbConstraints);
+        topGradientPanel.add(filterPanel,gbConstraints);
         
         return topGradientPanel;
     }
@@ -132,11 +155,13 @@ public class TestFrame extends JFrame {
         
         table = new QTable(expenses, cols, props);
         table.setPreferredWidth(2, 20);
+        table.getColumnModel().getColumn(0).setCellEditor(new DefaultCellEditor(getExpenseCategoriesCombo()));
         table.setCellRenderer(3, new CurrencyRenderer());
         table.setIsAlternateRowHightLighted(true);
         //XXX
         table.setBorder(null);
-
+        table.setFont(SwingRConstants.DEFAULT_TEXT_FONT);
+        table.getTableHeader().setFont(SwingRConstants.DEFAULT_HEADER_FONT);
         JScrollPane scrollPane = new JScrollPane(table);
         //XXX
         scrollPane.setBorder(null);
@@ -145,32 +170,35 @@ public class TestFrame extends JFrame {
         return rightPanel;
     }
 
-    private Component getBottomPanel() {
+
+	private Component getBottomPanel() {
         SimpleGradientPanel bottomPanel = new SimpleGradientPanel();       
         bottomPanel.setLayout(new BorderLayout());
-        bottomPanel.add(new JLabel("Total Expenses Amount $ " + table.sum(3)), BorderLayout.EAST);
+        JLabel totalLabel = new JLabel("Total Expenses Amount $ " + table.sum(3));
+        totalLabel.setFont(SwingRConstants.DEFAULT_TEXT_FONT);
+        bottomPanel.add(totalLabel, BorderLayout.EAST);
         return bottomPanel;
     }
 
     private JScrollPane getOptionsPane() {
         DefaultListModel listModel = new DefaultListModel();
-        JList optionsList = new JList(listModel);
+        optionsList = new JList(listModel);
         optionsList.setCellRenderer(new IconLabelListCellRenderer());
         
         URL resource = TestFrame.class.getResource("../../icons/money_delete.png");
-        listModel.addElement(new IconListItem(new ImageIcon(resource),"Expenses"));
+        listModel.addElement(new IconListItem(new ImageIcon(resource),EXPENSES));
 
         resource = TestFrame.class.getResource("../../icons/money_add.png");
-        listModel.addElement(new IconListItem(new ImageIcon(resource),"Incomes"));
+        listModel.addElement(new IconListItem(new ImageIcon(resource),INCOMES));
 
         resource = TestFrame.class.getResource("../../icons/money.png");
-        listModel.addElement(new IconListItem(new ImageIcon(resource),"Savings"));
+        listModel.addElement(new IconListItem(new ImageIcon(resource),SAVINGS));
 
         resource = TestFrame.class.getResource("../../icons/creditcards.png");
-        listModel.addElement(new IconListItem(new ImageIcon(resource),"Liabilities"));
+        listModel.addElement(new IconListItem(new ImageIcon(resource),LIABILITIES));
         
         resource = TestFrame.class.getResource("../../icons/report.png");
-        listModel.addElement(new IconListItem(new ImageIcon(resource),"Summary"));
+        listModel.addElement(new IconListItem(new ImageIcon(resource),SUMMARY));
 
         optionsList.setBackground(SwingRConstants.PANEL_DEEP_BACKGROUND_COLOR);
         optionsList.setSelectedIndex(2);
@@ -187,7 +215,7 @@ public class TestFrame extends JFrame {
 
     private Component getHeader() {
         EmbossedLabel label = new EmbossedLabel("CATEGORY");
-        label.setFont(new Font("Sans-Serif", Font.BOLD, 11));
+        label.setFont(SwingRConstants.DEFAULT_HEADER_FONT);
         label.setOpaque(true);
         label.setBackground(SwingRConstants.PANEL_DEEP_BACKGROUND_COLOR);
         return label;
@@ -195,11 +223,6 @@ public class TestFrame extends JFrame {
 
     private List getExpenses() {
         return new ExpenseService().getExpenses();
-    }
-
-    public static void main(String[] args) {
-        TestFrame frame = new TestFrame();
-        frame.setVisible(true);
     }
     
     public void showAddSavings() {
@@ -222,8 +245,8 @@ public class TestFrame extends JFrame {
                gl.createParallelGroup().addComponent(typeComboPanel).addComponent(centerPanel).addComponent(buttonPanel)
                );
         typeComboPanel.setOpaque(false);
-        JLabel label1 = new JLabel("Please Choose a Savings type to begin: ");
-        label1.setForeground(Color.WHITE);
+        JLabel label1 = new JLabel("Please Choose a Savings type to begin :");
+        //label1.setForeground(Color.WHITE);
         typeComboPanel.add(label1);
         List pluginList = pm.getPluginInfoList(PluginManager.PLUGIN_TYPE_SAVINGS_KEY);
         
@@ -243,6 +266,7 @@ public class TestFrame extends JFrame {
         
         splitPane.setRightComponent(addSavingsForm);
         splitPane.setDividerLocation(160);
+        lb.setEnabled(false);
     }
     public void restoreUI() {
         splitPane.setRightComponent(getTablePane(getExpenses(), cols, props));
@@ -260,7 +284,42 @@ public class TestFrame extends JFrame {
         addSavingsForm.add(centerPanel,BorderLayout.CENTER);
         addSavingsForm.updateUI();
     }
-   
+    
+    public String getCurrentContext() {
+    	Object selectedObject = optionsList.getSelectedValue();
+    	return ((IconListItem)selectedObject).getText();
+    }
+    
+    public void setCurrentContext(String context) {
+    	if(context.equals(EXPENSES)) {
+    	  this.optionsList.setSelectedIndex(0);
+    	  lb.setEnabled(true);
+    	}else if(context.equals(INCOMES)) {
+    		this.optionsList.setSelectedIndex(1);	
+    	}else if(context.equals(SAVINGS)) {
+    		this.optionsList.setSelectedIndex(2);	
+    		 lb.setEnabled(true);
+    	}else if(context.equals(LIABILITIES)) {
+    		this.optionsList.setSelectedIndex(3);		
+    	}else if(context.equals(SUMMARY)){
+    		this.optionsList.setSelectedIndex(4);		
+    	}
+    }
+    
+    public static void main(String[] args) {
+        TestFrame frame = new TestFrame();
+        frame.setVisible(true);
+    }
+    
+
+    private FlatComboBox getExpenseCategoriesCombo() {
+    	FlatComboBox combo = new FlatComboBox();
+    	for(String category: ExpenseService.EXPENSE_CATEGORIES){
+    		combo.addItem(category);
+    	}
+    	
+    	return combo;
+	}
     //-------------------------------------------------------
     class CurrencyRenderer extends DefaultTableCellRenderer {
 

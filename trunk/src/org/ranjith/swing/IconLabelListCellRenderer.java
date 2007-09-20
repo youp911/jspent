@@ -46,10 +46,10 @@ public class IconLabelListCellRenderer implements ListCellRenderer {
 
         JPanel panel = null;
         JLabel itemLabel = new JLabel(listItem.getText(),listItem.getIcon(),JLabel.LEFT);
-        itemLabel.setFont(new Font("Sans-Serif", Font.PLAIN, 11));
+        itemLabel.setFont(SwingRConstants.DEFAULT_TEXT_FONT);
         if(isSelected) {
             panel = new SimpleGradientPanel(new Color(0x5B92D5),new Color(0x1C58AE));
-            panel.setBorder(BorderFactory.createLineBorder(new Color(0x4580C8)));
+            panel.setBorder(BorderFactory.createLineBorder(new Color(0x1C58AE)));
             itemLabel.setForeground(Color.WHITE);
         }else{
             panel = new JPanel();

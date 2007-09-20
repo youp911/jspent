@@ -9,4 +9,10 @@ public class EmbossedLabel extends JLabel {
 		super(text);
 		setUI(new EmbossedLabelUI());
 	}
+
+	public EmbossedLabel(String text, int horizontalAlignment) {
+		super(text, horizontalAlignment);
+		setUI(new EmbossedLabelUI());
+	}
+
 }

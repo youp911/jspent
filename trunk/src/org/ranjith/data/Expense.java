@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.ranjith;
+package org.ranjith.data;
 
 import java.util.Date;
 
