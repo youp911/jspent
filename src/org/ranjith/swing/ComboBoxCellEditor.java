@@ -3,6 +3,7 @@
  */
 package org.ranjith.swing;
 
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -12,8 +13,9 @@ import java.util.EventObject;
 
 import javax.swing.*;
 import javax.swing.table.TableCellEditor;
+import javax.swing.tree.TreeCellEditor;
 
-public class ComboBoxCellEditor extends AbstractCellEditor implements ActionListener, TableCellEditor, Serializable {
+public class ComboBoxCellEditor extends AbstractCellEditor implements ActionListener, TableCellEditor, Serializable{
     
     private JComboBox comboBox;
     
@@ -68,21 +70,8 @@ public class ComboBoxCellEditor extends AbstractCellEditor implements ActionList
     @Override
     public boolean isCellEditable(EventObject e) {
         if (e instanceof MouseEvent) {
-            int clickCount;
-
-            // For single-click activation
-            clickCount = 1;
-
-
-            return ((MouseEvent)e).getClickCount() >= clickCount;
+            return ((MouseEvent)e).getClickCount() >= 1;
         }
         return true;
-    }
-    
-    // Implementing TreeCellEditor
-//    public java.awt.Component getTreeCellEditorComponent(javax.swing.JTree tree, Object value, boolean isSelected, boolean expanded, boolean leaf, int row) {
-//        String stringValue = tree.convertValueToText(value, isSelected, expanded, leaf, row, false);
-//        setValue(stringValue);
-//        return comboBox;
-//    }    
+    }   
 }

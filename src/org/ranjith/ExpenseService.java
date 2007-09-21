@@ -32,6 +32,7 @@ public class ExpenseService {
             expense.setDate(new Date());
             expense.setSubCategory("Subcat" + i);
             expense.setAmount(100f * i);
+            expense.setNotes("spent this money thoughtlessly.But still think it was mandatory");
             list.add(expense);
         }
         return list;

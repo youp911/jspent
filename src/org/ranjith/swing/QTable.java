@@ -7,6 +7,8 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Rectangle;
+import java.awt.event.MouseEvent;
+import java.util.EventObject;
 import java.util.List;
 import javax.swing.JTable;
 import javax.swing.JViewport;
@@ -178,9 +180,15 @@ public class QTable extends JTable {
             c.setBackground(colorForRow(row));
             c.setForeground(UIManager.getColor("Table.foreground"));
         } else {
-            c.setBackground(UIManager.getColor("Table.selectionBackground"));
-            c.setForeground(UIManager.getColor("Table.selectionForeground"));
+            if(hasFocus()) {
+                c.setBackground(getSelectionBackground());
+                c.setForeground(getSelectionForeground());
+            }else {
+                c.setBackground(Color.LIGHT_GRAY);
+                c.setForeground(getSelectionForeground());                
+            }
         }
         return c;
     }
+    
 }

@@ -1,16 +1,10 @@
 package org.ranjith;
 
-import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.KeyboardFocusManager;
-import java.awt.event.FocusEvent;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.net.URL;
 import java.text.NumberFormat;
 import java.util.HashMap;
@@ -18,7 +12,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import javax.swing.BorderFactory;
 import javax.swing.DefaultCellEditor;
 import javax.swing.DefaultListModel;
 import javax.swing.GroupLayout;
@@ -31,21 +24,18 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
-import javax.swing.JTextField;
 import javax.swing.JViewport;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellEditor;
 
-import org.ranjith.data.Expense;
 import org.ranjith.plugin.PluginInfo;
 import org.ranjith.plugin.PluginManager;
-import org.ranjith.swing.ComboBoxCellEditor;
 import org.ranjith.swing.EmbossedLabel;
 import org.ranjith.swing.FlatComboBox;
 import org.ranjith.swing.GlassToolBar;
-import org.ranjith.swing.IconListItem;
 import org.ranjith.swing.IconLabelListCellRenderer;
+import org.ranjith.swing.IconListItem;
 import org.ranjith.swing.QTable;
 import org.ranjith.swing.RoundButton;
 import org.ranjith.swing.RoundButtonComboBox;
@@ -60,8 +50,8 @@ import org.ranjith.swing.ToolBarButton;
 public class TestFrame extends JFrame {
     private QTable table = null;
     private JSplitPane splitPane;
-    String[] cols = {"Type", "Sub Type","Date", "Amount Spent"};
-    String[] props = {"category","subCategory", "date", "amount"};
+    String[] cols = {"Type", "Sub Type","Date", "Amount Spent", "Notes"};
+    String[] props = {"category","subCategory", "date", "amount","notes"};
     ToolBarButton lb = new ToolBarButton(0);
     ToolBarButton cb = new ToolBarButton(1);
     ToolBarButton rb = new ToolBarButton(2);
@@ -169,6 +159,9 @@ public class TestFrame extends JFrame {
         table.setBorder(null);
         table.setFont(SwingRConstants.DEFAULT_TEXT_FONT);
         table.getTableHeader().setFont(SwingRConstants.DEFAULT_HEADER_FONT);
+        table.setSelectionBackground(SwingRConstants.DEFAULT_SELECTION_BACKGROUND_COLOR);
+        table.setSelectionForeground(Color.WHITE);
+        table.getTableHeader().setReorderingAllowed(false);
         JScrollPane scrollPane = new JScrollPane(table);
         //XXX
         scrollPane.setBorder(null);
@@ -320,30 +313,14 @@ public class TestFrame extends JFrame {
     
 
     private TableCellEditor getExpenseCategoriesCombo() {
-    	JComboBox combo = new JComboBox() {
-    	    @Override
-    	    protected void processEvent(AWTEvent e) {
-    	        super.processEvent(e);
-    	        getEditor().selectAll();
-    	    }
-    	    
-/*	    protected void processFocusEvent(java.awt.event.FocusEvent e) {
-	    super.processFocusEvent(e);
-	    Component focusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
-	    System.out.println("Focus owner " + (focusOwner==this));
-	    if(isDisplayable() && e.getID() == FocusEvent.FOCUS_GAINED && isPopupVisible()) {
-	        setPopupVisible(true);
-	    }
-*/    	    
- };
+        FlatComboBox combo = new FlatComboBox();
     	for(String category: ExpenseService.EXPENSE_CATEGORIES){
     		combo.addItem(category);
     	}
     	combo.setFont(SwingRConstants.DEFAULT_TEXT_FONT);
-    	combo.setEditable(true);
-    	combo.putClientProperty("JComboBox.isTableCellEditor", Boolean.TRUE);
     	
-    	return new ComboBoxCellEditor(combo);
+    	combo.putClientProperty("JComboBox.isTableCellEditor", Boolean.TRUE);
+    	return new DefaultCellEditor(combo);
 	}
     //-------------------------------------------------------
     class CurrencyRenderer extends DefaultTableCellRenderer {
