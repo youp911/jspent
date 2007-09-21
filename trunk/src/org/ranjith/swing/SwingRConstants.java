@@ -11,4 +11,5 @@ public class SwingRConstants {
 	public static final Color PANEL_GRADIENT_END_COLOR = new Color(0x979596);
 	public static final Font DEFAULT_HEADER_FONT = new Font("Sans-Serif", Font.BOLD, 11);
 	public static final Font DEFAULT_TEXT_FONT = new Font("Sans-Serif", Font.PLAIN, 11);
+    public static final Color DEFAULT_SELECTION_BACKGROUND_COLOR = new Color(0x3D80DF);
 }
