@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.ranjith.data;
+package org.ranjith.jspent.data;
 
 import java.util.Date;
 

@@ -52,6 +52,12 @@ public class IconLabelListCellRenderer implements ListCellRenderer {
         JPanel panel = null;
         JLabel itemLabel = new JLabel(listItem.getText(),listItem.getIcon(),JLabel.LEFT);
         itemLabel.setFont(SwingRConstants.DEFAULT_TEXT_FONT);
+        itemLabel.setForeground(Color.BLACK);
+        
+        if(!list.isEnabled()) {
+        	itemLabel.setForeground(Color.GRAY);
+        }
+        
         if(isSelected) {
             if(hasFocus) {
                 panel = getGradientPanel(new Color(0x5B92D5),new Color(0x1C58AE), new Color(0x1C58AE));
@@ -62,7 +68,6 @@ public class IconLabelListCellRenderer implements ListCellRenderer {
             itemLabel.setForeground(Color.WHITE);
         }else{
             panel = new JPanel();
-            itemLabel.setForeground(Color.BLACK);
         }
         JLabel spacerLabel = new JLabel("  ");
         spacerLabel.setFont(new Font("Sans-Serif", Font.PLAIN, 14));
@@ -71,7 +76,6 @@ public class IconLabelListCellRenderer implements ListCellRenderer {
         panel.setOpaque(isSelected);
         panel.add(spacerLabel,BorderLayout.LINE_START);
         panel.add(itemLabel,BorderLayout.CENTER);
-
         return panel;
     }
     private JPanel getGradientPanel(Color startColor, Color endColor, Color borderColor) {

@@ -1,10 +1,12 @@
 /**
  * 
  */
-package org.ranjith;
+package org.ranjith.jspent.action;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
+import org.ranjith.jspent.JSpent;
 
 /**
  * @author ranjith
@@ -12,7 +14,7 @@ import java.awt.event.ActionListener;
  */
 public class DeleteActionListener implements ActionListener {
 
-	public DeleteActionListener(TestFrame testFrame) {
+	public DeleteActionListener(JSpent testFrame) {
 		// TODO Auto-generated constructor stub
 	}
 

@@ -1,10 +1,10 @@
 /**
  * 
  */
-package org.ranjith.data;
+package org.ranjith.jspent.data;
 
 /**
- * @author XR1CTSO
+ * @author ranjith
  * A high-level saving amount
  */
 public abstract class Saving implements java.io.Serializable {
