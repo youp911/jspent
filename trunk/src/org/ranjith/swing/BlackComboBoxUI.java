@@ -28,7 +28,7 @@ public class BlackComboBoxUI extends BasicComboBoxUI {
     
     protected JButton createArrowButton()
     {
-        java.net.URL vUrl = this.getClass().getResource("../../../icons/arrow_down.png");
+        java.net.URL vUrl = this.getClass().getResource("images/arrow_down.png");
         ImageIcon vIcon = new ImageIcon(vUrl);
         JButton vButton = new JButton(vIcon);
         
