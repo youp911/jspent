@@ -97,13 +97,13 @@ public class JSpent extends JFrame {
         GlassToolBar toolBar = new GlassToolBar();
 
         
-        URL resource = JSpent.class.getResource("../../icons/add.png");
+        URL resource = JSpent.class.getResource("icons/add.png");
         lb.setIcon(new ImageIcon(resource,"Add New"));
         lb.addActionListener(new AddNewActionListener(this));
-        resource = JSpent.class.getResource("../../icons/application_form_add.png");
+        resource = JSpent.class.getResource("icons/application_form_add.png");
         cb.setIcon(new ImageIcon(resource,"Modify"));
         cb.addActionListener(new ModifyActionListener(this));
-        resource = JSpent.class.getResource("../../icons/delete.png");
+        resource = JSpent.class.getResource("icons/delete.png");
         rb.setIcon(new ImageIcon(resource,"Delete"));
         cb.addActionListener(new DeleteActionListener(this));
         
@@ -185,7 +185,7 @@ public class JSpent extends JFrame {
     private JScrollPane getOptionsPane() {
         DefaultListModel listModel = new DefaultListModel();
         optionsList = new JList(listModel);
-        optionsList.setCellRenderer(new IconLabelListCellRenderer());
+        optionsList.setCellRenderer(new IconLabelListCellRenderer(1));
         
         URL resource = JSpent.class.getResource("icons/money_delete.png");
         listModel.addElement(new IconListItem(new ImageIcon(resource),EXPENSES));
@@ -235,6 +235,10 @@ public class JSpent extends JFrame {
     
     public void showAddExpense() {
     	prepareUIForAdd(lb);
+    	ExpenseFormPanel panel = new ExpenseFormPanel();
+    	splitPane.setRightComponent(panel);
+        splitPane.setDividerLocation(160);
+        panel.setDoneButtonListener(new BackActionListener(this));
     	
     }
     

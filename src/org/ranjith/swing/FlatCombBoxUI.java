@@ -24,7 +24,7 @@ public class FlatCombBoxUI extends BasicComboBoxUI {
 	
 	@Override
 	protected JButton createArrowButton() {
-		URL vUrl = this.getClass().getResource("../../../icons/bullet_arrow_down.png");
+		URL vUrl = this.getClass().getResource("images/bullet_arrow_down.png");
 		ImageIcon vIcon = new ImageIcon(vUrl);
 		JButton vButton = new JButton(vIcon);
 		vButton.setOpaque(false);

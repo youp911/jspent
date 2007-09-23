@@ -36,4 +36,8 @@ public class ExpenseService {
         }
         return list;
     }
+    
+    public static String[] getExpenseSubCategories() {
+    	return new String[] {"Grocery","Entertainment","Food & Drinks","Others"};
+    }
 }
