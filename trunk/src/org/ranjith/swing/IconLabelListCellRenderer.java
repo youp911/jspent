@@ -28,6 +28,7 @@ import javax.swing.ListCellRenderer;
  */
 public class IconLabelListCellRenderer implements ListCellRenderer {
    private int padding = 0;
+   private JLabel spacerLabel = new JLabel();
    public IconLabelListCellRenderer() {
        this(0);
    }
@@ -38,6 +39,10 @@ public class IconLabelListCellRenderer implements ListCellRenderer {
     */
    public IconLabelListCellRenderer(int padding) {
        this.padding = padding;
+       if(padding > 0) {
+         spacerLabel = new JLabel("  ");
+         spacerLabel.setFont(new Font("Sans-Serif", Font.PLAIN, 14));
+       }
    }
  
     /* (non-Javadoc)
@@ -69,13 +74,13 @@ public class IconLabelListCellRenderer implements ListCellRenderer {
         }else{
             panel = new JPanel();
         }
-        JLabel spacerLabel = new JLabel("  ");
-        spacerLabel.setFont(new Font("Sans-Serif", Font.PLAIN, 14));
+
         
         panel.setLayout(new BorderLayout());
         panel.setOpaque(isSelected);
         panel.add(spacerLabel,BorderLayout.LINE_START);
         panel.add(itemLabel,BorderLayout.CENTER);
+        System.out.println("returning panel :" + listItem.getText());
         return panel;
     }
     private JPanel getGradientPanel(Color startColor, Color endColor, Color borderColor) {
