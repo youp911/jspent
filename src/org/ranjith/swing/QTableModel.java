@@ -16,7 +16,8 @@ import org.ranjith.util.MathTool;
  * A "Quick Table" Model that will create table model
  * based on collection of objects. The Column headers and types needs to be
  * passed while initializing the object. This class depends on apache bean-utils
- * for bean/property methods.
+ * for bean/property methods. Currently this model is only "Read only". i.e; You
+ * can not edit cells.
  */
 public class QTableModel extends AbstractTableModel {
 
@@ -62,7 +63,7 @@ public class QTableModel extends AbstractTableModel {
      * @return return number of rows
      */
     public int getRowCount() {
-        return rows.size();
+        return (rows == null?0:rows.size());
     }
 
     /**
@@ -97,14 +98,16 @@ public class QTableModel extends AbstractTableModel {
      */
     public Object getValueAt(int row, int col) {
         Object value = null;
-        try {
-            value = PropertyUtils.getProperty(rows.get(row), colProps[col]);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
+        if(rows != null) {
+	        try {
+	            value = PropertyUtils.getProperty(rows.get(row), colProps[col]);
+	        } catch (IllegalAccessException e) {
+	            e.printStackTrace();
+	        } catch (InvocationTargetException e) {
+	            e.printStackTrace();
+	        } catch (NoSuchMethodException e) {
+	            e.printStackTrace();
+	        }
         }
         return value;
     }
@@ -144,8 +147,7 @@ public class QTableModel extends AbstractTableModel {
     }
 	@Override
 	public boolean isCellEditable(int row, int col) {
-		// TODO Auto-generated method stub
-		return true;
+		return false;
 	}
     /**
      * Add values in a specified column.
@@ -154,6 +156,7 @@ public class QTableModel extends AbstractTableModel {
      */
     public Number sum(int columnIndex) {
         double result = 0;
+
         try {
             for (Iterator rowsItr = rows.iterator(); rowsItr.hasNext();) {
                 Object property = PropertyUtils.getProperty(rowsItr.next(), colProps[columnIndex]);
@@ -168,6 +171,11 @@ public class QTableModel extends AbstractTableModel {
         }
     }
 
+    /**
+     * gets the given property's Type. 
+     * @param columnIndex
+     * @return
+     */
     private Class getPropertyType(int columnIndex) {
         try {
             PropertyDescriptor pd = PropertyUtils.getPropertyDescriptor(rows.get(0), colProps[columnIndex]);

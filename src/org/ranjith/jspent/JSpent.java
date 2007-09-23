@@ -1,4 +1,4 @@
-package org.ranjith;
+package org.ranjith.jspent;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -12,7 +12,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import javax.swing.DefaultCellEditor;
 import javax.swing.DefaultListModel;
 import javax.swing.GroupLayout;
 import javax.swing.ImageIcon;
@@ -27,12 +26,16 @@ import javax.swing.JSplitPane;
 import javax.swing.JViewport;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.TableCellEditor;
 
+import org.ranjith.jspent.action.AddNewActionListener;
+import org.ranjith.jspent.action.BackActionListener;
+import org.ranjith.jspent.action.DeleteActionListener;
+import org.ranjith.jspent.action.ModifyActionListener;
+import org.ranjith.jspent.action.SavingsTypeListener;
+import org.ranjith.jspent.data.ExpenseService;
 import org.ranjith.plugin.PluginInfo;
 import org.ranjith.plugin.PluginManager;
 import org.ranjith.swing.EmbossedLabel;
-import org.ranjith.swing.FlatComboBox;
 import org.ranjith.swing.GlassToolBar;
 import org.ranjith.swing.IconLabelListCellRenderer;
 import org.ranjith.swing.IconListItem;
@@ -47,7 +50,7 @@ import org.ranjith.swing.ToolBarButton;
 /*
  *  $Id:$
  */
-public class TestFrame extends JFrame {
+public class JSpent extends JFrame {
     private QTable table = null;
     private JSplitPane splitPane;
     String[] cols = {"Type", "Sub Type","Date", "Amount Spent", "Notes"};
@@ -67,7 +70,7 @@ public class TestFrame extends JFrame {
     private JPanel centerPanel,buttonPanel;
     SimpleGradientPanel addSavingsForm;
  
-    public TestFrame() {
+    public JSpent() {
         super("Test frame");
         List expenses = getExpenses();
 
@@ -94,13 +97,13 @@ public class TestFrame extends JFrame {
         GlassToolBar toolBar = new GlassToolBar();
 
         
-        URL resource = TestFrame.class.getResource("../../icons/add.png");
+        URL resource = JSpent.class.getResource("../../icons/add.png");
         lb.setIcon(new ImageIcon(resource,"Add New"));
         lb.addActionListener(new AddNewActionListener(this));
-        resource = TestFrame.class.getResource("../../icons/application_form_add.png");
+        resource = JSpent.class.getResource("../../icons/application_form_add.png");
         cb.setIcon(new ImageIcon(resource,"Modify"));
         cb.addActionListener(new ModifyActionListener(this));
-        resource = TestFrame.class.getResource("../../icons/delete.png");
+        resource = JSpent.class.getResource("../../icons/delete.png");
         rb.setIcon(new ImageIcon(resource,"Delete"));
         cb.addActionListener(new DeleteActionListener(this));
         
@@ -149,10 +152,9 @@ public class TestFrame extends JFrame {
     private JPanel getTablePane(List expenses, String[] cols, String[] props) {
         JPanel rightPanel = new JPanel();
         rightPanel.setLayout(new BorderLayout());
-        
+ 
         table = new QTable(expenses, cols, props);
         table.setPreferredWidth(2, 20);
-        table.getColumnModel().getColumn(0).setCellEditor(getExpenseCategoriesCombo());
         table.setCellRenderer(3, new CurrencyRenderer());
         table.setIsAlternateRowHightLighted(true);
         //XXX
@@ -185,23 +187,24 @@ public class TestFrame extends JFrame {
         optionsList = new JList(listModel);
         optionsList.setCellRenderer(new IconLabelListCellRenderer());
         
-        URL resource = TestFrame.class.getResource("../../icons/money_delete.png");
+        URL resource = JSpent.class.getResource("../../icons/money_delete.png");
         listModel.addElement(new IconListItem(new ImageIcon(resource),EXPENSES));
 
-        resource = TestFrame.class.getResource("../../icons/money_add.png");
+        resource = JSpent.class.getResource("../../icons/money_add.png");
         listModel.addElement(new IconListItem(new ImageIcon(resource),INCOMES));
 
-        resource = TestFrame.class.getResource("../../icons/money.png");
+        resource = JSpent.class.getResource("../../icons/money.png");
         listModel.addElement(new IconListItem(new ImageIcon(resource),SAVINGS));
 
-        resource = TestFrame.class.getResource("../../icons/creditcards.png");
+        resource = JSpent.class.getResource("../../icons/creditcards.png");
         listModel.addElement(new IconListItem(new ImageIcon(resource),LIABILITIES));
         
-        resource = TestFrame.class.getResource("../../icons/report.png");
+        resource = JSpent.class.getResource("../../icons/report.png");
         listModel.addElement(new IconListItem(new ImageIcon(resource),SUMMARY));
 
         optionsList.setBackground(SwingRConstants.PANEL_DEEP_BACKGROUND_COLOR);
-        optionsList.setSelectedIndex(2);
+        //Start with expense always selected.
+        optionsList.setSelectedIndex(0);
         
         JScrollPane categoryScrollPane = new JScrollPane(optionsList);
         JViewport colHeaderViewPort = new JViewport();
@@ -225,9 +228,18 @@ public class TestFrame extends JFrame {
         return new ExpenseService().getExpenses();
     }
     
+    private void prepareUIForAdd(ToolBarButton clickedButton) {
+    	clickedButton.setEnabled(false);
+    	optionsList.setEnabled(false);
+    }
+    
+    public void showAddExpense() {
+    	prepareUIForAdd(lb);
+    	
+    }
+    
     public void showAddSavings() {
-        //splitPane.remove(1);
-        
+    	prepareUIForAdd(lb);
         addSavingsForm = new SimpleGradientPanel(new Color(0x505866),new Color(0x7B8596));
 
         JPanel typeComboPanel = new JPanel();
@@ -261,16 +273,16 @@ public class TestFrame extends JFrame {
         
         typeComboPanel.add(savingsTypeCombo);
         RoundButton cancelButton = new RoundButton("Cancel");
-        cancelButton.addActionListener(new GoBackAction(this));
+        cancelButton.addActionListener(new BackActionListener(this));
         typeComboPanel.add(cancelButton);
         
         splitPane.setRightComponent(addSavingsForm);
         splitPane.setDividerLocation(160);
-        lb.setEnabled(false);
     }
     public void restoreUI() {
         splitPane.setRightComponent(getTablePane(getExpenses(), cols, props));
         splitPane.setDividerLocation(160);
+        optionsList.setEnabled(true);
     }
     
     public void setForm(JComponent component) {
@@ -307,21 +319,10 @@ public class TestFrame extends JFrame {
     }
     
     public static void main(String[] args) {
-        TestFrame frame = new TestFrame();
+        JSpent frame = new JSpent();
         frame.setVisible(true);
     }
     
-
-    private TableCellEditor getExpenseCategoriesCombo() {
-        FlatComboBox combo = new FlatComboBox();
-    	for(String category: ExpenseService.EXPENSE_CATEGORIES){
-    		combo.addItem(category);
-    	}
-    	combo.setFont(SwingRConstants.DEFAULT_TEXT_FONT);
-    	
-    	combo.putClientProperty("JComboBox.isTableCellEditor", Boolean.TRUE);
-    	return new DefaultCellEditor(combo);
-	}
     //-------------------------------------------------------
     class CurrencyRenderer extends DefaultTableCellRenderer {
 

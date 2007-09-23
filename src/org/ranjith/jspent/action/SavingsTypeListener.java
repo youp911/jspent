@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.ranjith;
+package org.ranjith.jspent.action;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -11,18 +11,19 @@ import javax.swing.JComboBox;
 import javax.swing.JComponent;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.ranjith.jspent.JSpent;
 import org.ranjith.plugin.PluginInfo;
 import org.ranjith.plugin.SavingsPlugin;
 
 /**
- * @author XR1CTSO
+ * @author ranjith
  * 
  */
 public class SavingsTypeListener implements ActionListener {
-    private TestFrame testFrame;
+    private JSpent testFrame;
     private List pluginList;
 
-    public SavingsTypeListener(TestFrame testFrame, List pluginList) {
+    public SavingsTypeListener(JSpent testFrame, List pluginList) {
         this.testFrame = testFrame;
         this.pluginList = pluginList;
     }

@@ -61,6 +61,20 @@ public class QTable extends JTable {
     }
 
     /**
+     * Creates a quick table based on the filled model.
+     * @param model
+     */
+    public QTable(QTableModel model) {
+        this.model = model;
+        this.setModel(model);
+        this.setAutoCreateColumnsFromModel(false);
+        this.setAutoCreateRowSorter(true);
+        this.setShowGrid(false);
+        this.setGridColor(Color.LIGHT_GRAY);
+        this.setShowVerticalLines(true);
+    }   
+    
+    /**
      * Returns sum of values in specified column.
      * @param columnIndex column index of the column to be summed.
      * @return            Sum in a generic Number object.

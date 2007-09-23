@@ -1,13 +1,12 @@
 /**
  * 
  */
-package org.ranjith;
+package org.ranjith.jspent.data;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.ranjith.data.Expense;
 
 /**
  * @author XR1CTSO
