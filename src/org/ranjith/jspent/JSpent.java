@@ -187,19 +187,19 @@ public class JSpent extends JFrame {
         optionsList = new JList(listModel);
         optionsList.setCellRenderer(new IconLabelListCellRenderer());
         
-        URL resource = JSpent.class.getResource("../../icons/money_delete.png");
+        URL resource = JSpent.class.getResource("icons/money_delete.png");
         listModel.addElement(new IconListItem(new ImageIcon(resource),EXPENSES));
 
-        resource = JSpent.class.getResource("../../icons/money_add.png");
+        resource = JSpent.class.getResource("icons/money_add.png");
         listModel.addElement(new IconListItem(new ImageIcon(resource),INCOMES));
 
-        resource = JSpent.class.getResource("../../icons/money.png");
+        resource = JSpent.class.getResource("icons/money.png");
         listModel.addElement(new IconListItem(new ImageIcon(resource),SAVINGS));
 
-        resource = JSpent.class.getResource("../../icons/creditcards.png");
+        resource = JSpent.class.getResource("icons/creditcards.png");
         listModel.addElement(new IconListItem(new ImageIcon(resource),LIABILITIES));
         
-        resource = JSpent.class.getResource("../../icons/report.png");
+        resource = JSpent.class.getResource("icons/report.png");
         listModel.addElement(new IconListItem(new ImageIcon(resource),SUMMARY));
 
         optionsList.setBackground(SwingRConstants.PANEL_DEEP_BACKGROUND_COLOR);
