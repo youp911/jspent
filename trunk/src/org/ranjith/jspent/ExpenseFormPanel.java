@@ -4,20 +4,23 @@
 package org.ranjith.jspent;
 
 import java.net.URL;
+import java.util.Date;
 
 import javax.swing.ImageIcon;
 
 import org.ranjith.jspent.action.BackActionListener;
+import org.ranjith.jspent.data.Expense;
 import org.ranjith.jspent.data.ExpenseService;
 import org.ranjith.swing.IconLabelListCellRenderer;
 import org.ranjith.swing.IconListItem;
+import org.ranjith.swing.RoundButton;
 
 /**
  * @author ranjith
  * A UI Pannel with controls to add a new 
  * expense information.
  */
-public class ExpenseFormPanel extends javax.swing.JPanel {
+public class ExpenseFormPanel extends CommonPanel {
     
     /** Creates new form ExpenseFormPanel */
     public ExpenseFormPanel() {
@@ -43,8 +46,8 @@ public class ExpenseFormPanel extends javax.swing.JPanel {
         notesLabel = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         notesTextArea = new javax.swing.JTextArea();
-        saveButton = new javax.swing.JButton();
-        doneButton = new javax.swing.JButton();
+        saveButton = new RoundButton();
+        doneButton = new RoundButton();
         currencyComboBox = new javax.swing.JComboBox(getCurrencyItemArray());
 
         categoryLabel.setText("Category:");
@@ -62,9 +65,9 @@ public class ExpenseFormPanel extends javax.swing.JPanel {
         jScrollPane1.setViewportView(notesTextArea);
 
         saveButton.setText("Save");
-
         doneButton.setText("Done");
         currencyComboBox.setRenderer(new IconLabelListCellRenderer());
+        
         
         //Generated using mattisse GUI designer from NB 6.0. DONOT edit beyond this point.
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -148,17 +151,43 @@ public class ExpenseFormPanel extends javax.swing.JPanel {
     private javax.swing.JComboBox currencyComboBox;
     private javax.swing.JLabel dateLabel;
     private javax.swing.JTextField dateTextField;
-    private javax.swing.JButton doneButton;
+    private RoundButton doneButton;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel notesLabel;
     private javax.swing.JTextArea notesTextArea;
-    private javax.swing.JButton saveButton;
+    private RoundButton saveButton;
     private javax.swing.JComboBox subCategoryComboBox;
     private javax.swing.JLabel subCategoryLabel;
     // End of variables declaration
     
 	public void setDoneButtonListener(BackActionListener backActionListener) {
 		doneButton.addActionListener(backActionListener);
+	}
+	
+	public void setSaveButtonListener(SaveActionListener saveActionListener) {
+		saveButton.addActionListener(saveActionListener);
+	}	
+	public void showAddNew() {
+		amountTextField.setText("");
+		dateTextField.setText("");
+		notesTextArea.setText("");
+	}
+	
+	public void showExpense(Expense expense) {
+		
+	}
+
+	@Override
+	public Object getDataObject() {
+		Expense e = new Expense();
+		e.setAmount(Float.valueOf(amountTextField.getText()));
+		e.setCategory((String)categoryComboBox.getSelectedItem());
+		e.setSubCategory((String)subCategoryComboBox.getSelectedItem());
+
+		//e.setDate(dateTextField.getText());
+		e.setDate(new Date());
+		e.setNotes(notesTextArea.getText());
+		return e;
 	}
     
 }

@@ -1,0 +1,16 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+	<hibernate-mapping>
+		<class name="org.ranjith.jspent.data.Expense" table="EXPENSES">
+			<id name="id" column="ID">
+				<generator class="identity"></generator>
+			</id>
+			<property name="category" column="CATEGORY"/>
+			<property name="subCategory" column="SUBCATEGORY"/>
+			<property name="date" column="EXPENSEDATE"/>
+			<property name="amount" column="AMOUNT"/>
+			<property name="notes" column="NOTES"/>
+		</class>
+	</hibernate-mapping>

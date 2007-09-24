@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.ranjith.util.HibernateUtil;
+
 
 /**
  * @author XR1CTSO
@@ -39,5 +41,9 @@ public class ExpenseService {
     
     public static String[] getExpenseSubCategories() {
     	return new String[] {"Grocery","Entertainment","Food & Drinks","Others"};
+    }
+    
+    public static void saveExpense(Expense expenseData) {
+    	HibernateUtil.save(expenseData);
     }
 }
