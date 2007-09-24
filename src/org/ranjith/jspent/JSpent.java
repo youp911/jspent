@@ -239,7 +239,7 @@ public class JSpent extends JFrame {
     	splitPane.setRightComponent(panel);
         splitPane.setDividerLocation(160);
         panel.setDoneButtonListener(new BackActionListener(this));
-    	
+    	panel.setSaveButtonListener(new SaveActionListener(SaveActionListener.ADD_NEW_MODE,panel));
     }
     
     public void showAddSavings() {
