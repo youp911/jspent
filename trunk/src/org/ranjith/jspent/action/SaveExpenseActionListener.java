@@ -1,13 +1,14 @@
 /**
  * 
  */
-package org.ranjith.jspent;
+package org.ranjith.jspent.action;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JPanel;
 
+import org.ranjith.jspent.CommonDataPanel;
 import org.ranjith.jspent.data.Expense;
 import org.ranjith.jspent.data.ExpenseService;
 import org.ranjith.util.HibernateUtil;
@@ -17,11 +18,10 @@ import org.ranjith.util.HibernateUtil;
  * The save can be "add new" or "edit-save"
  * @author ranjith
  */
-public class SaveActionListener implements ActionListener{
-	public static  int ADD_NEW_MODE = 0;
-	public static  int UPDATE_MODE = 1;
+public class SaveExpenseActionListener extends SaveActionListener{
+
 	private int mode = ADD_NEW_MODE;
-	private CommonPanel panel = null;
+	private CommonDataPanel panel = null;
 	/**
 	 * Creates a listener for specified save mode.
 	 * Save mode can be either 
@@ -30,7 +30,7 @@ public class SaveActionListener implements ActionListener{
 	 * will default to SaveButtonListener.ADD_NEW_MODE
 	 * @param mode
 	 */
-	public SaveActionListener(int mode) {
+	public SaveExpenseActionListener(int mode) {
 		if(mode <= UPDATE_MODE) {
 			this.mode = mode;
 		}
@@ -43,7 +43,7 @@ public class SaveActionListener implements ActionListener{
 	 * @param add_new_mode2
 	 * @param panel
 	 */
-	public SaveActionListener(int mode, CommonPanel panel) {
+	public SaveExpenseActionListener(int mode, CommonDataPanel panel) {
 		this.mode = mode;
 		this.panel = panel;
 	}

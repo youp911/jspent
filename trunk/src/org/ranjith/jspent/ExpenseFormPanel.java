@@ -3,28 +3,35 @@
  */
 package org.ranjith.jspent;
 
+import java.awt.event.ActionEvent;
 import java.net.URL;
+import java.text.NumberFormat;
 import java.util.Date;
 
 import javax.swing.ImageIcon;
 
 import org.ranjith.jspent.action.BackActionListener;
+import org.ranjith.jspent.action.SaveActionListener;
 import org.ranjith.jspent.data.Expense;
 import org.ranjith.jspent.data.ExpenseService;
 import org.ranjith.swing.IconLabelListCellRenderer;
 import org.ranjith.swing.IconListItem;
 import org.ranjith.swing.RoundButton;
+import org.ranjith.util.DataTypeUtil;
 
 /**
  * @author ranjith
  * A UI Pannel with controls to add a new 
  * expense information.
  */
-public class ExpenseFormPanel extends CommonPanel {
+public class ExpenseFormPanel extends CommonDataPanel {
+    private Expense expenseDataObject = null;
+    private SaveActionListener saveActionListener = null;
     
     /** Creates new form ExpenseFormPanel */
     public ExpenseFormPanel() {
         initComponents();
+        showAddNew();
     }
     
     /** This method is called from within the constructor to
@@ -42,7 +49,7 @@ public class ExpenseFormPanel extends CommonPanel {
         dateLabel = new javax.swing.JLabel();
         dateTextField = new javax.swing.JTextField();
         amountLabel = new javax.swing.JLabel();
-        amountTextField = new javax.swing.JTextField();
+        amountTextField = new javax.swing.JFormattedTextField(NumberFormat.getNumberInstance());
         notesLabel = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         notesTextArea = new javax.swing.JTextArea();
@@ -145,7 +152,7 @@ public class ExpenseFormPanel extends CommonPanel {
 
 	// Variables declaration - do not modify
     private javax.swing.JLabel amountLabel;
-    private javax.swing.JTextField amountTextField;
+    private javax.swing.JFormattedTextField amountTextField;
     private javax.swing.JComboBox categoryComboBox;
     private javax.swing.JLabel categoryLabel;
     private javax.swing.JComboBox currencyComboBox;
@@ -166,13 +173,19 @@ public class ExpenseFormPanel extends CommonPanel {
 	
 	public void setSaveButtonListener(SaveActionListener saveActionListener) {
 		saveButton.addActionListener(saveActionListener);
-	}	
-	public void showAddNew() {
-		amountTextField.setText("");
-		dateTextField.setText("");
-		notesTextArea.setText("");
+		this.saveActionListener = saveActionListener;
 	}
 	
+	private void setDataObject(Expense expense) {
+		this.expenseDataObject = expense;
+		this.categoryComboBox.setSelectedItem(expense.getCategory());
+		this.subCategoryComboBox.setSelectedItem(expense.getSubCategory());
+		//this.dateTextField.setText(expense.getDate() == null? new Date():expense.getDate());
+		this.dateTextField.setText("");
+		this.amountTextField.setText(Float.toString(expense.getAmount()));
+		this.notesTextArea.setText(expense.getNotes());
+	}
+
 	public void showExpense(Expense expense) {
 		
 	}
@@ -180,15 +193,35 @@ public class ExpenseFormPanel extends CommonPanel {
 	@Override
 	public Object getDataObject() {
 		Expense e = new Expense();
-		e.setAmount(Float.valueOf(amountTextField.getText()));
+		if(!DataTypeUtil.isEmptyOrNullString(amountTextField.getText())) {
+			e.setAmount(Float.valueOf(amountTextField.getText()));
+		}
 		e.setCategory((String)categoryComboBox.getSelectedItem());
 		e.setSubCategory((String)subCategoryComboBox.getSelectedItem());
-
-		//e.setDate(dateTextField.getText());
-		e.setDate(new Date());
-		e.setNotes(notesTextArea.getText());
+		if(!DataTypeUtil.isEmptyOrNullString(dateTextField.getText())){
+			e.setDate(new Date());	
+		}
+		if(!DataTypeUtil.isEmptyOrNullString(notesTextArea.getText())) {
+			e.setNotes(notesTextArea.getText());
+		}
 		return e;
 	}
-    
+
+	@Override
+	public boolean isDirty() {
+		Expense e = (Expense) getDataObject();
+		return(!getDataObject().equals(this.expenseDataObject));
+	}
+
+	@Override
+	public void showAddNew() {
+		setDataObject(new Expense());
+	}
+
+	@Override
+	public void fireSaveButtonPressed(ActionEvent e) {
+		saveActionListener.actionPerformed(e);
+	}
+
 }
 

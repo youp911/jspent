@@ -6,6 +6,9 @@ package org.ranjith.jspent.action;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.JOptionPane;
+
+import org.ranjith.jspent.CommonDataPanel;
 import org.ranjith.jspent.JSpent;
 
 /**
@@ -15,8 +18,14 @@ import org.ranjith.jspent.JSpent;
  */
 public class BackActionListener implements ActionListener {
     private JSpent testFrame;
+    private CommonDataPanel panel;
     public BackActionListener(JSpent testFrame) {
         this.testFrame = testFrame;
+        this.panel = null;
+    }
+    public BackActionListener(JSpent testFrame,CommonDataPanel panel) {
+        this.testFrame = testFrame;
+        this.panel = panel;
     }
 
     /* (non-Javadoc)
@@ -24,6 +33,25 @@ public class BackActionListener implements ActionListener {
      */
     @Override
     public void actionPerformed(ActionEvent arg0) {
+        if(panel != null && panel.isDirty()) {
+        	Object[] options = {"Cancel","Don't Save","Save"};
+        	int response = JOptionPane.showOptionDialog(this.testFrame,
+        		    "Would you like some green eggs to go "
+        		    + "with that ham?",
+        		    "A Silly Question",
+        		    JOptionPane.YES_NO_CANCEL_OPTION,
+        		    JOptionPane.QUESTION_MESSAGE,
+        		    null,
+        		    options,
+        		    options[2]);
+        	if(response == JOptionPane.CANCEL_OPTION) {
+        		return;
+        	}
+        	if(response == JOptionPane.YES_OPTION) {
+        		panel.fireSaveButtonPressed(arg0);
+        	}
+        	
+        }
     	testFrame.setCurrentContext(testFrame.getCurrentContext());
         testFrame.restoreUI();
     }
