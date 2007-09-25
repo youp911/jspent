@@ -7,6 +7,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.net.URL;
 import java.text.NumberFormat;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -226,7 +227,7 @@ public class JSpent extends JFrame {
     }
 
     private List getExpenses() {
-        return new ExpenseService().getExpenses();
+        return new ExpenseService().getExpenses(Calendar.getInstance().get(Calendar.MONTH)+1);
     }
     
     private void prepareUIForAdd(ToolBarButton clickedButton) {

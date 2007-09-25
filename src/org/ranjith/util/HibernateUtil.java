@@ -3,6 +3,14 @@
  */
 package org.ranjith.util;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Map.Entry;
+
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
@@ -24,5 +32,19 @@ public class HibernateUtil {
 		dbSession.save(dataObject);
 		dbSession.getTransaction().commit();
 		dbSession.close();
+	}
+	
+	public static List getData(String ql,Map paramMap) {
+	    List dataList  = new ArrayList();
+	    Session dbSession = sessionFactory.openSession();
+	    //"from HipaaReq where type='270' and year(transDate)=2007  and month(transDate)=8 and day(transDate)=:day ORDER BY transDate asc"
+	    Query query = dbSession.createQuery(ql);
+	    Set<Map.Entry<Object,Object>> entrySet = paramMap.entrySet();
+	    for(Map.Entry entry : entrySet){
+	        query.setParameter((String)entry.getKey(),entry.getValue());
+	    }
+	    dataList = query.list();
+	    dbSession.close();
+	    return dataList;
 	}
 }

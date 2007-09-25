@@ -80,7 +80,6 @@ public class IconLabelListCellRenderer implements ListCellRenderer {
         panel.setOpaque(isSelected);
         panel.add(spacerLabel,BorderLayout.LINE_START);
         panel.add(itemLabel,BorderLayout.CENTER);
-        System.out.println("returning panel :" + listItem.getText());
         return panel;
     }
     private JPanel getGradientPanel(Color startColor, Color endColor, Color borderColor) {
