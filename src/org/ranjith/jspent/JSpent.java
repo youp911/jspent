@@ -31,6 +31,7 @@ import org.ranjith.jspent.action.AddNewActionListener;
 import org.ranjith.jspent.action.BackActionListener;
 import org.ranjith.jspent.action.DeleteActionListener;
 import org.ranjith.jspent.action.ModifyActionListener;
+import org.ranjith.jspent.action.SaveExpenseActionListener;
 import org.ranjith.jspent.action.SavingsTypeListener;
 import org.ranjith.jspent.data.ExpenseService;
 import org.ranjith.plugin.PluginInfo;
@@ -238,8 +239,8 @@ public class JSpent extends JFrame {
     	ExpenseFormPanel panel = new ExpenseFormPanel();
     	splitPane.setRightComponent(panel);
         splitPane.setDividerLocation(160);
-        panel.setDoneButtonListener(new BackActionListener(this));
-    	panel.setSaveButtonListener(new SaveActionListener(SaveActionListener.ADD_NEW_MODE,panel));
+        panel.setDoneButtonListener(new BackActionListener(this,panel));
+    	panel.setSaveButtonListener(new SaveExpenseActionListener(SaveExpenseActionListener.ADD_NEW_MODE,panel));
     }
     
     public void showAddSavings() {
