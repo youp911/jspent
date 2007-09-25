@@ -4,6 +4,7 @@
 package org.ranjith.jspent;
 
 import java.awt.event.ActionEvent;
+import java.util.List;
 
 import javax.swing.JPanel;
 
@@ -21,4 +22,10 @@ public abstract class CommonDataPanel extends JPanel {
 	public abstract void showAddNew();
 	public abstract Object getDataObject();
 	public abstract boolean isDirty();
+	/**
+	 * Error handlers must check for isEmtpy or NULL
+	 * on returned List.
+	 * @return
+	 */
+    public abstract List getValidationErrors();
 }

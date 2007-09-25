@@ -5,7 +5,9 @@ package org.ranjith.jspent.data;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.ranjith.util.HibernateUtil;
 
@@ -24,19 +26,10 @@ public class ExpenseService {
     public ExpenseService() {
         
     }
-    public List getExpenses() {
-        List list = new ArrayList();
-        for (int i = 0; i < 55; i++) {
-            Expense expense = new Expense();
-            expense.setId(i);
-            expense.setCategory(EXPENSE_CATEGORIES[1]);
-            expense.setDate(new Date());
-            expense.setSubCategory("Subcat" + i);
-            expense.setAmount(100f * i);
-            expense.setNotes("spent this money thoughtlessly.But still think it was mandatory");
-            list.add(expense);
-        }
-        return list;
+    public List getExpenses(int forMonth) {
+        Map paramMap = new HashMap(1);
+        paramMap.put("month", forMonth);
+        return HibernateUtil.getData("from org.ranjith.jspent.data.Expense where month(date)=:month ORDER BY id asc", paramMap);
     }
     
     public static String[] getExpenseSubCategories() {

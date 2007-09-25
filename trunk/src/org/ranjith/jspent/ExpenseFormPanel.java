@@ -6,7 +6,10 @@ package org.ranjith.jspent;
 import java.awt.event.ActionEvent;
 import java.net.URL;
 import java.text.NumberFormat;
+import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.swing.ImageIcon;
 
@@ -194,7 +197,11 @@ public class ExpenseFormPanel extends CommonDataPanel {
 	public Object getDataObject() {
 		Expense e = new Expense();
 		if(!DataTypeUtil.isEmptyOrNullString(amountTextField.getText())) {
-			e.setAmount(Float.valueOf(amountTextField.getText()));
+			try {
+                e.setAmount(NumberFormat.getNumberInstance().parse(amountTextField.getText()).floatValue());
+            } catch (ParseException parseException) {
+                parseException.printStackTrace();
+            }
 		}
 		e.setCategory((String)categoryComboBox.getSelectedItem());
 		e.setSubCategory((String)subCategoryComboBox.getSelectedItem());
@@ -222,6 +229,26 @@ public class ExpenseFormPanel extends CommonDataPanel {
 	public void fireSaveButtonPressed(ActionEvent e) {
 		saveActionListener.actionPerformed(e);
 	}
+
+    @Override
+    public List getValidationErrors() {
+        List errors = new ArrayList();
+        if(DataTypeUtil.isEmptyOrNullString(amountTextField.getText())) {
+            errors.add("Please Enter Amount Spent");
+        }
+        try{
+            NumberFormat.getNumberInstance().parse(amountTextField.getText());    
+        }catch(ParseException parseException) {
+            errors.add("Please Enter a Numeric Value for Amount Spent");
+        }
+        if(DataTypeUtil.isEmptyOrNullString((String)categoryComboBox.getSelectedItem()) ){
+            errors.add("Please Select an Expense Category: Flexible/Mandatory");
+        }
+        if(DataTypeUtil.isEmptyOrNullString((String)subCategoryComboBox.getSelectedItem()) ){
+            errors.add("Please Select an Expense sub Category");
+        }
+        return errors;
+    }
 
 }
 

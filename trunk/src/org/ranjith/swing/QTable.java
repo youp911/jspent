@@ -57,7 +57,7 @@ public class QTable extends JTable {
         this.setAutoCreateRowSorter(true);
         this.setShowGrid(false);
         this.setGridColor(Color.LIGHT_GRAY);
-        this.setShowVerticalLines(true);
+        //this.setShowVerticalLines(true);
     }
 
     /**
@@ -71,7 +71,7 @@ public class QTable extends JTable {
         this.setAutoCreateRowSorter(true);
         this.setShowGrid(false);
         this.setGridColor(Color.LIGHT_GRAY);
-        this.setShowVerticalLines(true);
+        //this.setShowVerticalLines(true);
     }   
     
     /**
@@ -194,13 +194,8 @@ public class QTable extends JTable {
             c.setBackground(colorForRow(row));
             c.setForeground(UIManager.getColor("Table.foreground"));
         } else {
-            if(hasFocus()) {
                 c.setBackground(getSelectionBackground());
                 c.setForeground(getSelectionForeground());
-            }else {
-                c.setBackground(Color.LIGHT_GRAY);
-                c.setForeground(getSelectionForeground());                
-            }
         }
         return c;
     }
