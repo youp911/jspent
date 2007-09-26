@@ -37,7 +37,6 @@ public class HibernateUtil {
 	public static List getData(String ql,Map paramMap) {
 	    List dataList  = new ArrayList();
 	    Session dbSession = sessionFactory.openSession();
-	    //"from HipaaReq where type='270' and year(transDate)=2007  and month(transDate)=8 and day(transDate)=:day ORDER BY transDate asc"
 	    Query query = dbSession.createQuery(ql);
 	    Set<Map.Entry<Object,Object>> entrySet = paramMap.entrySet();
 	    for(Map.Entry entry : entrySet){
@@ -47,4 +46,13 @@ public class HibernateUtil {
 	    dbSession.close();
 	    return dataList;
 	}
+	
+    public static void delete(Object dataObject) {
+        Session dbSession = sessionFactory.openSession();
+        dbSession.beginTransaction();
+        dbSession.delete(dataObject);
+        dbSession.getTransaction().commit();
+        dbSession.close();
+    }
+	
 }

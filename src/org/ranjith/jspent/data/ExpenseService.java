@@ -39,4 +39,12 @@ public class ExpenseService {
     public static void saveExpense(Expense expenseData) {
     	HibernateUtil.save(expenseData);
     }
+    
+    /**
+     * Deletes the object from datastore
+     * @param selectedRowObject
+     */
+    public static void delete(Expense expenseObject) {
+        HibernateUtil.delete(expenseObject);
+    }
 }
