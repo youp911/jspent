@@ -170,6 +170,15 @@ public class QTableModel extends AbstractTableModel {
             return null;
         }
     }
+    
+    /**
+     * Removes a row from model and updates table.
+     * @param selectedRow row index
+     */
+    public void removeRow(int rowIndex) {
+        this.rows.remove(rowIndex);
+        fireTableRowsDeleted(rowIndex, rowIndex);
+    }
 
     /**
      * gets the given property's Type. 
@@ -186,6 +195,7 @@ public class QTableModel extends AbstractTableModel {
             return super.getColumnClass(columnIndex);
         }
     }
+
 
 
 }

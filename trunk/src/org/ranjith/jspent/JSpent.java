@@ -25,6 +25,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JViewport;
+import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 
@@ -32,6 +33,7 @@ import org.ranjith.jspent.action.AddNewActionListener;
 import org.ranjith.jspent.action.BackActionListener;
 import org.ranjith.jspent.action.DeleteActionListener;
 import org.ranjith.jspent.action.ModifyActionListener;
+import org.ranjith.jspent.action.RowSelectionActionListener;
 import org.ranjith.jspent.action.SaveExpenseActionListener;
 import org.ranjith.jspent.action.SavingsTypeListener;
 import org.ranjith.jspent.data.ExpenseService;
@@ -42,6 +44,7 @@ import org.ranjith.swing.GlassToolBar;
 import org.ranjith.swing.IconLabelListCellRenderer;
 import org.ranjith.swing.IconListItem;
 import org.ranjith.swing.QTable;
+import org.ranjith.swing.QTableModel;
 import org.ranjith.swing.RoundButton;
 import org.ranjith.swing.RoundButtonComboBox;
 import org.ranjith.swing.SimpleGradientPanel;
@@ -75,17 +78,16 @@ public class JSpent extends JFrame {
     public JSpent() {
         super("Test frame");
         List expenses = getExpenses();
-
         getContentPane().setLayout(new BorderLayout());
-        
         JPanel rightPanel = getTablePane(expenses, cols, props);
         JScrollPane categoryScrollPane = getOptionsPane();
-        
         splitPane = getSplitPane(rightPanel, categoryScrollPane);
         getContentPane().add(splitPane, BorderLayout.CENTER);
+        
         SimpleGradientPanel topGradientPanel = getTopPanel();
         getContentPane().add(topGradientPanel,BorderLayout.PAGE_START);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        optionsList.requestFocusInWindow();
         setSize(800, 640);
     }
 
@@ -96,28 +98,7 @@ public class JSpent extends JFrame {
         GridBagConstraints gbConstraints = new GridBagConstraints();
         
         
-        GlassToolBar toolBar = new GlassToolBar();
-
-        
-        URL resource = JSpent.class.getResource("icons/add.png");
-        lb.setIcon(new ImageIcon(resource,"Add New"));
-        lb.addActionListener(new AddNewActionListener(this));
-        resource = JSpent.class.getResource("icons/application_form_add.png");
-        cb.setIcon(new ImageIcon(resource,"Modify"));
-        cb.addActionListener(new ModifyActionListener(this));
-        resource = JSpent.class.getResource("icons/delete.png");
-        rb.setIcon(new ImageIcon(resource,"Delete"));
-        cb.addActionListener(new DeleteActionListener(this));
-        
-        toolBar.add(lb);
-        toolBar.add(cb);
-        toolBar.add(rb);
-        
-        gbConstraints.fill = GridBagConstraints.HORIZONTAL;
-        gbConstraints.gridx = 0;
-        gbConstraints.gridy = 0;
-        gbConstraints.weightx = 0.5;
-        gbConstraints.anchor = GridBagConstraints.PAGE_START;
+        GlassToolBar toolBar = getToolBar(gbConstraints);
         topGradientPanel.add(toolBar,gbConstraints);
         
         JPanel filterPanel = new JPanel(new BorderLayout());
@@ -139,6 +120,33 @@ public class JSpent extends JFrame {
         topGradientPanel.add(filterPanel,gbConstraints);
         
         return topGradientPanel;
+    }
+
+    private GlassToolBar getToolBar(GridBagConstraints gbConstraints) {
+        GlassToolBar toolBar = new GlassToolBar();
+        URL resource = JSpent.class.getResource("icons/add.png");
+        lb.setIcon(new ImageIcon(resource,"Add New"));
+        lb.addActionListener(new AddNewActionListener(this));
+        resource = JSpent.class.getResource("icons/application_form_add.png");
+        cb.setIcon(new ImageIcon(resource,"Modify"));
+        cb.addActionListener(new ModifyActionListener(this));
+        resource = JSpent.class.getResource("icons/delete.png");
+        rb.setIcon(new ImageIcon(resource,"Delete"));
+        rb.addActionListener(new DeleteActionListener(this));
+        //Not enabled on start up. Enable only when table row is selected.
+        cb.setEnabled(false);
+        rb.setEnabled(false);
+        
+        toolBar.add(lb);
+        toolBar.add(cb);
+        toolBar.add(rb);
+        
+        gbConstraints.fill = GridBagConstraints.HORIZONTAL;
+        gbConstraints.gridx = 0;
+        gbConstraints.gridy = 0;
+        gbConstraints.weightx = 0.5;
+        gbConstraints.anchor = GridBagConstraints.PAGE_START;
+        return toolBar;
     }
 
     private JSplitPane getSplitPane(JComponent scrollPane, JComponent categoryScrollPane) {
@@ -166,6 +174,10 @@ public class JSpent extends JFrame {
         table.setSelectionBackground(SwingRConstants.DEFAULT_SELECTION_BACKGROUND_COLOR);
         table.setSelectionForeground(Color.WHITE);
         table.getTableHeader().setReorderingAllowed(false);
+        ListSelectionModel selectionModel = table.getSelectionModel();
+        selectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        selectionModel.addListSelectionListener(new RowSelectionActionListener(this));
+        table.setSelectionModel(selectionModel);
         JScrollPane scrollPane = new JScrollPane(table);
         //XXX
         scrollPane.setBorder(null);
@@ -324,6 +336,29 @@ public class JSpent extends JFrame {
     	}
     }
     
+    public void enableModifyToolBarButton() {
+        this.cb.setEnabled(true);
+    }
+
+    public void enableDeleteToolBarButton() {
+        this.rb.setEnabled(true);
+    }
+
+    public Object getSelectedRowObject() {
+        QTableModel model = (QTableModel) table.getModel();
+        return model.getRows().get(table.getSelectedRow());
+    } 
+    
+    /**
+     * Removes selected row from the table. But this would not make 
+     * changes to underlying datastore.
+     */
+    public void removeSelectedRowObject() {
+        if(table.getSelectedRow() > -1) {
+            QTableModel model = (QTableModel) table.getModel();
+            model.removeRow(table.getSelectedRow());
+        }
+    }   
     public static void main(String[] args) {
         JSpent frame = new JSpent();
         frame.setVisible(true);
@@ -343,5 +378,8 @@ public class JSpent extends JFrame {
             setText(format.format(amount));
         }
     }
+
+
+
 
 }
