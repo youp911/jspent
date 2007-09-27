@@ -22,6 +22,8 @@ import org.ranjith.swing.IconListItem;
 import org.ranjith.swing.RoundButton;
 import org.ranjith.util.DataTypeUtil;
 
+import com.toedter.calendar.JDateChooser;
+
 /**
  * @author ranjith
  * A UI Pannel with controls to add a new 
@@ -37,6 +39,12 @@ public class ExpenseFormPanel extends CommonDataPanel {
         showAddNew();
     }
     
+    public ExpenseFormPanel(Expense expense) {
+        this.expenseDataObject = expense;
+        initComponents();
+        setDataObject(expense);
+    }
+    
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -50,7 +58,7 @@ public class ExpenseFormPanel extends CommonDataPanel {
         subCategoryLabel = new javax.swing.JLabel();
         subCategoryComboBox = new javax.swing.JComboBox(ExpenseService.getExpenseSubCategories());
         dateLabel = new javax.swing.JLabel();
-        dateTextField = new javax.swing.JTextField();
+        dateChooser = new JDateChooser();
         amountLabel = new javax.swing.JLabel();
         amountTextField = new javax.swing.JFormattedTextField(NumberFormat.getNumberInstance());
         notesLabel = new javax.swing.JLabel();
@@ -99,7 +107,7 @@ public class ExpenseFormPanel extends CommonDataPanel {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(amountTextField)
-                            .addComponent(dateTextField)
+                            .addComponent(dateChooser)
                             .addComponent(subCategoryComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(categoryComboBox, 0, 100, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -123,7 +131,7 @@ public class ExpenseFormPanel extends CommonDataPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(dateLabel)
-                    .addComponent(dateTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(dateChooser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(amountLabel)
@@ -160,7 +168,7 @@ public class ExpenseFormPanel extends CommonDataPanel {
     private javax.swing.JLabel categoryLabel;
     private javax.swing.JComboBox currencyComboBox;
     private javax.swing.JLabel dateLabel;
-    private javax.swing.JTextField dateTextField;
+    private JDateChooser dateChooser;
     private RoundButton doneButton;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel notesLabel;
@@ -183,8 +191,7 @@ public class ExpenseFormPanel extends CommonDataPanel {
 		this.expenseDataObject = expense;
 		this.categoryComboBox.setSelectedItem(expense.getCategory());
 		this.subCategoryComboBox.setSelectedItem(expense.getSubCategory());
-		//this.dateTextField.setText(expense.getDate() == null? new Date():expense.getDate());
-		this.dateTextField.setText("");
+		this.dateChooser.setDate(expense.getDate());
 		this.amountTextField.setText(Float.toString(expense.getAmount()));
 		this.notesTextArea.setText(expense.getNotes());
 	}
@@ -195,23 +202,26 @@ public class ExpenseFormPanel extends CommonDataPanel {
 
 	@Override
 	public Object getDataObject() {
-		Expense e = new Expense();
+	    Expense uiData = new Expense();
+	    if(expenseDataObject != null) {
+	        uiData.setId(expenseDataObject.getId());
+	    }
 		if(!DataTypeUtil.isEmptyOrNullString(amountTextField.getText())) {
 			try {
-                e.setAmount(NumberFormat.getNumberInstance().parse(amountTextField.getText()).floatValue());
+			    uiData.setAmount(NumberFormat.getNumberInstance().parse(amountTextField.getText()).floatValue());
             } catch (ParseException parseException) {
                 parseException.printStackTrace();
             }
 		}
-		e.setCategory((String)categoryComboBox.getSelectedItem());
-		e.setSubCategory((String)subCategoryComboBox.getSelectedItem());
-		if(!DataTypeUtil.isEmptyOrNullString(dateTextField.getText())){
-			e.setDate(new Date());	
+		uiData.setCategory((String)categoryComboBox.getSelectedItem());
+		uiData.setSubCategory((String)subCategoryComboBox.getSelectedItem());
+		if(dateChooser.getDate() != null){
+		    uiData.setDate(dateChooser.getDate());	
 		}
 		if(!DataTypeUtil.isEmptyOrNullString(notesTextArea.getText())) {
-			e.setNotes(notesTextArea.getText());
+		    uiData.setNotes(notesTextArea.getText());
 		}
-		return e;
+		return uiData;
 	}
 
 	@Override

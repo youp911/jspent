@@ -54,5 +54,13 @@ public class HibernateUtil {
         dbSession.getTransaction().commit();
         dbSession.close();
     }
+    
+    public static void update(Object dataObject) {
+        Session dbSession = sessionFactory.openSession();
+        dbSession.beginTransaction();
+        dbSession.update(dataObject);
+        dbSession.getTransaction().commit();
+        dbSession.close();
+    }
 	
 }

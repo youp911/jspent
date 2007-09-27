@@ -7,15 +7,16 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import org.ranjith.jspent.JSpent;
+import org.ranjith.jspent.data.Expense;
 
 /**
  * @author ranjith
  *
  */
 public class ModifyActionListener implements ActionListener {
-
-	public ModifyActionListener(JSpent testFrame) {
-		// TODO Auto-generated constructor stub
+    private JSpent application;
+	public ModifyActionListener(JSpent app) {
+	    application = app;
 	}
 
 	/* (non-Javadoc)
@@ -23,8 +24,9 @@ public class ModifyActionListener implements ActionListener {
 	 */
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		// TODO Auto-generated method stub
-
+	    if(application.getCurrentContext().equals(JSpent.EXPENSES)) {
+	        application.showExpenseForm((Expense) application.getSelectedRowObject());
+	    }
 	}
 
 }

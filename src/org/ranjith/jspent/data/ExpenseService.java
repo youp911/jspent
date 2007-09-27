@@ -47,4 +47,7 @@ public class ExpenseService {
     public static void delete(Expense expenseObject) {
         HibernateUtil.delete(expenseObject);
     }
+    public static void update(Expense dataObject) {
+        HibernateUtil.update(dataObject);
+    }
 }

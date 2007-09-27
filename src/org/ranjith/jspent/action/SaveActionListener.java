@@ -13,8 +13,8 @@ import java.awt.event.ActionListener;
  *
  */
 public abstract class SaveActionListener implements ActionListener {
-	public static  int ADD_NEW_MODE = 0;
-	public static  int UPDATE_MODE = 1;
+	public static final int ADD_NEW_MODE = 0;
+	public static final int UPDATE_MODE = 1;
 	/* (non-Javadoc)
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
