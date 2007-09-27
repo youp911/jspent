@@ -12,6 +12,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import org.ranjith.jspent.CommonDataPanel;
+import org.ranjith.jspent.JSpent;
 import org.ranjith.jspent.data.Expense;
 import org.ranjith.jspent.data.ExpenseService;
 import org.ranjith.util.HibernateUtil;
@@ -26,6 +27,7 @@ public class SaveExpenseActionListener extends SaveActionListener{
 
 	private int mode = ADD_NEW_MODE;
 	private CommonDataPanel panel = null;
+    private JSpent application;
 	/**
 	 * Creates a listener for specified save mode.
 	 * Save mode can be either 
@@ -47,10 +49,12 @@ public class SaveExpenseActionListener extends SaveActionListener{
 	 * @param add_new_mode2
 	 * @param panel
 	 */
-	public SaveExpenseActionListener(int mode, CommonDataPanel panel) {
+	public SaveExpenseActionListener(int mode, CommonDataPanel panel, JSpent application) {
 		this.mode = mode;
 		this.panel = panel;
+		this.application = application;
 	}
+	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 	    try{
@@ -59,8 +63,17 @@ public class SaveExpenseActionListener extends SaveActionListener{
 	            SwingRUtil.showErrorDialog(errors, "Can't Save", panel);
 	            return;
 	        }
-	        ExpenseService.saveExpense((Expense) panel.getDataObject());
-	        panel.showAddNew();
+	        switch(mode) {
+	        case ADD_NEW_MODE:
+	            ExpenseService.saveExpense((Expense) panel.getDataObject());
+	            panel.showAddNew();	            
+	            break;
+	        case UPDATE_MODE:
+	            ExpenseService.update((Expense) panel.getDataObject());
+	            application.setCurrentContext(application.getCurrentContext());
+	            application.restoreUI();	            
+	            break;
+	        }
 	    }catch(Throwable t) {
 	        t.printStackTrace();
 	        JOptionPane.showMessageDialog(panel, "Error occured!");

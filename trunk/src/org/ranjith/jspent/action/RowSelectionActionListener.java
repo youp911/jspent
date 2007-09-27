@@ -24,15 +24,12 @@ public class RowSelectionActionListener implements ListSelectionListener {
      */
     @Override
     public void valueChanged(ListSelectionEvent listSelectionEvent) {
-        if(listSelectionEvent.getFirstIndex() > 0) {
+        System.out.println(listSelectionEvent.getFirstIndex() );
+        if(listSelectionEvent.getFirstIndex() >= 0) {
             application.setModfyToolBarButtonEnabled(true);
             application.setDeleteToolBarButtonEnabled(true);
         }
-        System.out.println(listSelectionEvent.getFirstIndex());
-        System.out.println(listSelectionEvent.getLastIndex());
-        System.out.println(listSelectionEvent.getValueIsAdjusting());
         ListSelectionModel lsm = (ListSelectionModel)listSelectionEvent.getSource();
-        System.out.println(lsm.isSelectionEmpty());
     }
 
 }

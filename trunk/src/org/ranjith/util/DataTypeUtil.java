@@ -43,6 +43,9 @@ public class DataTypeUtil {
 	 * @return date without time on it.
 	 */
 	public static Date getDateYYYYMMDD(Date date){
+	    if(date == null) {
+	        return null;
+	    }
 		 Calendar actualCalendar = Calendar.getInstance();
 		 actualCalendar.setTime(date);
 		 Calendar modifiedCalendar = new GregorianCalendar(actualCalendar.get(Calendar.YEAR),actualCalendar.get(Calendar.MONTH),actualCalendar.get(Calendar.DAY_OF_MONTH));

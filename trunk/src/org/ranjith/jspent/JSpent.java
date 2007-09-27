@@ -16,7 +16,6 @@ import java.util.Map;
 import javax.swing.DefaultListModel;
 import javax.swing.GroupLayout;
 import javax.swing.ImageIcon;
-import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -27,15 +26,18 @@ import javax.swing.JSplitPane;
 import javax.swing.JViewport;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import org.ranjith.jspent.action.AddNewActionListener;
 import org.ranjith.jspent.action.BackActionListener;
 import org.ranjith.jspent.action.DeleteActionListener;
 import org.ranjith.jspent.action.ModifyActionListener;
+import org.ranjith.jspent.action.OptionSelectedActionListener;
 import org.ranjith.jspent.action.RowSelectionActionListener;
 import org.ranjith.jspent.action.SaveExpenseActionListener;
 import org.ranjith.jspent.action.SavingsTypeListener;
+import org.ranjith.jspent.data.Expense;
 import org.ranjith.jspent.data.ExpenseService;
 import org.ranjith.plugin.PluginInfo;
 import org.ranjith.plugin.PluginManager;
@@ -52,6 +54,8 @@ import org.ranjith.swing.SwingRConstants;
 import org.ranjith.swing.TestPanel;
 import org.ranjith.swing.ToolBarButton;
 
+import com.toedter.calendar.JMonthChooser;
+
 /*
  *  $Id:$
  */
@@ -60,12 +64,14 @@ public class JSpent extends JFrame {
     private JSplitPane splitPane;
     String[] cols = {"Type", "Sub Type","Date", "Amount Spent", "Notes"};
     String[] props = {"category","subCategory", "date", "amount","notes"};
-    ToolBarButton lb = new ToolBarButton(0);
-    ToolBarButton cb = new ToolBarButton(1);
-    ToolBarButton rb = new ToolBarButton(2);
+    ToolBarButton addButton = new ToolBarButton(0);
+    ToolBarButton modifyButton = new ToolBarButton(1);
+    ToolBarButton deleteButton = new ToolBarButton(2);
     private JList optionsList;
+    private JPanel filterPanel;
     private static Map savingsPluginMap = new HashMap(1);
     private static PluginManager pm = PluginManager.getInstance();
+    
     public static final String EXPENSES = "Expenses";
     public static final String INCOMES = "Incomes";
     public static final String SAVINGS = "Savings";
@@ -95,23 +101,27 @@ public class JSpent extends JFrame {
         SimpleGradientPanel topGradientPanel = new SimpleGradientPanel();
         GridBagLayout gridBagLayout = new GridBagLayout();
         topGradientPanel.setLayout(gridBagLayout);
+        
+        GlassToolBar toolBar = getToolBar();
+        
         GridBagConstraints gbConstraints = new GridBagConstraints();
-        
-        
-        GlassToolBar toolBar = getToolBar(gbConstraints);
+        gbConstraints.fill = GridBagConstraints.HORIZONTAL;
+        gbConstraints.gridx = 0;
+        gbConstraints.gridy = 0;
+        gbConstraints.weightx = 0.5;
+        gbConstraints.anchor = GridBagConstraints.PAGE_START;
         topGradientPanel.add(toolBar,gbConstraints);
         
-        JPanel filterPanel = new JPanel(new BorderLayout());
+        filterPanel = new JPanel(new BorderLayout());
         filterPanel.setOpaque(false);
         
         EmbossedLabel msgLabel = new EmbossedLabel("Showing records for the month of :",EmbossedLabel.TRAILING);
         msgLabel.setFont(SwingRConstants.DEFAULT_TEXT_FONT);
         filterPanel.add(msgLabel,BorderLayout.CENTER);
         
-        JComboBox currentMonthCombo = new JComboBox(new String[]{"September, 2007"});
-        currentMonthCombo.setOpaque(false);
-        TestPanel dateFilter = new TestPanel();
-        filterPanel.add(dateFilter,BorderLayout.LINE_END);
+        JMonthChooser monthChooser = new JMonthChooser();
+        monthChooser.setBorder(new EmptyBorder(0,0,0,0));
+        filterPanel.add(monthChooser,BorderLayout.LINE_END);
         
         gbConstraints.fill = GridBagConstraints.HORIZONTAL;
         gbConstraints.gridx = 2;
@@ -122,30 +132,25 @@ public class JSpent extends JFrame {
         return topGradientPanel;
     }
 
-    private GlassToolBar getToolBar(GridBagConstraints gbConstraints) {
+    private GlassToolBar getToolBar() {
         GlassToolBar toolBar = new GlassToolBar();
         URL resource = JSpent.class.getResource("icons/add.png");
-        lb.setIcon(new ImageIcon(resource,"Add New"));
-        lb.addActionListener(new AddNewActionListener(this));
+        addButton.setIcon(new ImageIcon(resource,"Add New"));
+        addButton.addActionListener(new AddNewActionListener(this));
         resource = JSpent.class.getResource("icons/application_form_add.png");
-        cb.setIcon(new ImageIcon(resource,"Modify"));
-        cb.addActionListener(new ModifyActionListener(this));
+        modifyButton.setIcon(new ImageIcon(resource,"Modify"));
+        modifyButton.addActionListener(new ModifyActionListener(this));
         resource = JSpent.class.getResource("icons/delete.png");
-        rb.setIcon(new ImageIcon(resource,"Delete"));
-        rb.addActionListener(new DeleteActionListener(this));
+        deleteButton.setIcon(new ImageIcon(resource,"Delete"));
+        deleteButton.addActionListener(new DeleteActionListener(this));
         //Not enabled on start up. Enable only when table row is selected.
-        cb.setEnabled(false);
-        rb.setEnabled(false);
+        modifyButton.setEnabled(false);
+        deleteButton.setEnabled(false);
         
-        toolBar.add(lb);
-        toolBar.add(cb);
-        toolBar.add(rb);
+        toolBar.add(addButton);
+        toolBar.add(modifyButton);
+        toolBar.add(deleteButton);
         
-        gbConstraints.fill = GridBagConstraints.HORIZONTAL;
-        gbConstraints.gridx = 0;
-        gbConstraints.gridy = 0;
-        gbConstraints.weightx = 0.5;
-        gbConstraints.anchor = GridBagConstraints.PAGE_START;
         return toolBar;
     }
 
@@ -174,7 +179,6 @@ public class JSpent extends JFrame {
         table.setSelectionBackground(SwingRConstants.DEFAULT_SELECTION_BACKGROUND_COLOR);
         table.setSelectionForeground(Color.WHITE);
         table.getTableHeader().setReorderingAllowed(false);
-        table.addFocusListener(new LostFocusListener(this));
         ListSelectionModel selectionModel = table.getSelectionModel();
         selectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         selectionModel.addListSelectionListener(new RowSelectionActionListener(this));
@@ -189,11 +193,18 @@ public class JSpent extends JFrame {
 
 
 	private Component getBottomPanel() {
+	    GridBagLayout gridBagLayout = new GridBagLayout();
         SimpleGradientPanel bottomPanel = new SimpleGradientPanel();       
-        bottomPanel.setLayout(new BorderLayout());
-        JLabel totalLabel = new JLabel("Total Expenses Amount $ " + table.sum(3));
+        bottomPanel.setLayout(gridBagLayout);
+        GridBagConstraints gbConstraints = new GridBagConstraints();
+        gbConstraints.fill = GridBagConstraints.HORIZONTAL;
+        gbConstraints.gridx = 1;
+        gbConstraints.gridy = 0;
+        gbConstraints.anchor = GridBagConstraints.CENTER;
+
+        EmbossedLabel totalLabel = new EmbossedLabel("Total Expenses Amount $ " + NumberFormat.getCurrencyInstance().format(table.sum(3)) + " ");
         totalLabel.setFont(SwingRConstants.DEFAULT_TEXT_FONT);
-        bottomPanel.add(totalLabel, BorderLayout.EAST);
+        bottomPanel.add(totalLabel,gbConstraints);
         return bottomPanel;
     }
 
@@ -218,9 +229,9 @@ public class JSpent extends JFrame {
         listModel.addElement(new IconListItem(new ImageIcon(resource),SUMMARY));
 
         optionsList.setBackground(SwingRConstants.PANEL_DEEP_BACKGROUND_COLOR);
+        optionsList.addListSelectionListener(new OptionSelectedActionListener());
         //Start with expense always selected.
         optionsList.setSelectedIndex(0);
-        
         JScrollPane categoryScrollPane = new JScrollPane(optionsList);
         JViewport colHeaderViewPort = new JViewport();
         colHeaderViewPort.setView(getHeader());
@@ -243,22 +254,38 @@ public class JSpent extends JFrame {
         return new ExpenseService().getExpenses(Calendar.getInstance().get(Calendar.MONTH)+1);
     }
     
-    private void prepareUIForAdd(ToolBarButton clickedButton) {
-    	clickedButton.setEnabled(false);
+    private void prepareUIForForm() {
+    	setAddToolBarButtonEnabled(false);
+    	setModfyToolBarButtonEnabled(false);
+    	setDeleteToolBarButtonEnabled(false);
+    	filterPanel.setVisible(false);
     	optionsList.setEnabled(false);
     }
     
-    public void showAddExpense() {
-    	prepareUIForAdd(lb);
-    	ExpenseFormPanel panel = new ExpenseFormPanel();
-    	splitPane.setRightComponent(panel);
+    /**
+     * This needs to be called when we have to add a new
+     * expense data.
+     */
+    public void showExpenseForm() {
+        showExpenseForm(null);
+    }
+
+    /**
+     * This needs to be called when we have to edit an
+     * expense data.
+     */
+    public void showExpenseForm(Expense expense) {
+        prepareUIForForm();
+        ExpenseFormPanel panel = expense == null? new ExpenseFormPanel():new ExpenseFormPanel(expense);
+        splitPane.setRightComponent(panel);
         splitPane.setDividerLocation(160);
         panel.setDoneButtonListener(new BackActionListener(this,panel));
-    	panel.setSaveButtonListener(new SaveExpenseActionListener(SaveExpenseActionListener.ADD_NEW_MODE,panel));
-    }
+        int mode = (expense == null?SaveExpenseActionListener.ADD_NEW_MODE : SaveExpenseActionListener.UPDATE_MODE);
+        panel.setSaveButtonListener(new SaveExpenseActionListener(mode,panel,this));
+    }    
     
     public void showAddSavings() {
-    	prepareUIForAdd(lb);
+    	prepareUIForForm();
         addSavingsForm = new SimpleGradientPanel(new Color(0x505866),new Color(0x7B8596));
 
         JPanel typeComboPanel = new JPanel();
@@ -300,6 +327,12 @@ public class JSpent extends JFrame {
     }
     public void restoreUI() {
         splitPane.setRightComponent(getTablePane(getExpenses(), cols, props));
+        if(table.getSelectedRow() < 0) {
+            setModfyToolBarButtonEnabled(false);
+            setDeleteToolBarButtonEnabled(false);
+        }
+        setAddToolBarButtonEnabled(true);
+        filterPanel.setVisible(true);
         splitPane.setDividerLocation(160);
         optionsList.setEnabled(true);
     }
@@ -310,7 +343,6 @@ public class JSpent extends JFrame {
        
         buttonPanel.setLayout(new BorderLayout());
         buttonPanel.add(new RoundButton("TEsting out"),BorderLayout.NORTH);
-    
         
         addSavingsForm.add(centerPanel,BorderLayout.CENTER);
         addSavingsForm.updateUI();
@@ -324,12 +356,10 @@ public class JSpent extends JFrame {
     public void setCurrentContext(String context) {
     	if(context.equals(EXPENSES)) {
     	  this.optionsList.setSelectedIndex(0);
-    	  lb.setEnabled(true);
     	}else if(context.equals(INCOMES)) {
     		this.optionsList.setSelectedIndex(1);	
     	}else if(context.equals(SAVINGS)) {
     		this.optionsList.setSelectedIndex(2);	
-    		 lb.setEnabled(true);
     	}else if(context.equals(LIABILITIES)) {
     		this.optionsList.setSelectedIndex(3);		
     	}else if(context.equals(SUMMARY)){
@@ -338,17 +368,26 @@ public class JSpent extends JFrame {
     }
     
     public void setModfyToolBarButtonEnabled(boolean isEnabled) {
-        this.cb.setEnabled(isEnabled);
+        this.modifyButton.setEnabled(isEnabled);
     }
-
+    
+    public void setAddToolBarButtonEnabled(boolean isEnabled) {
+        this.addButton.setEnabled(isEnabled);
+    }
+    
     public void setDeleteToolBarButtonEnabled(boolean isEnabled) {
-        this.rb.setEnabled(isEnabled);
+        this.deleteButton.setEnabled(isEnabled);
     }
 
     public Object getSelectedRowObject() {
         QTableModel model = (QTableModel) table.getModel();
         return model.getRows().get(table.getSelectedRow());
     } 
+    
+    public void clearTableSelection() {
+        table.getSelectionModel().clearSelection();
+    } 
+
     
     /**
      * Removes selected row from the table. But this would not make 

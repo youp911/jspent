@@ -32,9 +32,9 @@ public class BackActionListener implements ActionListener {
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     @Override
-    public void actionPerformed(ActionEvent arg0) {
+    public void actionPerformed(ActionEvent event) {
         if(panel != null && panel.isDirty()) {
-        	Object[] options = {"Cancel","Don't Save","Save"};
+        	Object[] options = {"Save","Don't Save","Cancel"};
         	int response = JOptionPane.showOptionDialog(this.testFrame,
         		    "Would you like some green eggs to go "
         		    + "with that ham?",
@@ -48,7 +48,7 @@ public class BackActionListener implements ActionListener {
         		return;
         	}
         	if(response == JOptionPane.YES_OPTION) {
-        		panel.fireSaveButtonPressed(arg0);
+        		panel.fireSaveButtonPressed(event);
         	}
         	
         }
