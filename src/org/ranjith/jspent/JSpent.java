@@ -174,6 +174,7 @@ public class JSpent extends JFrame {
         table.setSelectionBackground(SwingRConstants.DEFAULT_SELECTION_BACKGROUND_COLOR);
         table.setSelectionForeground(Color.WHITE);
         table.getTableHeader().setReorderingAllowed(false);
+        table.addFocusListener(new LostFocusListener(this));
         ListSelectionModel selectionModel = table.getSelectionModel();
         selectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         selectionModel.addListSelectionListener(new RowSelectionActionListener(this));
@@ -336,12 +337,12 @@ public class JSpent extends JFrame {
     	}
     }
     
-    public void enableModifyToolBarButton() {
-        this.cb.setEnabled(true);
+    public void setModfyToolBarButtonEnabled(boolean isEnabled) {
+        this.cb.setEnabled(isEnabled);
     }
 
-    public void enableDeleteToolBarButton() {
-        this.rb.setEnabled(true);
+    public void setDeleteToolBarButtonEnabled(boolean isEnabled) {
+        this.rb.setEnabled(isEnabled);
     }
 
     public Object getSelectedRowObject() {
