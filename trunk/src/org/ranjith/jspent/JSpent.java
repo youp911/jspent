@@ -114,12 +114,12 @@ public class JSpent extends JFrame {
         
         EmbossedLabel msgLabel = new EmbossedLabel("Expenses for :",EmbossedLabel.TRAILING);
         msgLabel.setFont(SwingRConstants.DEFAULT_TEXT_FONT);
-        filterPanel.add(msgLabel,BorderLayout.CENTER);
         
         MonthSpinnerPanel monthSpinner = new MonthSpinnerPanel();
         monthSpinner.setOpaque(false);
         monthSpinner.setFont(SwingRConstants.DEFAULT_TEXT_FONT);
-        //monthChooser.setBorder(new EmptyBorder(0,0,0,0));
+        
+        filterPanel.add(msgLabel,BorderLayout.CENTER);
         filterPanel.add(monthSpinner,BorderLayout.LINE_END);
         
         gbConstraints.fill = GridBagConstraints.HORIZONTAL;
