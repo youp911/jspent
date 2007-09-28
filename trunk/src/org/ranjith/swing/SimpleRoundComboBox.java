@@ -13,31 +13,31 @@ import javax.swing.plaf.ComponentUI;
  * @author XR1CTSO
  *
  */
-public class RoundButtonComboBox extends JComboBox {
+public class SimpleRoundComboBox extends JComboBox {
 
-    public RoundButtonComboBox() {
+    public SimpleRoundComboBox() {
         super();
         buildUI();
     }
 
-    public RoundButtonComboBox(ComboBoxModel model) {
+    public SimpleRoundComboBox(ComboBoxModel model) {
         super(model);
         buildUI();
     }
 
-    public RoundButtonComboBox(Object[] items) {
+    public SimpleRoundComboBox(Object[] items) {
         super(items);
         buildUI();
     }
 
-    public RoundButtonComboBox(Vector<?> items) {
+    public SimpleRoundComboBox(Vector<?> items) {
         super(items);
         buildUI();
     }
 
     private void buildUI() {
         //getUI().uninstallUI(this);
-        setUI(BlackComboBoxUI.INSTACE);
+        setUI(SimpleRoundComboBoxUI.INSTACE);
     }
     
 }

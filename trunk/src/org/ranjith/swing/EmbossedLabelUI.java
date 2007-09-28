@@ -29,7 +29,7 @@ public class EmbossedLabelUI extends BasicLabelUI {
         g2.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
         g2.setColor(Color.WHITE);
         BasicGraphicsUtils.drawString(g2, s, 0, textX, textY+1);
-        g2.setColor(SwingRConstants.EMBOSS_FOREGROUND_COLOR);
+        g2.setColor(l.getForeground());
         BasicGraphicsUtils.drawString(g2, s, 0, textX, textY);
 		g2.dispose();
 	}

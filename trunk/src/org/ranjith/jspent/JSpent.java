@@ -26,7 +26,6 @@ import javax.swing.JSplitPane;
 import javax.swing.JViewport;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
-import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import org.ranjith.jspent.action.AddNewActionListener;
@@ -45,16 +44,14 @@ import org.ranjith.swing.EmbossedLabel;
 import org.ranjith.swing.GlassToolBar;
 import org.ranjith.swing.IconLabelListCellRenderer;
 import org.ranjith.swing.IconListItem;
+import org.ranjith.swing.MonthSpinnerPanel;
 import org.ranjith.swing.QTable;
 import org.ranjith.swing.QTableModel;
 import org.ranjith.swing.RoundButton;
-import org.ranjith.swing.RoundButtonComboBox;
+import org.ranjith.swing.SimpleRoundComboBox;
 import org.ranjith.swing.SimpleGradientPanel;
 import org.ranjith.swing.SwingRConstants;
-import org.ranjith.swing.TestPanel;
 import org.ranjith.swing.ToolBarButton;
-
-import com.toedter.calendar.JMonthChooser;
 
 /*
  *  $Id:$
@@ -115,13 +112,15 @@ public class JSpent extends JFrame {
         filterPanel = new JPanel(new BorderLayout());
         filterPanel.setOpaque(false);
         
-        EmbossedLabel msgLabel = new EmbossedLabel("Showing records for the month of :",EmbossedLabel.TRAILING);
+        EmbossedLabel msgLabel = new EmbossedLabel("Expenses for :",EmbossedLabel.TRAILING);
         msgLabel.setFont(SwingRConstants.DEFAULT_TEXT_FONT);
         filterPanel.add(msgLabel,BorderLayout.CENTER);
         
-        JMonthChooser monthChooser = new JMonthChooser();
-        monthChooser.setBorder(new EmptyBorder(0,0,0,0));
-        filterPanel.add(monthChooser,BorderLayout.LINE_END);
+        MonthSpinnerPanel monthSpinner = new MonthSpinnerPanel();
+        monthSpinner.setOpaque(false);
+        monthSpinner.setFont(SwingRConstants.DEFAULT_TEXT_FONT);
+        //monthChooser.setBorder(new EmptyBorder(0,0,0,0));
+        filterPanel.add(monthSpinner,BorderLayout.LINE_END);
         
         gbConstraints.fill = GridBagConstraints.HORIZONTAL;
         gbConstraints.gridx = 2;
@@ -244,6 +243,7 @@ public class JSpent extends JFrame {
 
     private Component getHeader() {
         EmbossedLabel label = new EmbossedLabel("CATEGORY");
+        label.setForeground(new Color(0x505D6D));
         label.setFont(SwingRConstants.DEFAULT_HEADER_FONT);
         label.setOpaque(true);
         label.setBackground(SwingRConstants.PANEL_DEEP_BACKGROUND_COLOR);
@@ -308,14 +308,15 @@ public class JSpent extends JFrame {
         typeComboPanel.add(label1);
         List pluginList = pm.getPluginInfoList(PluginManager.PLUGIN_TYPE_SAVINGS_KEY);
         
-        RoundButtonComboBox savingsTypeCombo = new RoundButtonComboBox();
+        SimpleRoundComboBox savingsTypeCombo = new SimpleRoundComboBox();
         savingsTypeCombo.addItem("");
+        savingsTypeCombo.setFont(SwingRConstants.DEFAULT_TEXT_FONT);
         for (Iterator iterator = pluginList.iterator(); iterator.hasNext();) {
             PluginInfo plugin = (PluginInfo) iterator.next();
             savingsTypeCombo.addItem(plugin);
         }        
         
-        savingsTypeCombo.addActionListener(new SavingsTypeListener(this,pluginList));
+        //savingsTypeCombo.addActionListener(new SavingsTypeListener(this,pluginList));
         
         typeComboPanel.add(savingsTypeCombo);
         RoundButton cancelButton = new RoundButton("Cancel");
