@@ -202,7 +202,7 @@ public class JSpent extends JFrame {
         gbConstraints.gridy = 0;
         gbConstraints.anchor = GridBagConstraints.CENTER;
 
-        EmbossedLabel totalLabel = new EmbossedLabel("Total Expenses Amount $ " + NumberFormat.getCurrencyInstance().format(table.sum(3)) + " ");
+        EmbossedLabel totalLabel = new EmbossedLabel("Total Expenses " + NumberFormat.getCurrencyInstance().format(table.sum(3)) + " ");
         totalLabel.setFont(SwingRConstants.DEFAULT_TEXT_FONT);
         bottomPanel.add(totalLabel,gbConstraints);
         return bottomPanel;
