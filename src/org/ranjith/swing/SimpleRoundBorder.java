@@ -26,7 +26,7 @@ public class SimpleRoundBorder extends AbstractBorder {
         g2d.setColor(Color.GRAY);
         
         //dirty hack to make the round rect proper.
-        g2d.drawRoundRect(x, y, width-1, height-3, 30, 30);
+        g2d.drawRoundRect(x, y, width-1, height-3, 20, 20);
         // g2d.dispose();
     }
 
