@@ -25,13 +25,13 @@ import javax.swing.plaf.basic.BasicButtonUI;
  */
 public class RoundButtonUI extends BasicButtonUI{
     private static final RoundButtonUI INSTANCE = new RoundButtonUI();
+    public static final int ARC = 20;
     public static ComponentUI createUI(JComponent b) {
         return INSTANCE;
     }  
     protected Color getSelectColor() {
         return new Color(183, 234, 98);
     }
-
    public void paint(Graphics g, JComponent c) {
 
 		AbstractButton vButton = (AbstractButton) c;
@@ -61,7 +61,6 @@ public class RoundButtonUI extends BasicButtonUI{
     }    
     
     private void paintButtonBody(Graphics2D g2,AbstractButton button, int x, int y, int width, int height, boolean isPressed, boolean isRollover, boolean isSelected) {
-        int arc = 30;
         Paint oldPaint = g2.getPaint();
         //set color
         g2.setColor(new Color(0,0,0,220));
@@ -75,7 +74,7 @@ public class RoundButtonUI extends BasicButtonUI{
         	g2.setPaint(new GradientPaint(x,y,Color.BLACK,x,height,Color.LIGHT_GRAY));
         }
         	//g2.fillRect(0, 0, getWidth(), getHeight());
-        g2.fillRoundRect(1,1,width-3,height-3,arc,arc);
+        g2.fillRoundRect(1,1,width-3,height-3,ARC,ARC);
         g2.setPaint(oldPaint);
         paintIcon(g2, button, isRollover,isSelected);
     }
@@ -124,7 +123,7 @@ public class RoundButtonUI extends BasicButtonUI{
     }    
     private void paintButtonBorder(Graphics2D g2,int x, int y, int width, int height, boolean isPressed, boolean isRollover, boolean isSelected) {
     	g2.setColor(Color.WHITE);
-    	g2.drawRoundRect(1,1,width-3,height-3,30,30);
+    	g2.drawRoundRect(1,1,width-3,height-3,ARC,ARC);
     }
     private void paintText( Graphics g, String text, Color color, int w, int h, boolean isPressed, boolean isRollover, boolean isSelected) {
         // String size

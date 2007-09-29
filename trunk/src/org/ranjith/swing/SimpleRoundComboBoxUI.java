@@ -24,7 +24,7 @@ public class SimpleRoundComboBoxUI extends BasicComboBoxUI {
         super.installDefaults();
 
         comboBox.setOpaque(false);
-        comboBox.setBorder(new SoftBevelBorder(BevelBorder.RAISED));
+        comboBox.setBorder(new SimpleRoundBorder());
     }
     
     protected JButton createArrowButton()
