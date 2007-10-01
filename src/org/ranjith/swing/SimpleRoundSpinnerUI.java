@@ -11,6 +11,7 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
+import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicSpinnerUI;
 
 /**
@@ -45,8 +46,7 @@ public class SimpleRoundSpinnerUI extends BasicSpinnerUI {
 	protected Component createNextButton() {
         java.net.URL vUrl = this.getClass().getResource("images/resultset_next_up.png");
         ImageIcon vIcon = new ImageIcon(vUrl);
-        nextButton = new JButton(vIcon);
-        nextButton.setUI(new BorderlessButtonUI());
+        nextButton = new ToolBarButton(2);
         nextButton.setIcon(vIcon);
         setButtonProperties(nextButton);
         return nextButton;		
@@ -56,10 +56,9 @@ public class SimpleRoundSpinnerUI extends BasicSpinnerUI {
 	protected Component createPreviousButton() {
         java.net.URL vUrl = this.getClass().getResource("images/resultset_previous_down.png");
         ImageIcon vIcon = new ImageIcon(vUrl);
-        previousButton = new JButton(vIcon);
-        setButtonProperties(previousButton);
-        previousButton.setUI(new BorderlessButtonUI());
+        previousButton = new ToolBarButton(2);
         previousButton.setIcon(vIcon);
+        setButtonProperties(previousButton);
         return previousButton;
 	}
 	
