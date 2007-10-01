@@ -22,10 +22,15 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSpinner;
 import javax.swing.JSplitPane;
 import javax.swing.JViewport;
 import javax.swing.ListSelectionModel;
+import javax.swing.SpinnerDateModel;
+import javax.swing.SpinnerListModel;
 import javax.swing.SwingConstants;
+import javax.swing.JSpinner.DefaultEditor;
+import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import org.ranjith.jspent.action.AddNewActionListener;
@@ -50,6 +55,7 @@ import org.ranjith.swing.QTableModel;
 import org.ranjith.swing.RoundButton;
 import org.ranjith.swing.SimpleRoundComboBox;
 import org.ranjith.swing.SimpleGradientPanel;
+import org.ranjith.swing.SimpleRoundSpinner;
 import org.ranjith.swing.SwingRConstants;
 import org.ranjith.swing.ToolBarButton;
 
@@ -79,14 +85,14 @@ public class JSpent extends JFrame {
     SimpleGradientPanel addSavingsForm;
  
     public JSpent() {
-        super("Test frame");
+        super("jSpent - WIP");
         List expenses = getExpenses();
         getContentPane().setLayout(new BorderLayout());
         JPanel rightPanel = getTablePane(expenses, cols, props);
         JScrollPane categoryScrollPane = getOptionsPane();
         splitPane = getSplitPane(rightPanel, categoryScrollPane);
         getContentPane().add(splitPane, BorderLayout.CENTER);
-        
+        getContentPane().add(getBottomPanel(),BorderLayout.PAGE_END);
         SimpleGradientPanel topGradientPanel = getTopPanel();
         getContentPane().add(topGradientPanel,BorderLayout.PAGE_START);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -108,28 +114,39 @@ public class JSpent extends JFrame {
         gbConstraints.weightx = 0.5;
         gbConstraints.anchor = GridBagConstraints.PAGE_START;
         topGradientPanel.add(toolBar,gbConstraints);
+        JPanel spinnerPanel = new JPanel();
+        spinnerPanel.setLayout(new BorderLayout());
+        spinnerPanel.setOpaque(false);
+        SimpleRoundSpinner monthYearSpinner = getMonthYearSpinner();
+        spinnerPanel.add(monthYearSpinner,BorderLayout.CENTER);
+        spinnerPanel.add(new JLabel(" "),BorderLayout.LINE_END); //spacer
+        EmbossedLabel msgLabel = new EmbossedLabel("Expenses for :",EmbossedLabel.TRAILING);
+        msgLabel.setFont(SwingRConstants.DEFAULT_TEXT_FONT);   
         
         filterPanel = new JPanel(new BorderLayout());
         filterPanel.setOpaque(false);
-        
-        EmbossedLabel msgLabel = new EmbossedLabel("Expenses for :",EmbossedLabel.TRAILING);
-        msgLabel.setFont(SwingRConstants.DEFAULT_TEXT_FONT);
-        
-        MonthSpinnerPanel monthSpinner = new MonthSpinnerPanel();
-        monthSpinner.setOpaque(false);
-        monthSpinner.setFont(SwingRConstants.DEFAULT_TEXT_FONT);
-        
         filterPanel.add(msgLabel,BorderLayout.CENTER);
-        filterPanel.add(monthSpinner,BorderLayout.LINE_END);
-        
+        filterPanel.add(spinnerPanel,BorderLayout.LINE_END);
         gbConstraints.fill = GridBagConstraints.HORIZONTAL;
         gbConstraints.gridx = 2;
         gbConstraints.gridy = 0;
         gbConstraints.anchor = GridBagConstraints.PAGE_END;
         topGradientPanel.add(filterPanel,gbConstraints);
-        
+        topGradientPanel.setBorder(SwingRConstants.EMPTY_BORDER);
         return topGradientPanel;
     }
+
+	private SimpleRoundSpinner getMonthYearSpinner() {
+		SpinnerDateModel dateModel = new SpinnerDateModel();
+        SimpleRoundSpinner monthYearSpinner = new SimpleRoundSpinner(dateModel);
+        JSpinner.DateEditor dateEditor = new JSpinner.DateEditor(monthYearSpinner,"MMMMM, yyyy");
+        monthYearSpinner.setEditor(dateEditor);
+        monthYearSpinner.setFont(SwingRConstants.DEFAULT_TEXT_FONT);
+        monthYearSpinner.setOpaque(false);
+        JSpinner.DefaultEditor editor = (DefaultEditor) monthYearSpinner.getEditor();
+        editor.getTextField().setEditable(false);
+		return monthYearSpinner;
+	}
 
     private GlassToolBar getToolBar() {
         GlassToolBar toolBar = new GlassToolBar();
@@ -159,7 +176,7 @@ public class JSpent extends JFrame {
         splitPane.setDividerLocation(160);
         splitPane.add(scrollPane, JSplitPane.RIGHT);
         splitPane.add(categoryScrollPane, JSplitPane.LEFT);
-
+        splitPane.setBorder(SwingRConstants.EMPTY_BORDER);
         return splitPane;
     }
 
@@ -171,8 +188,9 @@ public class JSpent extends JFrame {
         table.setPreferredWidth(2, 20);
         table.setCellRenderer(3, new CurrencyRenderer());
         table.setIsAlternateRowHightLighted(true);
+        table.setGridColor(SwingRConstants.TABLE_GRID_COLOR);
         //XXX
-        table.setBorder(null);
+        table.setBorder(SwingRConstants.EMPTY_BORDER);
         table.setFont(SwingRConstants.DEFAULT_TEXT_FONT);
         table.getTableHeader().setFont(SwingRConstants.DEFAULT_HEADER_FONT);
         table.setSelectionBackground(SwingRConstants.DEFAULT_SELECTION_BACKGROUND_COLOR);
@@ -184,9 +202,10 @@ public class JSpent extends JFrame {
         table.setSelectionModel(selectionModel);
         JScrollPane scrollPane = new JScrollPane(table);
         //XXX
-        scrollPane.setBorder(null);
+        scrollPane.setBorder(SwingRConstants.EMPTY_BORDER);
         rightPanel.add(scrollPane,BorderLayout.CENTER);
-        rightPanel.add(getBottomPanel(),BorderLayout.SOUTH);
+        //rightPanel.add(getBottomPanel(),BorderLayout.SOUTH);
+        rightPanel.setBorder(SwingRConstants.EMPTY_BORDER);
         return rightPanel;
     }
 
@@ -204,6 +223,7 @@ public class JSpent extends JFrame {
         EmbossedLabel totalLabel = new EmbossedLabel("Total Expenses " + NumberFormat.getCurrencyInstance().format(table.sum(3)) + " ");
         totalLabel.setFont(SwingRConstants.DEFAULT_TEXT_FONT);
         bottomPanel.add(totalLabel,gbConstraints);
+        bottomPanel.setBorder(SwingRConstants.EMPTY_BORDER);
         return bottomPanel;
     }
 
@@ -237,7 +257,7 @@ public class JSpent extends JFrame {
                 
         categoryScrollPane.setColumnHeader(colHeaderViewPort);
         //XXX
-        categoryScrollPane.setBorder(null);
+        categoryScrollPane.setBorder(SwingRConstants.EMPTY_BORDER);
         return categoryScrollPane;
     }
 
