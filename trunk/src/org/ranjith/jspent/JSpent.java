@@ -143,6 +143,7 @@ public class JSpent extends JFrame {
         monthYearSpinner.setEditor(dateEditor);
         monthYearSpinner.setFont(SwingRConstants.DEFAULT_TEXT_FONT);
         monthYearSpinner.setOpaque(false);
+        monthYearSpinner.addChangeListener(new MonthYearChangeActionListener(this));
         JSpinner.DefaultEditor editor = (DefaultEditor) monthYearSpinner.getEditor();
         editor.getTextField().setEditable(false);
 		return monthYearSpinner;
@@ -271,7 +272,11 @@ public class JSpent extends JFrame {
     }
 
     private List getExpenses() {
-        return new ExpenseService().getExpenses(Calendar.getInstance().get(Calendar.MONTH)+1);
+        return getExpenses(Calendar.getInstance().get(Calendar.MONTH)+1);
+    }
+    
+    private List getExpenses(int month) {
+        return new ExpenseService().getExpenses(month);
     }
     
     private void prepareUIForForm() {
@@ -408,8 +413,18 @@ public class JSpent extends JFrame {
     public void clearTableSelection() {
         table.getSelectionModel().clearSelection();
     } 
-
     
+    /**
+     * updates expense table display for given month
+     * @param month 1..12 indicating month
+     */
+    public void updateExpenseTableForMonth(int month) {
+        QTableModel model = (QTableModel)table.getModel();
+        model.setRows(getExpenses(month));
+        model.fireTableDataChanged();
+    }
+    
+
     /**
      * Removes selected row from the table. But this would not make 
      * changes to underlying datastore.
