@@ -15,6 +15,8 @@ import javax.swing.JViewport;
 import javax.swing.UIManager;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
 
 /**
  * @author ranjith
@@ -136,7 +138,8 @@ public class QTable extends JTable {
        getColumnModel().getColumn(columnIndex).setCellRenderer(renderer); 
     }
     //--------------------------------------------------------------------------
-    // Following code is for painting alternate row hightlight
+    // Following code is for painting alternate row hightlight and column 
+    // grid for all rows.
     //--------------------------------------------------------------------------
     /**
      * Paints empty rows too, after letting the UI delegate do
@@ -145,7 +148,26 @@ public class QTable extends JTable {
     public void paint(Graphics g) {
         super.paint(g);
         paintEmptyRows(g);
+		g.setColor(gridColor);
+		paintGridLines(g);
     }
+
+	private void paintGridLines(Graphics g) {
+		int x = 0;
+		Rectangle clip = g.getClipBounds();
+		TableColumnModel vModel = getColumnModel();
+		//vModel.getColumnCount()-1 is a dirty hack to avoid
+		//drawing line on last column's end.
+		for (int i = 0; i < vModel.getColumnCount()-1; i++)
+		{
+			TableColumn vColumn = vModel.getColumn(i);
+			x += vColumn.getWidth();
+			if ((x >= clip.x) && (x <= clip.x + clip.width))
+			{
+				g.drawLine(x - 1, clip.y, x - 1, clip.y + clip.height);
+			}
+		}
+	}
 
     /**
      * Paints the backgrounds of the implied empty rows when the

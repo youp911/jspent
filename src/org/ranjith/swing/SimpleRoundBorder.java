@@ -26,16 +26,16 @@ public class SimpleRoundBorder extends AbstractBorder {
         g2d.setColor(Color.GRAY);
         
         //dirty hack to make the round rect proper.
-        g2d.drawRoundRect(x, y, width-1, height-3, 20, 20);
+        g2d.drawRoundRect(x, y, width-2, height-2, 20, 20);
         // g2d.dispose();
     }
 
     public Insets getBorderInsets(Component c) {
-        return new Insets(3, 3, 3, 3);
+        return new Insets(3, 6, 3, 3);
     }
 
     public Insets getBorderInsets(Component c, Insets insets) {
-        insets.left = insets.top = insets.right = insets.bottom = 3;
+    	insets.top = insets.left = insets.bottom = insets.right = 3;
         return insets;
     }
 
