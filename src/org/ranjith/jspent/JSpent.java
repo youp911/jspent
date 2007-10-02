@@ -15,6 +15,7 @@ import java.util.Map;
 
 import javax.swing.DefaultListModel;
 import javax.swing.GroupLayout;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
@@ -37,6 +38,7 @@ import org.ranjith.jspent.action.AddNewActionListener;
 import org.ranjith.jspent.action.BackActionListener;
 import org.ranjith.jspent.action.DeleteActionListener;
 import org.ranjith.jspent.action.ModifyActionListener;
+import org.ranjith.jspent.action.MonthYearChangeActionListener;
 import org.ranjith.jspent.action.OptionSelectedActionListener;
 import org.ranjith.jspent.action.RowSelectionActionListener;
 import org.ranjith.jspent.action.SaveExpenseActionListener;
@@ -80,9 +82,13 @@ public class JSpent extends JFrame {
     public static final String SAVINGS = "Savings";
     public static final String LIABILITIES = "Liabilities";
     public static final String SUMMARY = "Summary";
+    private static final Icon SMALL_OK_ICON = new ImageIcon(JSpent.class.getResource("icons/okIcon-sm.png"));
+	private static final Icon SMALL_WARN_ICON = new ImageIcon(JSpent.class.getResource("icons/warningIcon.png"));
+
     //savings form
     private JPanel centerPanel,buttonPanel;
     SimpleGradientPanel addSavingsForm;
+    EmbossedLabel totalLabel;
  
     public JSpent() {
         super("jSpent - WIP");
@@ -187,6 +193,7 @@ public class JSpent extends JFrame {
  
         table = new QTable(expenses, cols, props);
         table.setPreferredWidth(2, 20);
+        table.setCellRenderer(0, new CategoryRenderer());
         table.setCellRenderer(3, new CurrencyRenderer());
         table.setIsAlternateRowHightLighted(true);
         table.setGridColor(SwingRConstants.TABLE_GRID_COLOR);
@@ -220,13 +227,17 @@ public class JSpent extends JFrame {
         gbConstraints.gridx = 1;
         gbConstraints.gridy = 0;
         gbConstraints.anchor = GridBagConstraints.CENTER;
-
-        EmbossedLabel totalLabel = new EmbossedLabel("Total Expenses " + NumberFormat.getCurrencyInstance().format(table.sum(3)) + " ");
+        totalLabel = new EmbossedLabel("");
         totalLabel.setFont(SwingRConstants.DEFAULT_TEXT_FONT);
+        setTotal();
         bottomPanel.add(totalLabel,gbConstraints);
         bottomPanel.setBorder(SwingRConstants.EMPTY_BORDER);
         return bottomPanel;
     }
+	
+	public void setTotal() {
+		totalLabel.setText( "Total Expenses " + NumberFormat.getCurrencyInstance().format(table.sum(3)) + " ");
+	}
 
     private JScrollPane getOptionsPane() {
         DefaultListModel listModel = new DefaultListModel();
@@ -361,6 +372,7 @@ public class JSpent extends JFrame {
         filterPanel.setVisible(true);
         splitPane.setDividerLocation(160);
         optionsList.setEnabled(true);
+        setTotal();
     }
     
     public void setForm(JComponent component) {
@@ -454,8 +466,23 @@ public class JSpent extends JFrame {
             setText(format.format(amount));
         }
     }
+    //-------------------------------------------------------
+    class CategoryRenderer extends DefaultTableCellRenderer {
 
-
+		@Override
+        protected void setValue(Object value) {
+            if (value == null) {
+                value = new String();
+            }
+            String category = (String)value;
+            setText(category);
+            if(category.equals(ExpenseService.EXPENSE_CAT_MANDATORY)){
+            	setIcon(SMALL_OK_ICON);
+            }else if(category.equals(ExpenseService.EXPENSE_CAT_FLEXIBLE)){
+            	setIcon(SMALL_WARN_ICON);
+            }
+        }
+    }
 
 
 }
