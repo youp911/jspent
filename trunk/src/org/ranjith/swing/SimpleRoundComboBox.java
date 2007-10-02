@@ -10,7 +10,8 @@ import javax.swing.JComboBox;
 import javax.swing.plaf.ComponentUI;
 
 /**
- * @author XR1CTSO
+ * Combo box with a simple round border
+ * @author ranjith
  *
  */
 public class SimpleRoundComboBox extends JComboBox {

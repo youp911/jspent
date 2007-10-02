@@ -14,7 +14,8 @@ import org.ranjith.jspent.JSpent;
 import org.ranjith.swing.SimpleRoundSpinner;
 
 /**
- * @author XR1CTSO
+ * Month year value change handler.
+ * @author ranjith
  *
  */
 public class MonthYearChangeActionListener implements ChangeListener {
@@ -22,10 +23,9 @@ public class MonthYearChangeActionListener implements ChangeListener {
     public MonthYearChangeActionListener(JSpent application) {
         this.application = application;
     }
-    /*
-     * updates expesnses shown in current application.
-     *  (non-Javadoc)
-     * @see javax.swing.event.ChangeListener#stateChanged(javax.swing.event.ChangeEvent)
+    
+    /**
+     * Updates list of expenses shown in application.
      */
     @Override
     public void stateChanged(ChangeEvent event) {

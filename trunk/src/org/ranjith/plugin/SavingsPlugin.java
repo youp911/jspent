@@ -8,7 +8,8 @@ import java.util.Map;
 import javax.swing.JComponent;
 
 /**
- * @author XR1CTSO
+ * Plugin for Savings
+ * @author ranjith
  *
  */
 public interface SavingsPlugin extends Plugin{

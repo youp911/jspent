@@ -9,7 +9,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 /**
- * @author XR1CTSO
+ * Database utility class.
+ * Will add an abstraction layer above database.
+ * @author ranjith
  *
  */
 public class DBUtil {

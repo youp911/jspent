@@ -13,6 +13,7 @@ import java.awt.RenderingHints;
 import javax.swing.border.AbstractBorder;
 
 /**
+ * A simple round border
  * @author ranjith
  * 
  */

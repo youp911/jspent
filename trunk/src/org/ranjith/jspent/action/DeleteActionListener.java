@@ -13,6 +13,7 @@ import org.ranjith.jspent.data.Expense;
 import org.ranjith.jspent.data.ExpenseService;
 
 /**
+ * Action handler for delete command from toolbar(or elsewhere)
  * @author ranjith
  *
  */
@@ -22,8 +23,8 @@ public class DeleteActionListener implements ActionListener {
 	    this.application = testFrame;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	/**
+	 * Prompt and then delete on YES
 	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {

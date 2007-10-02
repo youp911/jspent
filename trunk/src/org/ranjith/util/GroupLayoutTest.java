@@ -9,6 +9,12 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+/**
+ * Test calss for creating data forms.
+ * Not to be used anywhere as it is.
+ * @author ranjith
+ *
+ */
 public class GroupLayoutTest extends JFrame {
     JLabel firstNameLabel = new JLabel("First Name :");
     JLabel lastNameLabel = new JLabel("Lastt Name :");

@@ -5,6 +5,12 @@ import java.awt.Font;
 
 import javax.swing.border.EmptyBorder;
 
+/**
+ * Universal constants for swing looks and delegates in
+ * org.ranjith.swing package.
+ * @author ranjith
+ *
+ */
 public class SwingRConstants {
 	public static final Color ALTERNATE_ROW_COLOR = new Color(0xEDF3FE);
 	public static final Color PANEL_DEEP_BACKGROUND_COLOR = new Color(0xCBD1DC);

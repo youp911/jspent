@@ -6,6 +6,11 @@ import java.util.List;
 
 import javax.swing.JOptionPane;
 
+/**
+ * A local swing utilities class
+ * @author ranjith
+ *
+ */
 public class SwingRUtil {
 
     public static void showErrorDialog(List errorStrigList, String title,

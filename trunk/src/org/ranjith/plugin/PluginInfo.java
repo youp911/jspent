@@ -4,7 +4,8 @@
 package org.ranjith.plugin;
 
 /**
- * @author XR1CTSO
+ * A Plugin meta-data class.
+ * @author ranjith
  *
  */
 public class PluginInfo {

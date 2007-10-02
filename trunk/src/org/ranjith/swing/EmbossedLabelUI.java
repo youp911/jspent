@@ -10,10 +10,9 @@ import javax.swing.plaf.basic.BasicGraphicsUtils;
 import javax.swing.plaf.basic.BasicLabelUI;
 
 /**
- * 
- * @author XR1CTSO
- * A simple UI implementation that renders an 
- * embossed text. Only enabled text is implemented as of now.
+ * A minimal UI implementation that renders an 
+ * embossed text. Only enabled text is implemented as of now. 
+ * @author ranjith
  */
 public class EmbossedLabelUI extends BasicLabelUI {
 	static {
@@ -22,6 +21,10 @@ public class EmbossedLabelUI extends BasicLabelUI {
 	@Override
 	protected void paintEnabledText(JLabel l, Graphics g, String s, int textX,
 			int textY) {
+	    //an effect of embossed text is created by:
+	    //draw the text in white with a little Y offset
+	    //then draw the text in original foreground color.
+
         Graphics2D g2 = (Graphics2D)g.create();
 
         g2.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);

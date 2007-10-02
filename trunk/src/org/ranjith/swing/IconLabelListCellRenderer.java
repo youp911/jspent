@@ -21,10 +21,10 @@ import javax.swing.JPanel;
 import javax.swing.ListCellRenderer;
 
 /**
- * @author XR1CTSO
  * A list cell renderer with icon and text on it.
  * The focuse/selection color behavior tries to mimic
  * the left side list seen in Apple's iTunes UI.
+ * @author ranjith
  */
 public class IconLabelListCellRenderer implements ListCellRenderer {
    private int padding = 0;

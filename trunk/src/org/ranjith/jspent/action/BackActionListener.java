@@ -12,9 +12,9 @@ import org.ranjith.jspent.CommonDataPanel;
 import org.ranjith.jspent.JSpent;
 
 /**
- * @author ranjith
  * Takes the user back to application screen.
  * With setting context back to where it was.
+ * @author ranjith
  */
 public class BackActionListener implements ActionListener {
     private JSpent testFrame;
@@ -28,8 +28,9 @@ public class BackActionListener implements ActionListener {
         this.panel = panel;
     }
 
-    /* (non-Javadoc)
-     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+    /**
+     * Checks if the form is 'dirty' if so, prompts to save/cancel/don't save.
+     * Otherwise restores main application UI.
      */
     @Override
     public void actionPerformed(ActionEvent event) {

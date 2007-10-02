@@ -16,6 +16,7 @@ import org.ranjith.plugin.PluginInfo;
 import org.ranjith.plugin.SavingsPlugin;
 
 /**
+ * An action listener to process selected "Savings" type.
  * @author ranjith
  * 
  */
@@ -28,10 +29,10 @@ public class SavingsTypeListener implements ActionListener {
         this.pluginList = pluginList;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+    /**
+     * When a savings type is chosen, get the UI to add the saving
+     * from plugin list.
+     * @param e
      */
     @Override
     public void actionPerformed(ActionEvent e) {

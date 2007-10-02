@@ -17,6 +17,7 @@ import org.hibernate.cfg.Configuration;
 
 /**
  * A utility class to use Hibernate session.
+ * TODO: Error handling.
  * @author ranjith
  *
  */
@@ -26,6 +27,10 @@ public class HibernateUtil {
 	static {
 		sessionFactory = new Configuration().configure().buildSessionFactory();
 	}
+	/**
+	 * Persist given data object to database
+	 * @param dataObject
+	 */
 	public static void save(Object dataObject) {
 		Session dbSession = sessionFactory.openSession();
 		dbSession.beginTransaction();
@@ -34,6 +39,13 @@ public class HibernateUtil {
 		dbSession.close();
 	}
 	
+	/**
+	 * Retrieve data bases on specified query and parameter map.
+	 * 
+	 * @param ql hibernate HQL string
+	 * @param paramMap map with query parameter key and value.
+	 * @return
+	 */
 	public static List getData(String ql,Map paramMap) {
 	    List dataList  = new ArrayList();
 	    Session dbSession = sessionFactory.openSession();
@@ -47,6 +59,10 @@ public class HibernateUtil {
 	    return dataList;
 	}
 	
+	/**
+	 * Delete given data object from database.
+	 * @param dataObject
+	 */
     public static void delete(Object dataObject) {
         Session dbSession = sessionFactory.openSession();
         dbSession.beginTransaction();
@@ -55,6 +71,10 @@ public class HibernateUtil {
         dbSession.close();
     }
     
+    /**
+     * Modify given data object in database.
+     * @param dataObject
+     */
     public static void update(Object dataObject) {
         Session dbSession = sessionFactory.openSession();
         dbSession.beginTransaction();

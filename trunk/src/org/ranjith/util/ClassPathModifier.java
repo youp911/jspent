@@ -9,11 +9,11 @@ import java.net.URL;
 import java.net.URLClassLoader;
 
 /**
- * @author ranjith
  * This method is heavily based on a protected method in URLClassLoader,
  * which is accessed by reflection. This might fail at some point. Then,
  * one must use a custom class loader to load classes. 
  * This is based on posts on java sun forum.
+ * @author ranjith
  */
 public class ClassPathModifier {
 	private static final Class[] parameters = new Class[]{URL.class};

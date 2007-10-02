@@ -10,6 +10,7 @@ import javax.swing.event.ListSelectionListener;
 import org.ranjith.jspent.JSpent;
 
 /**
+ * Handler for row selection event.
  * @author ranjith
  *
  */
@@ -19,8 +20,9 @@ public class RowSelectionActionListener implements ListSelectionListener {
         application = spent;
     }
 
-    /* (non-Javadoc)
-     * @see javax.swing.event.ListSelectionListener#valueChanged(javax.swing.event.ListSelectionEvent)
+    /**
+     * If a row is selected, enable the modify and delete toolbar buttons
+     * @param listSelectionEvent
      */
     @Override
     public void valueChanged(ListSelectionEvent listSelectionEvent) {

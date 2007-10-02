@@ -7,7 +7,8 @@ import javax.swing.JToolBar;
 import javax.swing.border.EmptyBorder;
 
 /**
- * @author XR1CTSO
+ * A transparent toolbar
+ * @author ranjith
  *
  */
 public class GlassToolBar extends JToolBar {

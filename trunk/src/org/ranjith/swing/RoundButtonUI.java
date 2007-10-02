@@ -20,8 +20,8 @@ import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicButtonUI;
 
 /**
- *
- * @author XR1CTSO
+ * A UI delegate for round button/ 
+ * @author ranjith
  */
 public class RoundButtonUI extends BasicButtonUI{
     private static final RoundButtonUI INSTANCE = new RoundButtonUI();
