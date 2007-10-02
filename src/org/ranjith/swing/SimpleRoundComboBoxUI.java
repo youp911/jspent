@@ -14,7 +14,7 @@ import javax.swing.border.SoftBevelBorder;
 import javax.swing.plaf.basic.BasicComboBoxUI;
 
 /**
- * @author XR1CTSO
+ * @author ranjith
  *
  */
 public class SimpleRoundComboBoxUI extends BasicComboBoxUI {

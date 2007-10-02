@@ -62,6 +62,7 @@ import org.ranjith.swing.SwingRConstants;
 import org.ranjith.swing.ToolBarButton;
 
 /*
+ * Main application class.
  *  $Id:$
  */
 public class JSpent extends JFrame {
@@ -90,8 +91,11 @@ public class JSpent extends JFrame {
     SimpleGradientPanel addSavingsForm;
     EmbossedLabel totalLabel;
  
+    /**
+     * Creates default application instance.
+     */
     public JSpent() {
-        super("jSpent - WIP");
+        super("jSpent - very very early stages");
         List expenses = getExpenses();
         getContentPane().setLayout(new BorderLayout());
         JPanel rightPanel = getTablePane(expenses, cols, props);
@@ -105,7 +109,7 @@ public class JSpent extends JFrame {
         optionsList.requestFocusInWindow();
         setSize(800, 640);
     }
-
+    
     private SimpleGradientPanel getTopPanel() {
         SimpleGradientPanel topGradientPanel = new SimpleGradientPanel();
         GridBagLayout gridBagLayout = new GridBagLayout();

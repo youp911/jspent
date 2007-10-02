@@ -5,6 +5,12 @@ import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.plaf.ComponentUI;
 
+/**
+ * A round eye-candy button. With gradientbody
+ * and white border.
+ * @author ranjith
+ *
+ */
 public class RoundButton extends JButton {
     public RoundButton() {
         super();

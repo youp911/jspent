@@ -11,6 +11,7 @@ import javax.swing.JOptionPane;
 import org.ranjith.jspent.JSpent;
 
 /**
+ * Handler to add new action performed on the toolbar.
  * @author ranjith
  *
  */
@@ -20,8 +21,9 @@ public class AddNewActionListener implements ActionListener {
 		this.application = testFrame;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	/**
+	 * Check what is the current context and based on it, show the 'add new'
+	 * form.
 	 */
 	@Override
 	public void actionPerformed(ActionEvent arg0) {

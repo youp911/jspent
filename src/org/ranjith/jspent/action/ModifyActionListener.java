@@ -10,6 +10,7 @@ import org.ranjith.jspent.JSpent;
 import org.ranjith.jspent.data.Expense;
 
 /**
+ * Action handler for "Modify" command on toolbar(or from elsewhere)
  * @author ranjith
  *
  */
@@ -19,8 +20,8 @@ public class ModifyActionListener implements ActionListener {
 	    application = app;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	/**
+	 * Based on application context, show modify form.
 	 */
 	@Override
 	public void actionPerformed(ActionEvent arg0) {

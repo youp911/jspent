@@ -46,7 +46,8 @@ public class SimpleRoundSpinnerUI extends BasicSpinnerUI {
 	protected Component createNextButton() {
         java.net.URL vUrl = this.getClass().getResource("images/resultset_next_up.png");
         ImageIcon vIcon = new ImageIcon(vUrl);
-        nextButton = new ToolBarButton(2);
+        nextButton = new JButton();
+        nextButton.setUI(new BorderlessButtonUI());
         nextButton.setIcon(vIcon);
         setButtonProperties(nextButton);
         return nextButton;		
@@ -56,7 +57,8 @@ public class SimpleRoundSpinnerUI extends BasicSpinnerUI {
 	protected Component createPreviousButton() {
         java.net.URL vUrl = this.getClass().getResource("images/resultset_previous_down.png");
         ImageIcon vIcon = new ImageIcon(vUrl);
-        previousButton = new ToolBarButton(2);
+        previousButton = new JButton();
+        previousButton.setUI(new BorderlessButtonUI());
         previousButton.setIcon(vIcon);
         setButtonProperties(previousButton);
         return previousButton;

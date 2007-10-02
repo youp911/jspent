@@ -9,7 +9,9 @@ import javax.swing.JButton;
 import javax.swing.plaf.ComponentUI;
 
 /**
- * @author XR1CTSO
+ * A toolbar button that resembles buttons in 
+ * apple mail etc.
+ * @author ranjith
  *
  */
 public class ToolBarButton extends JButton {

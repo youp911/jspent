@@ -26,8 +26,10 @@ import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicButtonUI;
 
 /**
- * @author XR1CTSO
+ * A toolbar button UI delegate to draw tool bar
+ * button like that of apple mail.
  * Heavily using TigerToolBarButtonUI of Jhon Lipsky.
+ * @author ranjith
  * 
  */
 public class ToolBarButtonUI extends BasicButtonUI {

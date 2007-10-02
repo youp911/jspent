@@ -6,6 +6,12 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * A util class that provides datatype related methods
+ * such as conversion of prmitive to wrapper etc.
+ * @author ranjith
+ *
+ */
 public class DataTypeUtil {
 	static final Map PrimitiveToClassMap = new HashMap();
 	static {

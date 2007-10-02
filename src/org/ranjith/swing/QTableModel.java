@@ -12,12 +12,12 @@ import org.ranjith.util.DataTypeUtil;
 import org.ranjith.util.MathTool;
 
 /**
- * @author ranjith
  * A "Quick Table" Model that will create table model
  * based on collection of objects. The Column headers and types needs to be
  * passed while initializing the object. This class depends on apache bean-utils
  * for bean/property methods. Currently this model is only "Read only". i.e; You
  * can not edit cells.
+ * @author ranjith
  */
 public class QTableModel extends AbstractTableModel {
 

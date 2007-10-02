@@ -6,9 +6,9 @@ package org.ranjith.swing;
 import javax.swing.Icon;
 
 /**
- * @author XR1CTSO
  * A list Item with an icon and text.
  * Text can be  returned as the value.
+ * @author ranjith
  */
 public class IconListItem {
     private Icon icon;

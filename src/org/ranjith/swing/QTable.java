@@ -19,11 +19,11 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
 /**
- * @author ranjith
  * QTable is a "Quick table" that can be used to display a List of homogenous
  * Objects on a Swing JTable. The table works based on underlying QTableModel
  * implementation and provides basic sorting features. Also provides a few
- * eyecandy features as alternate row coloring.
+ * eyecandy features as alternate row coloring(Like in iTunes).
+ * @author ranjith
  */
 public class QTable extends JTable {
 

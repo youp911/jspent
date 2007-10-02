@@ -8,6 +8,7 @@ import java.util.Date;
 import org.ranjith.util.DataTypeUtil;
 
 /**
+ * Basic expense data object
  * @author ranjith
  *
  */
@@ -18,27 +19,69 @@ public class Expense {
 	private Date date;
 	private float amount;
 	private String notes;
+	
+	/**
+	 * Get's expense's unique id.
+	 * @return
+	 */
 	public int getId() {
 		return id;
 	}
+	
+	/**
+	 * Set id to the expense.
+	 * @param id
+	 */
 	public void setId(int id) {
 		this.id = id;
 	}
+	
+	/**
+	 * Get expense category
+	 * @see ExpenseService for constants.
+	 * @return
+	 */
 	public String getCategory() {
 		return category;
 	}
+	
+	/**
+	 * Set category for the expense.
+     * @see ExpenseService for constants.
+	 * @param category
+	 */
 	public void setCategory(String category) {
 		this.category = category;
 	}
+	
+	/**
+	 * Get sub category for the expense.
+	 * @return
+	 */
 	public String getSubCategory() {
 		return subCategory;
 	}
+	
+	/**
+     * Set sub category for the expense. 
+	 * @param subCategory
+	 */
 	public void setSubCategory(String subCategory) {
 		this.subCategory = subCategory;
 	}
+	
+	/**
+	 * Get amount for the expense.
+	 * @return amount
+	 */
 	public float getAmount() {
 		return amount;
 	}
+	
+	/**
+	 * Set amount for the expense.
+	 * @param amount
+	 */
 	public void setAmount(float amount) {
 		this.amount = amount;
 	}

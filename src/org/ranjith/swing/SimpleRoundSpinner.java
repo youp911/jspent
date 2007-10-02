@@ -7,6 +7,8 @@ import javax.swing.JSpinner;
 import javax.swing.SpinnerModel;
 
 /**
+ * A round spinner with simple round border and
+ * some custom buttons.
  * @author ranjith
  *
  */
