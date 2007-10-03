@@ -10,6 +10,7 @@ import javax.swing.JPanel;
 
 import org.ranjith.jspent.action.BackActionListener;
 import org.ranjith.jspent.action.SaveActionListener;
+import org.ranjith.swing.SimpleGradientPanel;
 
 /**
  * A panel to be extended by all data-form like panel.
@@ -18,7 +19,7 @@ import org.ranjith.jspent.action.SaveActionListener;
  * @author ranjith
  *
  */
-public abstract class CommonDataPanel extends JPanel {
+public abstract class CommonDataPanel extends SimpleGradientPanel {
     
     /**
      * Add a "done" or "cancel" button listener to the form.

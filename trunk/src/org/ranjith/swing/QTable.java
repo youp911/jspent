@@ -17,6 +17,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableModel;
 
 /**
  * QTable is a "Quick table" that can be used to display a List of homogenous
@@ -61,7 +62,7 @@ public class QTable extends JTable {
         this.setGridColor(Color.LIGHT_GRAY);
         //this.setShowVerticalLines(true);
     }
-
+    
     /**
      * Creates a quick table based on the filled model.
      * @param model
@@ -75,15 +76,6 @@ public class QTable extends JTable {
         this.setGridColor(Color.LIGHT_GRAY);
         //this.setShowVerticalLines(true);
     }   
-    
-    /**
-     * Returns sum of values in specified column.
-     * @param columnIndex column index of the column to be summed.
-     * @return            Sum in a generic Number object.
-     */
-    public Number sum(int columnIndex) {
-        return model.sum(columnIndex);
-    }
 
     /**
      * Returns the alternate row hightlight color
@@ -220,6 +212,18 @@ public class QTable extends JTable {
                 c.setForeground(getSelectionForeground());
         }
         return c;
+    }
+    
+    /**
+     * Get underlying QTable Model.
+     * @return
+     */
+    public QTableModel getQTableModel() {
+        return this.model;
+    }
+    
+    public void setQTableModel(QTableModel model) {
+        this.model = model;
     }
     
 }

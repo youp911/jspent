@@ -30,6 +30,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.SpinnerDateModel;
 import javax.swing.SpinnerListModel;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.JSpinner.DefaultEditor;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -61,6 +62,8 @@ import org.ranjith.swing.SimpleRoundSpinner;
 import org.ranjith.swing.SwingRConstants;
 import org.ranjith.swing.ToolBarButton;
 
+import sun.swing.SwingUtilities2;
+
 /*
  * Main application class.
  *  $Id:$
@@ -68,13 +71,12 @@ import org.ranjith.swing.ToolBarButton;
 public class JSpent extends JFrame {
     private QTable table = null;
     private JSplitPane splitPane;
-    String[] cols = {"Type", "Sub Type","Date", "Amount Spent", "Notes"};
-    String[] props = {"category","subCategory", "date", "amount","notes"};
     ToolBarButton addButton = new ToolBarButton(0);
     ToolBarButton modifyButton = new ToolBarButton(1);
     ToolBarButton deleteButton = new ToolBarButton(2);
     private JList optionsList;
     private JPanel filterPanel;
+    JScrollPane tableScrollPane;
     private static Map savingsPluginMap = new HashMap(1);
     private static PluginManager pm = PluginManager.getInstance();
     
@@ -83,9 +85,7 @@ public class JSpent extends JFrame {
     public static final String SAVINGS = "Savings";
     public static final String LIABILITIES = "Liabilities";
     public static final String SUMMARY = "Summary";
-    private static final Icon SMALL_OK_ICON = new ImageIcon(JSpent.class.getResource("icons/okIcon-sm.png"));
-	private static final Icon SMALL_WARN_ICON = new ImageIcon(JSpent.class.getResource("icons/warningIcon.png"));
-
+    private UIFactory uiFactory;
     //savings form
     private JPanel centerPanel,buttonPanel;
     SimpleGradientPanel addSavingsForm;
@@ -96,16 +96,19 @@ public class JSpent extends JFrame {
      */
     public JSpent() {
         super("jSpent - very very early stages");
-        List expenses = getExpenses();
+        this.table = new QTable();
+        uiFactory = UIFactory.getInstance(this);
+        
         getContentPane().setLayout(new BorderLayout());
-        JPanel rightPanel = getTablePane(expenses, cols, props);
         JScrollPane categoryScrollPane = getOptionsPane();
-        splitPane = getSplitPane(rightPanel, categoryScrollPane);
+        splitPane = getSplitPane(getTablePane(table), categoryScrollPane);
         getContentPane().add(splitPane, BorderLayout.CENTER);
         getContentPane().add(getBottomPanel(),BorderLayout.PAGE_END);
         SimpleGradientPanel topGradientPanel = getTopPanel();
         getContentPane().add(topGradientPanel,BorderLayout.PAGE_START);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        //Start with expense always selected.
+        optionsList.setSelectedIndex(0);
         optionsList.requestFocusInWindow();
         setSize(800, 640);
     }
@@ -191,36 +194,16 @@ public class JSpent extends JFrame {
         return splitPane;
     }
 
-    private JPanel getTablePane(List expenses, String[] cols, String[] props) {
+    private JPanel getTablePane(QTable table) {
+        this.table = table;
         JPanel rightPanel = new JPanel();
         rightPanel.setLayout(new BorderLayout());
- 
-        table = new QTable(expenses, cols, props);
-        table.setPreferredWidth(2, 20);
-        table.setCellRenderer(0, new CategoryRenderer());
-        table.setCellRenderer(3, new CurrencyRenderer());
-        table.setIsAlternateRowHightLighted(true);
-        table.setGridColor(SwingRConstants.TABLE_GRID_COLOR);
-        //XXX
-        table.setBorder(SwingRConstants.EMPTY_BORDER);
-        table.setFont(SwingRConstants.DEFAULT_TEXT_FONT);
-        table.getTableHeader().setFont(SwingRConstants.DEFAULT_HEADER_FONT);
-        table.setSelectionBackground(SwingRConstants.DEFAULT_SELECTION_BACKGROUND_COLOR);
-        table.setSelectionForeground(Color.WHITE);
-        table.getTableHeader().setReorderingAllowed(false);
-        ListSelectionModel selectionModel = table.getSelectionModel();
-        selectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        selectionModel.addListSelectionListener(new RowSelectionActionListener(this));
-        table.setSelectionModel(selectionModel);
-        JScrollPane scrollPane = new JScrollPane(table);
-        //XXX
-        scrollPane.setBorder(SwingRConstants.EMPTY_BORDER);
-        rightPanel.add(scrollPane,BorderLayout.CENTER);
-        //rightPanel.add(getBottomPanel(),BorderLayout.SOUTH);
+        tableScrollPane = new JScrollPane(table);
+        tableScrollPane.setBorder(SwingRConstants.EMPTY_BORDER);
+        rightPanel.add(tableScrollPane,BorderLayout.CENTER);
         rightPanel.setBorder(SwingRConstants.EMPTY_BORDER);
         return rightPanel;
     }
-
 
 	private Component getBottomPanel() {
 	    GridBagLayout gridBagLayout = new GridBagLayout();
@@ -233,15 +216,21 @@ public class JSpent extends JFrame {
         gbConstraints.anchor = GridBagConstraints.CENTER;
         totalLabel = new EmbossedLabel("");
         totalLabel.setFont(SwingRConstants.DEFAULT_TEXT_FONT);
-        setTotal();
         bottomPanel.add(totalLabel,gbConstraints);
         bottomPanel.setBorder(SwingRConstants.EMPTY_BORDER);
         return bottomPanel;
     }
 	
 	public void setTotal() {
-		totalLabel.setText( "Total Expenses " + NumberFormat.getCurrencyInstance().format(table.sum(3)) + " ");
+	    if(getCurrentContext().equals(EXPENSES)) {
+	        totalLabel.setText( getTotalExpense());
+	    }
 	}
+
+    private String getTotalExpense() {
+        return "Total Expenses " +
+                NumberFormat.getCurrencyInstance().format(table.getQTableModel().sum(3)) + " ";
+    }
 
     private JScrollPane getOptionsPane() {
         DefaultListModel listModel = new DefaultListModel();
@@ -264,9 +253,7 @@ public class JSpent extends JFrame {
         listModel.addElement(new IconListItem(new ImageIcon(resource),SUMMARY));
 
         optionsList.setBackground(SwingRConstants.PANEL_DEEP_BACKGROUND_COLOR);
-        optionsList.addListSelectionListener(new OptionSelectedActionListener());
-        //Start with expense always selected.
-        optionsList.setSelectedIndex(0);
+        optionsList.addListSelectionListener(new OptionSelectedActionListener(this));
         JScrollPane categoryScrollPane = new JScrollPane(optionsList);
         JViewport colHeaderViewPort = new JViewport();
         colHeaderViewPort.setView(getHeader());
@@ -284,10 +271,6 @@ public class JSpent extends JFrame {
         label.setOpaque(true);
         label.setBackground(SwingRConstants.PANEL_DEEP_BACKGROUND_COLOR);
         return label;
-    }
-
-    private List getExpenses() {
-        return getExpenses(Calendar.getInstance().get(Calendar.MONTH)+1);
     }
     
     private List getExpenses(int month) {
@@ -317,11 +300,15 @@ public class JSpent extends JFrame {
     public void showExpenseForm(Expense expense) {
         prepareUIForForm();
         ExpenseFormPanel panel = expense == null? new ExpenseFormPanel():new ExpenseFormPanel(expense);
-        splitPane.setRightComponent(panel);
-        splitPane.setDividerLocation(160);
+        updateRightPane(panel);
         panel.setDoneButtonListener(new BackActionListener(this,panel));
         int mode = (expense == null?SaveExpenseActionListener.ADD_NEW_MODE : SaveExpenseActionListener.UPDATE_MODE);
         panel.setSaveButtonListener(new SaveExpenseActionListener(mode,panel,this));
+    }
+
+    private void updateRightPane(JPanel panel) {
+        splitPane.setRightComponent(panel);
+        splitPane.setDividerLocation(160);
     }    
     
     public void showAddSavings() {
@@ -366,19 +353,31 @@ public class JSpent extends JFrame {
         splitPane.setRightComponent(addSavingsForm);
         splitPane.setDividerLocation(160);
     }
+    
     public void restoreUI() {
-        splitPane.setRightComponent(getTablePane(getExpenses(), cols, props));
-        if(table.getSelectedRow() < 0) {
-            setModfyToolBarButtonEnabled(false);
-            setDeleteToolBarButtonEnabled(false);
+        if(getCurrentContext().equals(EXPENSES)) {
+            setRightTable(uiFactory.createExpenseTableForMonth(Calendar.getInstance().get(Calendar.MONTH) + 1));
+            if(table.getSelectedRow() < 0) {
+                setModfyToolBarButtonEnabled(false);
+                setDeleteToolBarButtonEnabled(false);
+            }
+            setAddToolBarButtonEnabled(true);
+            filterPanel.setVisible(true);
+            splitPane.setDividerLocation(160);
+            optionsList.setEnabled(true);
+            setTotal();
         }
-        setAddToolBarButtonEnabled(true);
-        filterPanel.setVisible(true);
-        splitPane.setDividerLocation(160);
-        optionsList.setEnabled(true);
-        setTotal();
     }
     
+    /**
+     * Sets the main table in the application.
+     * @param table
+     */
+    public void setRightTable(QTable table) {
+       updateRightPane(getTablePane(table));
+       SwingUtilities.updateComponentTreeUI(tableScrollPane);
+    }
+
     public void setForm(JComponent component) {
         centerPanel.setLayout(new BorderLayout());
         centerPanel.add(component,BorderLayout.CENTER);
@@ -456,37 +455,7 @@ public class JSpent extends JFrame {
         frame.setVisible(true);
     }
     
-    //-------------------------------------------------------
-    class CurrencyRenderer extends DefaultTableCellRenderer {
 
-        @Override
-        protected void setValue(Object value) {
-            if (value == null) {
-                value = new Float(0.0F);
-            }
-            Float amount = (Float) value;
-            setHorizontalAlignment(SwingConstants.RIGHT);
-            NumberFormat format = NumberFormat.getCurrencyInstance();
-            setText(format.format(amount));
-        }
-    }
-    //-------------------------------------------------------
-    class CategoryRenderer extends DefaultTableCellRenderer {
-
-		@Override
-        protected void setValue(Object value) {
-            if (value == null) {
-                value = new String();
-            }
-            String category = (String)value;
-            setText(category);
-            if(category.equals(ExpenseService.EXPENSE_CAT_MANDATORY)){
-            	setIcon(SMALL_OK_ICON);
-            }else if(category.equals(ExpenseService.EXPENSE_CAT_FLEXIBLE)){
-            	setIcon(SMALL_WARN_ICON);
-            }
-        }
-    }
 
 
 }
