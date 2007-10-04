@@ -3,17 +3,27 @@ package org.ranjith.jspent;
 import java.awt.Color;
 import java.text.NumberFormat;
 import java.util.Calendar;
+import java.util.Iterator;
 import java.util.List;
 
+import javax.swing.GroupLayout;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 
+import org.ranjith.jspent.action.BackActionListener;
 import org.ranjith.jspent.action.RowSelectionActionListener;
 import org.ranjith.jspent.data.ExpenseService;
+import org.ranjith.plugin.PluginInfo;
+import org.ranjith.plugin.PluginManager;
 import org.ranjith.swing.QTable;
+import org.ranjith.swing.RoundButton;
+import org.ranjith.swing.SimpleGradientPanel;
+import org.ranjith.swing.SimpleRoundComboBox;
 import org.ranjith.swing.SwingRConstants;
 
 public class UIFactory {
@@ -61,6 +71,51 @@ public class UIFactory {
         table.setSelectionModel(selectionModel);
         return table;        
     }
+    
+    /**
+     * Creates and returns a Savings - add form.
+     */
+    public SimpleGradientPanel createAddSavingsForm() {
+
+		SimpleGradientPanel addSavingsForm = new SimpleGradientPanel(new Color(0x505866),new Color(0x7B8596));
+
+        JPanel typeComboPanel = new JPanel();
+        JPanel centerPanel = new JPanel();
+        JPanel buttonPanel = new JPanel();
+        jSpent.setCenterPanel(centerPanel);
+        jSpent.setButtonPanel(buttonPanel);
+        GroupLayout gl = new GroupLayout(addSavingsForm);
+        addSavingsForm.setLayout(gl);
+        gl.setHorizontalGroup(
+                gl.createSequentialGroup().addGroup(
+                gl.createParallelGroup().addComponent(typeComboPanel).addComponent(centerPanel).addComponent(buttonPanel)
+                )
+                );
+       gl.setVerticalGroup(
+               gl.createParallelGroup().addComponent(typeComboPanel).addComponent(centerPanel).addComponent(buttonPanel)
+               );
+        typeComboPanel.setOpaque(false);
+        JLabel label1 = new JLabel("Please Choose a Savings type to begin :");
+        //label1.setForeground(Color.WHITE);
+        typeComboPanel.add(label1);
+        List pluginList = jSpent.pluginManager.getPluginInfoList(PluginManager.PLUGIN_TYPE_SAVINGS_KEY);
+        
+        SimpleRoundComboBox savingsTypeCombo = new SimpleRoundComboBox();
+        savingsTypeCombo.addItem("");
+        savingsTypeCombo.setFont(SwingRConstants.DEFAULT_TEXT_FONT);
+        for (Iterator iterator = pluginList.iterator(); iterator.hasNext();) {
+            PluginInfo plugin = (PluginInfo) iterator.next();
+            savingsTypeCombo.addItem(plugin);
+        }        
+        
+        //savingsTypeCombo.addActionListener(new SavingsTypeListener(this,pluginList));
+        
+        typeComboPanel.add(savingsTypeCombo);
+        RoundButton cancelButton = new RoundButton("Cancel");
+        cancelButton.addActionListener(new BackActionListener(jSpent));
+        typeComboPanel.add(cancelButton);
+        return addSavingsForm;
+	}
     
     private List getExpenses(int month) {
         return new ExpenseService().getExpenses(month);

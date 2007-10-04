@@ -78,7 +78,7 @@ public class JSpent extends JFrame {
     private JPanel filterPanel;
     JScrollPane tableScrollPane;
     private static Map savingsPluginMap = new HashMap(1);
-    private static PluginManager pm = PluginManager.getInstance();
+    public  static PluginManager pluginManager = PluginManager.getInstance();
     
     public static final String EXPENSES = "Expenses";
     public static final String INCOMES = "Incomes";
@@ -86,8 +86,8 @@ public class JSpent extends JFrame {
     public static final String LIABILITIES = "Liabilities";
     public static final String SUMMARY = "Summary";
     private UIFactory uiFactory;
+    JPanel centerPanel,buttonPanel;
     //savings form
-    private JPanel centerPanel,buttonPanel;
     SimpleGradientPanel addSavingsForm;
     EmbossedLabel totalLabel;
  
@@ -313,46 +313,11 @@ public class JSpent extends JFrame {
     
     public void showAddSavings() {
     	prepareUIForForm();
-        addSavingsForm = new SimpleGradientPanel(new Color(0x505866),new Color(0x7B8596));
-
-        JPanel typeComboPanel = new JPanel();
-        centerPanel = new JPanel();
-        buttonPanel = new JPanel();
-        
-        GroupLayout gl = new GroupLayout(addSavingsForm);
-        addSavingsForm.setLayout(gl);
-        gl.setHorizontalGroup(
-                gl.createSequentialGroup().addGroup(
-                gl.createParallelGroup().addComponent(typeComboPanel).addComponent(centerPanel).addComponent(buttonPanel)
-                )
-                );
-       gl.setVerticalGroup(
-               gl.createParallelGroup().addComponent(typeComboPanel).addComponent(centerPanel).addComponent(buttonPanel)
-               );
-        typeComboPanel.setOpaque(false);
-        JLabel label1 = new JLabel("Please Choose a Savings type to begin :");
-        //label1.setForeground(Color.WHITE);
-        typeComboPanel.add(label1);
-        List pluginList = pm.getPluginInfoList(PluginManager.PLUGIN_TYPE_SAVINGS_KEY);
-        
-        SimpleRoundComboBox savingsTypeCombo = new SimpleRoundComboBox();
-        savingsTypeCombo.addItem("");
-        savingsTypeCombo.setFont(SwingRConstants.DEFAULT_TEXT_FONT);
-        for (Iterator iterator = pluginList.iterator(); iterator.hasNext();) {
-            PluginInfo plugin = (PluginInfo) iterator.next();
-            savingsTypeCombo.addItem(plugin);
-        }        
-        
-        //savingsTypeCombo.addActionListener(new SavingsTypeListener(this,pluginList));
-        
-        typeComboPanel.add(savingsTypeCombo);
-        RoundButton cancelButton = new RoundButton("Cancel");
-        cancelButton.addActionListener(new BackActionListener(this));
-        typeComboPanel.add(cancelButton);
-        
-        splitPane.setRightComponent(addSavingsForm);
-        splitPane.setDividerLocation(160);
+    	addSavingsForm = uiFactory.createAddSavingsForm();
+        updateRightPane(addSavingsForm);
     }
+
+
     
     public void restoreUI() {
         if(getCurrentContext().equals(EXPENSES)) {
@@ -454,6 +419,14 @@ public class JSpent extends JFrame {
         JSpent frame = new JSpent();
         frame.setVisible(true);
     }
+
+	public void setCenterPanel(JPanel centerPanel) {
+		this.centerPanel = centerPanel;
+	}
+
+	public void setButtonPanel(JPanel buttonPanel) {
+		this.buttonPanel = buttonPanel;
+	}
     
 
 
