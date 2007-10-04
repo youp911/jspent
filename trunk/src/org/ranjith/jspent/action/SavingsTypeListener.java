@@ -21,11 +21,11 @@ import org.ranjith.plugin.SavingsPlugin;
  * 
  */
 public class SavingsTypeListener implements ActionListener {
-    private JSpent testFrame;
+    private JSpent application;
     private List pluginList;
 
-    public SavingsTypeListener(JSpent testFrame, List pluginList) {
-        this.testFrame = testFrame;
+    public SavingsTypeListener(JSpent application, List pluginList) {
+        this.application = application;
         this.pluginList = pluginList;
     }
 
@@ -43,7 +43,7 @@ public class SavingsTypeListener implements ActionListener {
                 Class clazz = Class.forName(plugin.getClassName());
                 Object pluginObject = clazz.newInstance();
                 SavingsPlugin savingsPlugin = (SavingsPlugin) pluginObject;
-                testFrame.setForm(savingsPlugin.getAddUI());
+                application.setForm(savingsPlugin.getAddUI());
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
