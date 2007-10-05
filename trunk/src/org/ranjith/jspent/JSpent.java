@@ -9,31 +9,24 @@ import java.net.URL;
 import java.text.NumberFormat;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import javax.swing.DefaultListModel;
-import javax.swing.GroupLayout;
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JSplitPane;
 import javax.swing.JViewport;
-import javax.swing.ListSelectionModel;
 import javax.swing.SpinnerDateModel;
-import javax.swing.SpinnerListModel;
-import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.JSpinner.DefaultEditor;
-import javax.swing.border.EmptyBorder;
-import javax.swing.table.DefaultTableCellRenderer;
 
 import org.ranjith.jspent.action.AddNewActionListener;
 import org.ranjith.jspent.action.BackActionListener;
@@ -41,28 +34,21 @@ import org.ranjith.jspent.action.DeleteActionListener;
 import org.ranjith.jspent.action.ModifyActionListener;
 import org.ranjith.jspent.action.MonthYearChangeActionListener;
 import org.ranjith.jspent.action.OptionSelectedActionListener;
-import org.ranjith.jspent.action.RowSelectionActionListener;
 import org.ranjith.jspent.action.SaveExpenseActionListener;
-import org.ranjith.jspent.action.SavingsTypeListener;
 import org.ranjith.jspent.data.Expense;
 import org.ranjith.jspent.data.ExpenseService;
-import org.ranjith.plugin.PluginInfo;
 import org.ranjith.plugin.PluginManager;
 import org.ranjith.swing.EmbossedLabel;
 import org.ranjith.swing.GlassToolBar;
 import org.ranjith.swing.IconLabelListCellRenderer;
 import org.ranjith.swing.IconListItem;
-import org.ranjith.swing.MonthSpinnerPanel;
 import org.ranjith.swing.QTable;
 import org.ranjith.swing.QTableModel;
 import org.ranjith.swing.RoundButton;
-import org.ranjith.swing.SimpleRoundComboBox;
 import org.ranjith.swing.SimpleGradientPanel;
 import org.ranjith.swing.SimpleRoundSpinner;
 import org.ranjith.swing.SwingRConstants;
 import org.ranjith.swing.ToolBarButton;
-
-import sun.swing.SwingUtilities2;
 
 /*
  * Main application class.
@@ -221,10 +207,8 @@ public class JSpent extends JFrame {
         return bottomPanel;
     }
 	
-	public void setTotal() {
-	    if(getCurrentContext().equals(EXPENSES)) {
-	        totalLabel.setText( getTotalExpense());
-	    }
+	public void setTotal(String totalString) {
+       totalLabel.setText(totalString);
 	}
 
     private String getTotalExpense() {
@@ -317,21 +301,34 @@ public class JSpent extends JFrame {
         updateRightPane(addSavingsForm);
     }
 
-
-    
-    public void restoreUI() {
+    /**
+     * Updates application's UI to match current selection on options.
+     * Options selection determines the application's current context. 
+     * and restore's application to default view 
+     * of tables/dash board/summary.
+     */
+    public void refreshUI() {
         if(getCurrentContext().equals(EXPENSES)) {
             setRightTable(uiFactory.createExpenseTableForMonth(Calendar.getInstance().get(Calendar.MONTH) + 1));
-            if(table.getSelectedRow() < 0) {
-                setModfyToolBarButtonEnabled(false);
-                setDeleteToolBarButtonEnabled(false);
-            }
-            setAddToolBarButtonEnabled(true);
-            filterPanel.setVisible(true);
-            splitPane.setDividerLocation(160);
-            optionsList.setEnabled(true);
-            setTotal();
+            updateUIElements();
+            setTotal(getTotalExpense());
+        }if(getCurrentContext().equals(SAVINGS)) {
+            JOptionPane.showMessageDialog(this, "Should go to savings view");
+            setRightTable(uiFactory.createSavingsTable());
+            updateUIElements();
+            setTotal(getTotalSavings());
         }
+    }
+
+    private void updateUIElements() {
+        if(table.getSelectedRow() < 0) {
+            setModfyToolBarButtonEnabled(false);
+            setDeleteToolBarButtonEnabled(false);
+        }
+        setAddToolBarButtonEnabled(true);
+        filterPanel.setVisible(true);
+        splitPane.setDividerLocation(160);
+        optionsList.setEnabled(true);
     }
     
     /**
@@ -348,7 +345,7 @@ public class JSpent extends JFrame {
         centerPanel.add(component,BorderLayout.CENTER);
        
         buttonPanel.setLayout(new BorderLayout());
-        buttonPanel.add(new RoundButton("TEsting out"),BorderLayout.NORTH);
+        buttonPanel.add(new RoundButton("Test"),BorderLayout.NORTH);
         
         addSavingsForm.add(centerPanel,BorderLayout.CENTER);
         addSavingsForm.updateUI();

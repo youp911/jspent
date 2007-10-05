@@ -71,7 +71,7 @@ public class SaveExpenseActionListener extends SaveActionListener{
 	        case UPDATE_MODE:
 	            ExpenseService.update((Expense) panel.getDataObject());
 	            application.setCurrentContext(application.getCurrentContext());
-	            application.restoreUI();	            
+	            application.refreshUI();	            
 	            break;
 	        }
 	    }catch(Throwable t) {

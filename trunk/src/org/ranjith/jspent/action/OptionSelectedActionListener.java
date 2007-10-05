@@ -29,11 +29,12 @@ public class OptionSelectedActionListener implements ListSelectionListener {
         int option = list.getSelectedIndex();
         switch(option) {
         case 0: //expenses
-            application.restoreUI();
+            application.refreshUI();
             break;
         case 1: //Incomes
             break;
         case 3: //Savings
+            application.refreshUI();
             break;
         case 4: //Liabilities
             break;
