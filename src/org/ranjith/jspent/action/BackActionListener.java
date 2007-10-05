@@ -17,14 +17,14 @@ import org.ranjith.jspent.JSpent;
  * @author ranjith
  */
 public class BackActionListener implements ActionListener {
-    private JSpent testFrame;
+    private JSpent jSPent;
     private CommonDataPanel panel;
-    public BackActionListener(JSpent testFrame) {
-        this.testFrame = testFrame;
+    public BackActionListener(JSpent app) {
+        this.jSPent = app;
         this.panel = null;
     }
-    public BackActionListener(JSpent testFrame,CommonDataPanel panel) {
-        this.testFrame = testFrame;
+    public BackActionListener(JSpent app,CommonDataPanel panel) {
+        this.jSPent = app;
         this.panel = panel;
     }
 
@@ -36,7 +36,7 @@ public class BackActionListener implements ActionListener {
     public void actionPerformed(ActionEvent event) {
         if(panel != null && panel.isDirty()) {
         	Object[] options = {"Save","Don't Save","Cancel"};
-        	int response = JOptionPane.showOptionDialog(this.testFrame,
+        	int response = JOptionPane.showOptionDialog(this.jSPent,
         		    "Would you like some green eggs to go "
         		    + "with that ham?",
         		    "A Silly Question",
@@ -53,8 +53,7 @@ public class BackActionListener implements ActionListener {
         	}
         	
         }
-    	testFrame.setCurrentContext(testFrame.getCurrentContext());
-        testFrame.restoreUI();
+        jSPent.refreshUI();
     }
 
 }
