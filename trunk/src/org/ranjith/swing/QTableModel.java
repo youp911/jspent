@@ -14,9 +14,9 @@ import org.ranjith.util.MathTool;
 /**
  * A "Quick Table" Model that will create table model
  * based on collection of objects. The Column headers and types needs to be
- * passed while initializing the object. This class depends on apache bean-utils
- * for bean/property methods. Currently this model is only "Read only". i.e; You
- * can not edit cells.
+ * passed while initializing the object. This class depends on Apache bean-utils
+ * for bean/property methods. Currently this model is only &quote;Read only&quote;.
+ * i.e; You can not edit resulting cells.
  * @author ranjith
  */
 public class QTableModel extends AbstractTableModel {
@@ -44,6 +44,9 @@ public class QTableModel extends AbstractTableModel {
      *                  colProps element.
      */
     public QTableModel(List rows, String[] colNames, String[] colProps) {
+    	if(rows == null) {
+    		throw new IllegalArgumentException("parameter for rows not initialized.");
+    	}
         this.rows = rows;
         this.colNames = colNames;
         this.colProps = colProps;
@@ -103,10 +106,12 @@ public class QTableModel extends AbstractTableModel {
 	            value = PropertyUtils.getProperty(rows.get(row), colProps[col]);
 	        } catch (IllegalAccessException e) {
 	            e.printStackTrace();
+	            throw new IllegalArgumentException("getter for property for column: " + colProps[col] + " is not public");
 	        } catch (InvocationTargetException e) {
 	            e.printStackTrace();
 	        } catch (NoSuchMethodException e) {
 	            e.printStackTrace();
+	            throw new IllegalArgumentException("getter for property for column: " + colProps[col] + " is not found.");
 	        }
         }
         return value;
@@ -123,10 +128,12 @@ public class QTableModel extends AbstractTableModel {
             PropertyUtils.setProperty(rows.get(rowIndex), colProps[columnIndex], value);
         } catch (IllegalAccessException e) {
             e.printStackTrace();
+            throw new IllegalArgumentException("setter for property for column: " + colProps[columnIndex] + "is not public");
         } catch (InvocationTargetException e) {
             e.printStackTrace();
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
+            throw new IllegalArgumentException("setter for property for column: " + colProps[columnIndex] + "is not found.");
         }
     }
 
@@ -149,6 +156,7 @@ public class QTableModel extends AbstractTableModel {
 	public boolean isCellEditable(int row, int col) {
 		return false;
 	}
+	
     /**
      * Add values in a specified column.
      * @param columnIndex the column index of the column to be summed.

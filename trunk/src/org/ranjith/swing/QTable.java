@@ -20,10 +20,11 @@ import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 
 /**
- * QTable is a "Quick table" that can be used to display a List of homogenous
- * Objects on a Swing JTable. The table works based on underlying QTableModel
- * implementation and provides basic sorting features. Also provides a few
- * eyecandy features as alternate row coloring(Like in iTunes).
+ * QTable is a &quote;Quick table&quote; that can be used to 
+ * display a List of <b>homogeneous</b> Objects on a Swing JTable. 
+ * The table works based on underlying QTableModel implementation 
+ * and provides basic sorting features. Also provides a few
+ * eye-candy features as alternate row coloring(Like in iTunes).
  * @author ranjith
  */
 public class QTable extends JTable {
@@ -38,7 +39,9 @@ public class QTable extends JTable {
     private Color alternateRowColor = SwingRConstants.ALTERNATE_ROW_COLOR;
 
     /**
-     * Empty constructor. Do not use this
+     * Empty constructor. Use this constructor only to initialize containers.
+     * Provided for compatibility with actual swing component.
+     * <b>This is not a favored way to construct Qtable</b>
      */
     public QTable() {
     }
@@ -55,12 +58,7 @@ public class QTable extends JTable {
      */
     public QTable(List rows, String[] colNames, String[] colProps) {
         model = new QTableModel(rows, colNames, colProps);
-        this.setModel(model);
-        this.setAutoCreateColumnsFromModel(false);
-        this.setAutoCreateRowSorter(true);
-        this.setShowGrid(false);
-        this.setGridColor(Color.LIGHT_GRAY);
-        //this.setShowVerticalLines(true);
+        init(model);
     }
     
     /**
@@ -69,13 +67,8 @@ public class QTable extends JTable {
      */
     public QTable(QTableModel model) {
         this.model = model;
-        this.setModel(model);
-        this.setAutoCreateColumnsFromModel(false);
-        this.setAutoCreateRowSorter(true);
-        this.setShowGrid(false);
-        this.setGridColor(Color.LIGHT_GRAY);
-        //this.setShowVerticalLines(true);
-    }   
+        init(model);
+    }
 
     /**
      * Returns the alternate row hightlight color
@@ -129,13 +122,23 @@ public class QTable extends JTable {
     public void setCellRenderer(int columnIndex, DefaultTableCellRenderer renderer) {
        getColumnModel().getColumn(columnIndex).setCellRenderer(renderer); 
     }
+    
+	private void init(QTableModel model) {
+		this.setModel(model);
+        this.setAutoCreateColumnsFromModel(false);
+        this.setAutoCreateRowSorter(true);
+        this.setShowGrid(false);
+        this.setGridColor(Color.LIGHT_GRAY);
+	}
+	
     //--------------------------------------------------------------------------
-    // Following code is for painting alternate row hightlight and column 
-    // grid for all rows.
+    // Following code is for painting alternate row highlight and column 
+    // grid for all rows. Pure UI pleasure.
     //--------------------------------------------------------------------------
     /**
      * Paints empty rows too, after letting the UI delegate do
      * its painting.
+     * @param g graphics object
      */
     public void paint(Graphics g) {
         super.paint(g);
@@ -143,7 +146,11 @@ public class QTable extends JTable {
 		g.setColor(gridColor);
 		paintGridLines(g);
     }
-
+    
+    /**
+     * To draw grid lines, even if there are no rows in the table.
+     * @param g target graphics 
+     */
 	private void paintGridLines(Graphics g) {
 		int x = 0;
 		Rectangle clip = g.getClipBounds();
@@ -162,10 +169,11 @@ public class QTable extends JTable {
 	}
 
     /**
-     * Paints the backgrounds of the implied empty rows when the
-     * table model is insufficient to fill all the visible area
-     * available to us. We don't involve cell renderers, because
-     * we have no data.
+     * Paints the backgrounds for empty rows when the
+     * table model does not have data to fill all the visible area
+     * available. Cell renderers are not called as there is no data
+     * to render.
+     * @param g target graphics
      */
     protected void paintEmptyRows(Graphics g) {
         final int rowCount = getRowCount();
@@ -183,6 +191,7 @@ public class QTable extends JTable {
      * the behavior of JList, which expands to fill the available space.
      * JTable normally restricts its size to just what's needed by its
      * model.
+     * @return scroll-able tracks 
      */
     public boolean getScrollableTracksViewportHeight() {
         if (getParent() instanceof JViewport) {
@@ -194,13 +203,16 @@ public class QTable extends JTable {
 
     /**
      * Returns the appropriate background color for the given row.
+     * @return color for odd or even row.
      */
     protected Color colorForRow(int row) {
         return (row % 2 == 0 && isAlternateRowHightLighted) ? alternateRowColor : getBackground();
     }
 
     /**
-     * Shades alternate rows in different colors.
+     * Prepares cell renderer by querying underlying data model.
+     * We check value and selection state of the cell at row, column.
+     * @return Componenet
      */
     public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
         Component c = super.prepareRenderer(renderer, row, column);
@@ -222,8 +234,14 @@ public class QTable extends JTable {
         return this.model;
     }
     
+    /**
+     * Set underlying data model
+     * @param model instance of QTableModel
+     */
     public void setQTableModel(QTableModel model) {
         this.model = model;
+        init(model);
+        model.fireTableDataChanged();
     }
     
 }
