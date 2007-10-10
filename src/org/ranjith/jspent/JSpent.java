@@ -343,7 +343,6 @@ public class JSpent extends JFrame {
     public void setForm(JComponent component) {
         centerPanel.setLayout(new BorderLayout());
         centerPanel.add(component,BorderLayout.CENTER);
-       
         buttonPanel.setLayout(new BorderLayout());
         buttonPanel.add(new RoundButton("Test"),BorderLayout.NORTH);
         

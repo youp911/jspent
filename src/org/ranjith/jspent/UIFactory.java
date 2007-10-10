@@ -17,6 +17,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 
 import org.ranjith.jspent.action.BackActionListener;
 import org.ranjith.jspent.action.RowSelectionActionListener;
+import org.ranjith.jspent.action.SavingsTypeListener;
 import org.ranjith.jspent.data.ExpenseService;
 import org.ranjith.plugin.PluginInfo;
 import org.ranjith.plugin.PluginManager;
@@ -112,8 +113,7 @@ public class UIFactory {
             PluginInfo plugin = (PluginInfo) iterator.next();
             savingsTypeCombo.addItem(plugin);
         }        
-        
-        //savingsTypeCombo.addActionListener(new SavingsTypeListener(this,pluginList));
+        savingsTypeCombo.addActionListener(new SavingsTypeListener(jSpent,pluginList));
         
         typeComboPanel.add(savingsTypeCombo);
         RoundButton cancelButton = new RoundButton("Cancel");
