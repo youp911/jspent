@@ -21,6 +21,7 @@ import org.ranjith.jspent.data.ExpenseService;
 import org.ranjith.plugin.PluginInfo;
 import org.ranjith.plugin.PluginManager;
 import org.ranjith.swing.QTable;
+import org.ranjith.swing.QTableModel;
 import org.ranjith.swing.RoundButton;
 import org.ranjith.swing.SimpleGradientPanel;
 import org.ranjith.swing.SimpleRoundComboBox;
@@ -49,16 +50,11 @@ public class UIFactory {
         this.jSpent = app;
     }
     
-    public QTable createExpenseTableForMonth(int monthNumber) {
-        System.out.println("create..");
-        List expenses = getExpenses(monthNumber);
-        QTable table = new QTable(expenses, cols, props);
-        table.setPreferredWidth(2, 20);
-        table.setCellRenderer(0, new CategoryRenderer());
-        table.setCellRenderer(3, new CurrencyRenderer());
+    public QTable createDataTable() {
+        QTable table = new QTable();
+        //table.setPreferredWidth(2, 20);
         table.setIsAlternateRowHightLighted(true);
         table.setGridColor(SwingRConstants.TABLE_GRID_COLOR);
-        //XXX
         table.setBorder(SwingRConstants.EMPTY_BORDER);
         table.setFont(SwingRConstants.DEFAULT_TEXT_FONT);
         table.getTableHeader().setFont(SwingRConstants.DEFAULT_HEADER_FONT);
@@ -68,10 +64,19 @@ public class UIFactory {
         ListSelectionModel selectionModel = table.getSelectionModel();
         selectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         selectionModel.addListSelectionListener(new RowSelectionActionListener(jSpent));
-        table.setSelectionModel(selectionModel);
-        return table;        
+        table.setSelectionModel(selectionModel);        
+        return table;
     }
     
+    public void updateExpenseDataTable(QTable table,int monthNumber) {
+        List expenses = getExpenses(monthNumber);
+        QTableModel tableModel = new QTableModel(expenses,cols,props);
+        table.setQTableModel(tableModel);
+        //ordering this is important. We should have data.
+        table.setCellRenderer(0, new CategoryRenderer());
+        table.setCellRenderer(3, new CurrencyRenderer());
+    }
+   
     /**
      * Creates and returns a Savings - add form.
      */

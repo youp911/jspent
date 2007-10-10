@@ -30,11 +30,21 @@ public class MonthYearChangeActionListener implements ChangeListener {
     @Override
     public void stateChanged(ChangeEvent event) {
         SimpleRoundSpinner source = (SimpleRoundSpinner) event.getSource();
+        int month = getMonth(source);
+        application.setCurrentMonth(month);
+        application.refreshUI();
+    }
+
+    /**
+     * @param source
+     * @return
+     */
+    public static int getMonth(SimpleRoundSpinner source) {
         Date date = (Date) source.getValue();
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
-        application.updateExpenseTableForMonth(cal.get(Calendar.MONTH) + 1);
-        application.setTotal();
+        int month=cal.get(Calendar.MONTH) +1;
+        return month;
     }
 
 }

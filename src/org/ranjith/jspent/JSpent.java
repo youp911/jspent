@@ -76,15 +76,15 @@ public class JSpent extends JFrame {
     //savings form
     SimpleGradientPanel addSavingsForm;
     EmbossedLabel totalLabel;
- 
+    private int currentMonth;
     /**
      * Creates default application instance.
      */
     public JSpent() {
         super("jSpent - very very early stages");
-        this.table = new QTable();
-        uiFactory = UIFactory.getInstance(this);
         
+        uiFactory = UIFactory.getInstance(this);
+        this.table = uiFactory.createDataTable();
         getContentPane().setLayout(new BorderLayout());
         JScrollPane categoryScrollPane = getOptionsPane();
         splitPane = getSplitPane(getTablePane(table), categoryScrollPane);
@@ -144,6 +144,7 @@ public class JSpent extends JFrame {
         monthYearSpinner.setOpaque(false);
         monthYearSpinner.addChangeListener(new MonthYearChangeActionListener(this));
         JSpinner.DefaultEditor editor = (DefaultEditor) monthYearSpinner.getEditor();
+        setCurrentMonth(MonthYearChangeActionListener.getMonth(monthYearSpinner));
         editor.getTextField().setEditable(false);
 		return monthYearSpinner;
 	}
@@ -309,14 +310,13 @@ public class JSpent extends JFrame {
      */
     public void refreshUI() {
         if(getCurrentContext().equals(EXPENSES)) {
-            setRightTable(uiFactory.createExpenseTableForMonth(Calendar.getInstance().get(Calendar.MONTH) + 1));
+            uiFactory.updateExpenseDataTable(table, currentMonth);
+            setRightTable(table);
             updateUIElements();
             setTotal(getTotalExpense());
         }if(getCurrentContext().equals(SAVINGS)) {
             JOptionPane.showMessageDialog(this, "Should go to savings view");
-            setRightTable(uiFactory.createSavingsTable());
             updateUIElements();
-            setTotal(getTotalSavings());
         }
     }
 
@@ -424,6 +424,13 @@ public class JSpent extends JFrame {
 	public void setButtonPanel(JPanel buttonPanel) {
 		this.buttonPanel = buttonPanel;
 	}
+
+    /**
+     * @param currentMonth the currentMonth to set
+     */
+    public void setCurrentMonth(int currentMonth) {
+        this.currentMonth = currentMonth;
+    }
     
 
 
