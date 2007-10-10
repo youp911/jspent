@@ -180,6 +180,7 @@ public class QTable extends JTable {
         final Rectangle clip = g.getClipBounds();
         if (rowCount * rowHeight < clip.height) {
             for (int i = rowCount; i <= clip.height / rowHeight; ++i) {
+            	System.out.println("Getting color for row  " + i);
                 g.setColor(colorForRow(i));
                 g.fillRect(clip.x, i * rowHeight, clip.width, rowHeight);
             }
