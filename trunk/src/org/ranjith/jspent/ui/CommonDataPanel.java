@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.ranjith.jspent;
+package org.ranjith.jspent.ui;
 
 import java.awt.event.ActionEvent;
 import java.util.List;

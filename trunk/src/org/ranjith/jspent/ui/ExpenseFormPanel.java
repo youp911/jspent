@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.ranjith.jspent;
+package org.ranjith.jspent.ui;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;
@@ -11,9 +11,11 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.ResourceBundle;
 
 import javax.swing.ImageIcon;
 
+import org.ranjith.jspent.Application;
 import org.ranjith.jspent.action.BackActionListener;
 import org.ranjith.jspent.action.SaveActionListener;
 import org.ranjith.jspent.data.Expense;
@@ -63,7 +65,8 @@ public class ExpenseFormPanel extends CommonDataPanel {
      */
     // <editor-fold defaultstate="collapsed" desc=" Generated Code ">
     private void initComponents() {
-
+        ResourceBundle bundle = Application.getResourceBundle();
+        
         categoryLabel = new javax.swing.JLabel();
         categoryComboBox = new javax.swing.JComboBox(ExpenseService.EXPENSE_CATEGORIES);
         subCategoryLabel = new javax.swing.JLabel();
@@ -79,22 +82,22 @@ public class ExpenseFormPanel extends CommonDataPanel {
         doneButton = new RoundButton();
         currencyComboBox = new javax.swing.JComboBox(getCurrencyItemArray());
 
-        categoryLabel.setText("Category:");
+        categoryLabel.setText(bundle.getString("prompt.category"));
 
-        subCategoryLabel.setText("Sub-Category:");
+        subCategoryLabel.setText(bundle.getString("prompt.subcategory"));
 
-        dateLabel.setText("Date:");
+        dateLabel.setText(bundle.getString("prompt.date"));
 
-        amountLabel.setText("Amount:");
+        amountLabel.setText(bundle.getString("prompt.amount"));
 
-        notesLabel.setText("Notes:");
+        notesLabel.setText(bundle.getString("prompt.notes"));
 
         notesTextArea.setColumns(20);
         notesTextArea.setRows(5);
         jScrollPane1.setViewportView(notesTextArea);
 
-        saveButton.setText("Save");
-        doneButton.setText("Done");
+        saveButton.setText(bundle.getString("prompt.save"));
+        doneButton.setText(bundle.getString("prompt.done"));
         currencyComboBox.setRenderer(new IconLabelListCellRenderer());
         
         
@@ -167,13 +170,14 @@ public class ExpenseFormPanel extends CommonDataPanel {
      * @return currencyListItems
      */
 	private Object[] getCurrencyItemArray() {
+	    ResourceBundle bundle = Application.getResourceBundle();
 		Object[] currencyListItems = new Object[3];
-        URL resource = JSpent.class.getResource("icons/money_dollar.png");
-        currencyListItems[0] = new IconListItem(new ImageIcon(resource),"Dollars");	
-        resource = JSpent.class.getResource("icons/money_euro.png");
-        currencyListItems[1] = new IconListItem(new ImageIcon(resource),"Euros");
-        resource = JSpent.class.getResource("icons/money_pound.png");
-        currencyListItems[2] = new IconListItem(new ImageIcon(resource),"Pounds");	        
+        URL resource = JSpent.class.getResource(bundle.getString("options.dollar.icon"));
+        currencyListItems[0] = new IconListItem(new ImageIcon(resource),bundle.getString("options.dollar"));	
+        resource = JSpent.class.getResource(bundle.getString("options.euro.icon"));
+        currencyListItems[1] = new IconListItem(new ImageIcon(resource),bundle.getString("options.euro"));
+        resource = JSpent.class.getResource(bundle.getString("options.pound.icon"));
+        currencyListItems[2] = new IconListItem(new ImageIcon(resource),bundle.getString("options.pound"));	        
         return currencyListItems;
 	}
 
@@ -258,20 +262,21 @@ public class ExpenseFormPanel extends CommonDataPanel {
 
     @Override
     public List getValidationErrors() {
+        ResourceBundle bundle = Application.getResourceBundle();
         List errors = new ArrayList();
         if(DataTypeUtil.isEmptyOrNullString(amountTextField.getText())) {
-            errors.add("Please Enter Amount Spent");
+            errors.add(bundle.getString("validation.amount.spent.missing"));
         }
         try{
             NumberFormat.getNumberInstance().parse(amountTextField.getText());    
         }catch(ParseException parseException) {
-            errors.add("Please Enter a Numeric Value for Amount Spent");
+            errors.add(bundle.getString("validation.amount.spent.nonnumeric"));
         }
         if(DataTypeUtil.isEmptyOrNullString((String)categoryComboBox.getSelectedItem()) ){
-            errors.add("Please Select an Expense Category: Flexible/Mandatory");
+            errors.add(bundle.getString("validation.amount.category.notselected"));
         }
         if(DataTypeUtil.isEmptyOrNullString((String)subCategoryComboBox.getSelectedItem()) ){
-            errors.add("Please Select an Expense sub Category");
+            errors.add(bundle.getString("validation.amount.subcategory.notselected"));
         }
         return errors;
     }

@@ -68,7 +68,7 @@ public class PluginManager {
 	 * meta data, store in hashmap against type. Add the jar to 
 	 * the system classpath.
 	 */
-	private static synchronized void load() {
+	private synchronized void load() {
 		File pluginsDir = new File(System.getProperty("user.dir") + "/plugins");
 		try {
 			for (File file : pluginsDir.listFiles()) {
@@ -84,11 +84,11 @@ public class PluginManager {
 		}
 	}
 
-	private static void addJarToClassPath(File file) {
+	private void addJarToClassPath(File file) {
 		ClassPathModifier.addFile(file);
 	}
 
-	private static void savePluginInfo(File file) throws IOException,
+	private void savePluginInfo(File file) throws IOException,
 			SAXException {
 		List pluginInfoList = getPluginInfoList(file);
 
@@ -105,7 +105,7 @@ public class PluginManager {
 
 	}
 
-	private static List getPluginInfoList(File file) throws IOException,
+	private List getPluginInfoList(File file) throws IOException,
 			SAXException {
 		JarFile jarFile = new JarFile(file);
 		JarEntry jarEntry = jarFile.getJarEntry("plugin-manifest.xml");
@@ -125,7 +125,7 @@ public class PluginManager {
 	 * @param pluginType plugin type.
 	 * @return list of plugin information.
 	 */
-	public static List getPluginInfoList(String pluginType) {
+	public List getPluginInfoList(String pluginType) {
 		return (List) pluginTypeInfoMap.get(pluginType);
 	}
 	

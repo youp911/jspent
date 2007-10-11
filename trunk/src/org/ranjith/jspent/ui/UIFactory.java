@@ -1,4 +1,4 @@
-package org.ranjith.jspent;
+package org.ranjith.jspent.ui;
 
 import java.awt.Color;
 import java.text.NumberFormat;
@@ -15,6 +15,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 
+import org.ranjith.jspent.Application;
 import org.ranjith.jspent.action.BackActionListener;
 import org.ranjith.jspent.action.RowSelectionActionListener;
 import org.ranjith.jspent.action.SavingsTypeListener;
@@ -22,6 +23,7 @@ import org.ranjith.jspent.data.ExpenseService;
 import org.ranjith.plugin.PluginInfo;
 import org.ranjith.plugin.PluginManager;
 import org.ranjith.swing.QTable;
+import org.ranjith.swing.QTableHeaderRenderer;
 import org.ranjith.swing.QTableModel;
 import org.ranjith.swing.RoundButton;
 import org.ranjith.swing.SimpleGradientPanel;
@@ -29,61 +31,79 @@ import org.ranjith.swing.SimpleRoundComboBox;
 import org.ranjith.swing.SwingRConstants;
 
 public class UIFactory {
-    private static final Icon SMALL_OK_ICON = new ImageIcon(UIFactory.class.getResource("icons/okIcon-sm.png"));
-    private static final Icon SMALL_WARN_ICON = new ImageIcon(UIFactory.class.getResource("icons/warningIcon.png"));
+    private static final Icon SMALL_OK_ICON = new ImageIcon(UIFactory.class
+            .getResource(Application.getResourceBundle().getString(
+                    "small.ok.icon")));
+    private static final Icon SMALL_WARN_ICON = new ImageIcon(UIFactory.class
+            .getResource(Application.getResourceBundle().getString(
+                    "small.warn.icon")));
 
-    public static final String[] cols = {"Type", "Sub Type","Date", "Amount Spent", "Notes"};
-    public static final String[] props = {"category","subCategory", "date", "amount","notes"};
+    public static final String[] cols = {
+        Application.getResourceBundle().getString("table.col.type"),
+        Application.getResourceBundle().getString("table.col.subtype"),
+        Application.getResourceBundle().getString("table.col.date"),
+        Application.getResourceBundle().getString("table.col.amount"),
+        Application.getResourceBundle().getString("table.col.notes")
+                                        };
+    public static final String[] props = { "category", "subCategory", "date",
+            "amount", "notes" };
     private static UIFactory INSTANCE = null;
     private JSpent jSpent = null;
+
+    public  static PluginManager pluginManager = PluginManager.getInstance();
     
     public static UIFactory getInstance(JSpent application) {
-        if(INSTANCE == null) {
+        if (INSTANCE == null) {
             INSTANCE = new UIFactory(application);
         }
         return INSTANCE;
     }
+
     private UIFactory() {
-        
+
     }
-    
+
     private UIFactory(JSpent app) {
         this.jSpent = app;
     }
-    
+
     public QTable createDataTable() {
         QTable table = new QTable();
-        //table.setPreferredWidth(2, 20);
+        // table.setPreferredWidth(2, 20);
         table.setIsAlternateRowHightLighted(true);
         table.setGridColor(SwingRConstants.TABLE_GRID_COLOR);
         table.setBorder(SwingRConstants.EMPTY_BORDER);
         table.setFont(SwingRConstants.DEFAULT_TEXT_FONT);
+        table.getTableHeader().setDefaultRenderer(new QTableHeaderRenderer());
         table.getTableHeader().setFont(SwingRConstants.DEFAULT_HEADER_FONT);
-        table.setSelectionBackground(SwingRConstants.DEFAULT_SELECTION_BACKGROUND_COLOR);
+        table
+                .setSelectionBackground(SwingRConstants.DEFAULT_SELECTION_BACKGROUND_COLOR);
         table.setSelectionForeground(Color.WHITE);
         table.getTableHeader().setReorderingAllowed(false);
         ListSelectionModel selectionModel = table.getSelectionModel();
         selectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        selectionModel.addListSelectionListener(new RowSelectionActionListener(jSpent));
-        table.setSelectionModel(selectionModel);        
+        selectionModel.addListSelectionListener(new RowSelectionActionListener(
+                jSpent));
+        table.setSelectionModel(selectionModel);
         return table;
     }
-    
-    public void updateExpenseDataTable(QTable table,int monthNumber) {
+
+    public void updateExpenseDataTable(QTable table, int monthNumber) {
         List expenses = getExpenses(monthNumber);
-        QTableModel tableModel = new QTableModel(expenses,cols,props);
+        QTableModel tableModel = new QTableModel(expenses, cols, props);
         table.setQTableModel(tableModel);
-        //ordering this is important. We should have data.
+        // ordering this is important. We should have data.
         table.setCellRenderer(0, new CategoryRenderer());
         table.setCellRenderer(3, new CurrencyRenderer());
     }
-   
+
     /**
      * Creates and returns a Savings - add form.
      */
     public SimpleGradientPanel createAddSavingsForm() {
 
-		SimpleGradientPanel addSavingsForm = new SimpleGradientPanel(new Color(0x505866),new Color(0x7B8596));
+        SimpleGradientPanel addSavingsForm = new SimpleGradientPanel(new Color(
+                0x505866), new Color(0x7B8596));
 
         JPanel typeComboPanel = new JPanel();
         JPanel centerPanel = new JPanel();
@@ -92,41 +112,41 @@ public class UIFactory {
         jSpent.setButtonPanel(buttonPanel);
         GroupLayout gl = new GroupLayout(addSavingsForm);
         addSavingsForm.setLayout(gl);
-        gl.setHorizontalGroup(
-                gl.createSequentialGroup().addGroup(
-                gl.createParallelGroup().addComponent(typeComboPanel).addComponent(centerPanel).addComponent(buttonPanel)
-                )
-                );
-       gl.setVerticalGroup(
-               gl.createParallelGroup().addComponent(typeComboPanel).addComponent(centerPanel).addComponent(buttonPanel)
-               );
+        gl.setHorizontalGroup(gl.createSequentialGroup().addGroup(
+                gl.createParallelGroup().addComponent(typeComboPanel)
+                        .addComponent(centerPanel).addComponent(buttonPanel)));
+        gl.setVerticalGroup(gl.createParallelGroup().addComponent(
+                typeComboPanel).addComponent(centerPanel).addComponent(
+                buttonPanel));
         typeComboPanel.setOpaque(false);
-        JLabel label1 = new JLabel("Please Choose a Savings type to begin :");
-        //label1.setForeground(Color.WHITE);
+        JLabel label1 = new JLabel(Application.getResourceBundle().getString("prompt.choose.savingstype"));
+        // label1.setForeground(Color.WHITE);
         typeComboPanel.add(label1);
-        List pluginList = jSpent.pluginManager.getPluginInfoList(PluginManager.PLUGIN_TYPE_SAVINGS_KEY);
-        
+
+        List pluginList = pluginManager.getPluginInfoList(PluginManager.PLUGIN_TYPE_SAVINGS_KEY);
+
         SimpleRoundComboBox savingsTypeCombo = new SimpleRoundComboBox();
         savingsTypeCombo.addItem("");
         savingsTypeCombo.setFont(SwingRConstants.DEFAULT_TEXT_FONT);
         for (Iterator iterator = pluginList.iterator(); iterator.hasNext();) {
             PluginInfo plugin = (PluginInfo) iterator.next();
             savingsTypeCombo.addItem(plugin);
-        }        
-        savingsTypeCombo.addActionListener(new SavingsTypeListener(jSpent,pluginList));
-        
+        }
+        savingsTypeCombo.addActionListener(new SavingsTypeListener(jSpent,
+                pluginList));
+
         typeComboPanel.add(savingsTypeCombo);
         RoundButton cancelButton = new RoundButton("Cancel");
         cancelButton.addActionListener(new BackActionListener(jSpent));
         typeComboPanel.add(cancelButton);
         return addSavingsForm;
-	}
-    
+    }
+
     private List getExpenses(int month) {
         return new ExpenseService().getExpenses(month);
     }
-    
-    //-------------------------------------------------------
+
+    // -------------------------------------------------------
     class CurrencyRenderer extends DefaultTableCellRenderer {
 
         @Override
@@ -140,7 +160,8 @@ public class UIFactory {
             setText(format.format(amount));
         }
     }
-    //-------------------------------------------------------
+
+    // -------------------------------------------------------
     class CategoryRenderer extends DefaultTableCellRenderer {
 
         @Override
@@ -148,11 +169,11 @@ public class UIFactory {
             if (value == null) {
                 value = new String();
             }
-            String category = (String)value;
+            String category = (String) value;
             setText(category);
-            if(category.equals(ExpenseService.EXPENSE_CAT_MANDATORY)){
+            if (category.equals(ExpenseService.EXPENSE_CAT_MANDATORY)) {
                 setIcon(SMALL_OK_ICON);
-            }else if(category.equals(ExpenseService.EXPENSE_CAT_FLEXIBLE)){
+            } else if (category.equals(ExpenseService.EXPENSE_CAT_FLEXIBLE)) {
                 setIcon(SMALL_WARN_ICON);
             }
         }

@@ -128,7 +128,6 @@ public class QTable extends JTable {
         this.setAutoCreateColumnsFromModel(false);
         this.setAutoCreateRowSorter(true);
         this.setShowGrid(false);
-        this.setGridColor(Color.LIGHT_GRAY);
 	}
 	
     //--------------------------------------------------------------------------

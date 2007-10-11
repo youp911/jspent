@@ -10,7 +10,7 @@ import javax.swing.SpinnerModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import org.ranjith.jspent.JSpent;
+import org.ranjith.jspent.ui.JSpent;
 import org.ranjith.swing.SimpleRoundSpinner;
 
 /**

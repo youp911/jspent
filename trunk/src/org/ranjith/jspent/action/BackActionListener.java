@@ -8,8 +8,8 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JOptionPane;
 
-import org.ranjith.jspent.CommonDataPanel;
-import org.ranjith.jspent.JSpent;
+import org.ranjith.jspent.ui.CommonDataPanel;
+import org.ranjith.jspent.ui.JSpent;
 
 /**
  * Takes the user back to application screen.

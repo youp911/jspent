@@ -1,4 +1,4 @@
-package org.ranjith.jspent;
+package org.ranjith.jspent.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -10,6 +10,7 @@ import java.text.NumberFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
@@ -27,6 +28,7 @@ import javax.swing.SpinnerDateModel;
 import javax.swing.SwingUtilities;
 import javax.swing.JSpinner.DefaultEditor;
 
+import org.ranjith.jspent.Application;
 import org.ranjith.jspent.action.AddNewActionListener;
 import org.ranjith.jspent.action.BackActionListener;
 import org.ranjith.jspent.action.DeleteActionListener;
@@ -62,7 +64,6 @@ public class JSpent extends JFrame {
     private JList optionsList;
     private JPanel filterPanel;
     JScrollPane tableScrollPane;
-    public  static PluginManager pluginManager = PluginManager.getInstance();
     
     public static final String EXPENSES = "Expenses";
     public static final String INCOMES = "Incomes";
@@ -75,11 +76,12 @@ public class JSpent extends JFrame {
     SimpleGradientPanel addSavingsForm;
     EmbossedLabel totalLabel;
     private int currentMonth;
+    
     /**
      * Creates default application instance.
      */
     public JSpent() {
-        super("jSpent - very very early stages");
+        super(Application.getResourceBundle().getString("app.title"));
         
         uiFactory = UIFactory.getInstance(this);
         this.table = uiFactory.createDataTable();
@@ -148,15 +150,16 @@ public class JSpent extends JFrame {
 	}
 
     private GlassToolBar getToolBar() {
+        ResourceBundle bundle = Application.getResourceBundle();
         GlassToolBar toolBar = new GlassToolBar();
-        URL resource = JSpent.class.getResource("icons/add.png");
-        addButton.setIcon(new ImageIcon(resource,"Add New"));
+        URL resource = JSpent.class.getResource(bundle.getString("toolbar.add.new.icon"));
+        addButton.setIcon(new ImageIcon(resource,bundle.getString("toolbar.add.new")));
         addButton.addActionListener(new AddNewActionListener(this));
-        resource = JSpent.class.getResource("icons/application_form_add.png");
-        modifyButton.setIcon(new ImageIcon(resource,"Modify"));
+        resource = JSpent.class.getResource(bundle.getString("toolbar.modify.icon"));
+        modifyButton.setIcon(new ImageIcon(resource,bundle.getString("toolbar.modify")));
         modifyButton.addActionListener(new ModifyActionListener(this));
-        resource = JSpent.class.getResource("icons/delete.png");
-        deleteButton.setIcon(new ImageIcon(resource,"Delete"));
+        resource = JSpent.class.getResource(bundle.getString("toolbar.delete.icon"));
+        deleteButton.setIcon(new ImageIcon(resource,bundle.getString("toolbar.delete")));
         deleteButton.addActionListener(new DeleteActionListener(this));
         //Not enabled on start up. Enable only when table row is selected.
         modifyButton.setEnabled(false);
@@ -216,23 +219,24 @@ public class JSpent extends JFrame {
     }
 
     private JScrollPane getOptionsPane() {
+        ResourceBundle bundle = Application.getResourceBundle();
         DefaultListModel listModel = new DefaultListModel();
         optionsList = new JList(listModel);
         optionsList.setCellRenderer(new IconLabelListCellRenderer(1));
         
-        URL resource = JSpent.class.getResource("icons/money_delete.png");
+        URL resource = JSpent.class.getResource(bundle.getString("options.expense.icon"));
         listModel.addElement(new IconListItem(new ImageIcon(resource),EXPENSES));
 
-        resource = JSpent.class.getResource("icons/money_add.png");
+        resource = JSpent.class.getResource(bundle.getString("options.income.icon"));
         listModel.addElement(new IconListItem(new ImageIcon(resource),INCOMES));
 
-        resource = JSpent.class.getResource("icons/money.png");
+        resource = JSpent.class.getResource(bundle.getString("options.savings.icon"));
         listModel.addElement(new IconListItem(new ImageIcon(resource),SAVINGS));
 
-        resource = JSpent.class.getResource("icons/creditcards.png");
+        resource = JSpent.class.getResource(bundle.getString("options.liabilities.icon"));
         listModel.addElement(new IconListItem(new ImageIcon(resource),LIABILITIES));
         
-        resource = JSpent.class.getResource("icons/report.png");
+        resource = JSpent.class.getResource(bundle.getString("options.summary.icon"));
         listModel.addElement(new IconListItem(new ImageIcon(resource),SUMMARY));
 
         optionsList.setBackground(SwingRConstants.PANEL_DEEP_BACKGROUND_COLOR);
@@ -409,11 +413,7 @@ public class JSpent extends JFrame {
             model.removeRow(table.getSelectedRow());
         }
     }   
-    public static void main(String[] args) {
-        JSpent frame = new JSpent();
-        frame.setVisible(true);
-    }
-
+    
 	public void setCenterPanel(JPanel centerPanel) {
 		this.centerPanel = centerPanel;
 	}

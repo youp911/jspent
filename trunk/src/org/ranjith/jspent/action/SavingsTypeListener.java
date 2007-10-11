@@ -11,7 +11,7 @@ import javax.swing.JComboBox;
 import javax.swing.JComponent;
 
 import org.apache.commons.beanutils.BeanUtils;
-import org.ranjith.jspent.JSpent;
+import org.ranjith.jspent.ui.JSpent;
 import org.ranjith.plugin.PluginInfo;
 import org.ranjith.plugin.SavingsPlugin;
 

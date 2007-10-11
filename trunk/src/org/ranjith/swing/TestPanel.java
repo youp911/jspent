@@ -12,7 +12,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 
-import org.ranjith.jspent.JSpent;
+import org.ranjith.jspent.ui.JSpent;
 
 import com.sun.xml.bind.v2.runtime.reflect.Lister.Pack;
 
