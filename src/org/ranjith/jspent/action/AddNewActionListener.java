@@ -8,7 +8,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JOptionPane;
 
-import org.ranjith.jspent.JSpent;
+import org.ranjith.jspent.ui.JSpent;
 
 /**
  * Handler to add new action performed on the toolbar.

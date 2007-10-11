@@ -7,7 +7,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import org.ranjith.jspent.JSpent;
+import org.ranjith.jspent.ui.JSpent;
 
 /**
  * Handler for row selection event.

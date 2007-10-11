@@ -8,9 +8,9 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JOptionPane;
 
-import org.ranjith.jspent.JSpent;
 import org.ranjith.jspent.data.Expense;
 import org.ranjith.jspent.data.ExpenseService;
+import org.ranjith.jspent.ui.JSpent;
 
 /**
  * Action handler for delete command from toolbar(or elsewhere)
