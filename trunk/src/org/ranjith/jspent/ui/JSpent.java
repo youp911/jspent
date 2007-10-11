@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 
+import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
@@ -178,7 +179,8 @@ public class JSpent extends JFrame {
         splitPane.setDividerLocation(160);
         splitPane.add(scrollPane, JSplitPane.RIGHT);
         splitPane.add(categoryScrollPane, JSplitPane.LEFT);
-        splitPane.setBorder(SwingRConstants.EMPTY_BORDER);
+        //splitPane.setBorder(SwingRConstants.EMPTY_BORDER);
+        splitPane.setBorder(BorderFactory.createLineBorder(Color.GRAY));
         return splitPane;
     }
 

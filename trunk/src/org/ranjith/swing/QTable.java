@@ -7,6 +7,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Rectangle;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.EventObject;
 import java.util.List;
@@ -14,6 +15,7 @@ import javax.swing.JTable;
 import javax.swing.JViewport;
 import javax.swing.UIManager;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
@@ -37,7 +39,9 @@ public class QTable extends JTable {
 
     /** alternate row color.Defaults to SwingRConstants.ALTERNATE_ROW_COLOR */
     private Color alternateRowColor = SwingRConstants.ALTERNATE_ROW_COLOR;
-
+    
+    /** this field is used to track sorted column */
+    private int sortedColumnIndex = -1; //nothing is sorted
     /**
      * Empty constructor. Use this constructor only to initialize containers.
      * Provided for compatibility with actual swing component.
@@ -128,8 +132,24 @@ public class QTable extends JTable {
         this.setAutoCreateColumnsFromModel(false);
         this.setAutoCreateRowSorter(true);
         this.setShowGrid(false);
+        this.getTableHeader().addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent evt) {
+                super.mouseClicked(evt);
+                JTable table = ((JTableHeader)evt.getSource()).getTable();
+                TableColumnModel colModel = table.getColumnModel();
+                setSortedColumnIndex(colModel.getColumnIndexAtX(evt.getX()));
+            }
+        });
 	}
 	
+	public void setSortedColumnIndex(int n){
+	    sortedColumnIndex = n;
+	}
+	
+	public int getSortedColumnIndex() {
+	    return sortedColumnIndex;
+	}
     //--------------------------------------------------------------------------
     // Following code is for painting alternate row highlight and column 
     // grid for all rows. Pure UI pleasure.
@@ -234,13 +254,15 @@ public class QTable extends JTable {
     }
     
     /**
-     * Set underlying data model
+     * Set underlying data model. Fires data changed
+     * on model and sets sorted column index to -1
      * @param model instance of QTableModel
      */
     public void setQTableModel(QTableModel model) {
         this.model = model;
         init(model);
         model.fireTableDataChanged();
+        this.setSortedColumnIndex(-1);
     }
     
 }
