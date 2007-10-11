@@ -9,29 +9,42 @@ import java.awt.Dimension;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.RenderingHints;
 import java.awt.geom.Rectangle2D;
+import java.net.URL;
 
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
 
 /**
- * An "iTunes(R)" like table header
+ * An "iTunes(R)" like table header. This is a minimal implementation. Column
+ * selection etc are not taken care.
+ * 
  * @author ranjith
- *
+ * 
  */
-public class QTableHeaderRenderer extends SimpleGradientPanel implements TableCellRenderer{
-    
-    
+public class QTableHeaderRenderer extends JPanel implements TableCellRenderer {
+
     protected JTable table;
     protected Object value;
     protected boolean isSelected;
     protected boolean hasFocus;
     protected int row;
     protected int column;
+    boolean isDrawingSortedColumn = false;
+    protected int prevSortedColumn = -1;
 
     public static final int LEFTJUSTIFICATION = 0;
     public static final int RIGHTJUSTIFICATION = 1;
-    
+
+    public static final int SORTASC = 1;
+    public static final int SORTDESC = 2;
+    private int sortDirection;
+
     public static final Color selectedTopStartColor = new Color(0xD0E0F4);
     public static final Color selectedTopEndColor = new Color(0x8FBBE8);
     public static final Color selectedBottomStartColor = new Color(0x6AAAEB);
@@ -43,10 +56,11 @@ public class QTableHeaderRenderer extends SimpleGradientPanel implements TableCe
     public static final Color unselectedBottomEndColor = Color.WHITE;
 
     public static final Color borderMiddleColor = new Color(0x666666);
-    public static final Color borderVerticalColor = new Color(150, 150, 150, 150);
-    
+    public static final Color borderVerticalColor = new Color(150, 150, 150,
+            150);
+
     private int justification = LEFTJUSTIFICATION;
-    
+
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value,
             boolean isSelected, boolean hasFocus, int row, int column) {
@@ -57,97 +71,116 @@ public class QTableHeaderRenderer extends SimpleGradientPanel implements TableCe
         this.row = row;
         this.column = column;
         setFont(table.getFont());
-
+        int sortedColumn = ((QTable) table).getSortedColumnIndex();
+        this.isDrawingSortedColumn = (sortedColumn == column);
+        if (this.isDrawingSortedColumn) {
+            if (sortedColumn == prevSortedColumn) {
+                sortDirection = toggle(sortDirection);
+            } else {
+                sortDirection = SORTASC;
+                prevSortedColumn = sortedColumn;
+            }
+        }
         return this;
     }
-    
-    public void paint(Graphics g)
-    {
+
+    private int toggle(int direction) {
+        return (direction == SORTDESC) ? SORTASC : SORTDESC;
+    }
+
+    public void paint(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
-        Color topStartColor = isSelected ? selectedTopStartColor : unselectedTopStartColor;
-        Color topEndColor = isSelected ? selectedTopEndColor : unselectedTopEndColor;
-        Color bottomStartColor = isSelected ? selectedBottomStartColor : unselectedBottomStartColor;
-        Color bottomEndColor = isSelected ? selectedBottomEndColor : unselectedBottomEndColor;
+        Dimension vSize = getSize();
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                RenderingHints.VALUE_ANTIALIAS_ON);
 
-        java.awt.Dimension vSize = getSize();
-
-        int h = vSize.height;
-        int w = vSize.width;
-
-        int h2 = h / 2;
-        int h4 = h / 4;
-
-        g2.setPaint(new GradientPaint(0, 0, topStartColor, 0, h4, topEndColor));
-        g2.fillRect(0, 0, w, h2);
-
-        g2.setColor(topEndColor);
-        g2.setPaint(new GradientPaint(0, h4 + 1, topStartColor, 0, h2, topEndColor));
-
-        g2.setPaint(new GradientPaint(0, h2, bottomStartColor, 0, h - 2, bottomEndColor));
-        g2.fillRect(0, h2, w, h - 2);
+        if (isDrawingSortedColumn) {
+            g2.setPaint(new GradientPaint(0, 0, new Color(0xC8D4E2), 0,
+                    vSize.height, new Color(0x7F95B3)));
+        } else {
+            g2.setPaint(new GradientPaint(0, 0, new Color(0xEEEEEE), 0,
+                    vSize.height, new Color(0xBBBBBB)));
+        }
+        g2.fillRect(0, 0, vSize.width, vSize.height);
 
         g2.setColor(borderMiddleColor);
-        g2.drawLine(0, h - 1, w, h - 1);
+        g2.drawLine(0, vSize.height - 1, vSize.width, vSize.height - 1);
 
         boolean isLast = column == table.getColumnCount() - 1;
-        if (!isLast)
-        {
+        if (!isLast) {
             g2.setColor(borderVerticalColor);
-            g2.drawLine(w - 1, 0, w - 1, h - 1);
+            g2.drawLine(vSize.width - 1, 0, vSize.width - 1, vSize.height - 1);
         }
 
         String vText = getText(value);
-        System.out.println(vText + " - " + isSelected);
-        if (vText != null)
-        {
-            Rectangle2D vRectangle = g.getFontMetrics().getStringBounds(vText,g);
+        if (vText != null) {
+            Rectangle2D vRectangle = g2.getFontMetrics().getStringBounds(vText,
+                    g2);
 
             int sx;
 
-            if (justification == LEFTJUSTIFICATION)
-            {
+            if (justification == LEFTJUSTIFICATION) {
                 sx = 5;
+            } else {
+                sx = vSize.width - ((int) vRectangle.getWidth() + 5);
             }
-            else
-            {
-                sx = w-((int)vRectangle.getWidth()+5);
+            int sy = vSize.height
+                    - (vSize.height - (int) vRectangle.getHeight()) / 2
+                    - g.getFontMetrics().getDescent();
+            
+            if (isDrawingSortedColumn) {
+                g2.setColor(Color.LIGHT_GRAY);
+                g2.drawString(vText, sx, sy+1);                
             }
-            int sy = h - (h-(int)vRectangle.getHeight()) / 2 - g.getFontMetrics().getDescent();
-
-            g.setColor(Color.BLACK);
-            g.drawString(vText, sx, sy);
+            g2.setColor(new Color(0x202020));
+            g2.drawString(vText, sx, sy);
         }
+        if (isDrawingSortedColumn) {
+            paintIcon(g2, vSize.width, vSize.height);
+
+        }
+        g2.dispose();
     }
-    
-    public Dimension getPreferredSize()
-    {
+
+    private void paintIcon(Graphics2D g2, int width, int height) {
+        URL imageURL = (sortDirection == SORTDESC) ? this.getClass()
+                .getResource("images/sort_desc.png") : this.getClass()
+                .getResource("images/sort_asc.png");
+
+        Icon vIcon = new ImageIcon(imageURL, "S");
+
+        int x = (width - vIcon.getIconWidth());
+        int y = (height - vIcon.getIconHeight()) / 2;
+        
+        //some dirty math to make the icon location correct.
+        vIcon.paintIcon(this, g2, x-1, y-2);
+    }
+
+    public Dimension getPreferredSize() {
         Dimension vDimension = super.getPreferredSize();
-        vDimension.height = getFont().getSize() + 5;
+        vDimension.height = getFont().getSize() + 6;
         return vDimension;
     }
-    
+
     private String getText(Object value) {
-        return value==null?"":value.toString();
+        return value == null ? "" : value.toString();
     }
-    
+
     // ------------------------------------------------------------------------------------------------------------------
     // The following methods override the defaults for performance reasons
     // ------------------------------------------------------------------------------------------------------------------
 
-
-    public void validate()
-    {
+    public void validate() {
     }
 
-    public void revalidate()
-    {
+    public void revalidate() {
     }
 
-    protected void firePropertyChange(String propertyName, Object oldValue, Object newValue)
-    {
+    protected void firePropertyChange(String propertyName, Object oldValue,
+            Object newValue) {
     }
 
-    public void firePropertyChange(String propertyName, boolean oldValue, boolean newValue)
-    {
-    }    
+    public void firePropertyChange(String propertyName, boolean oldValue,
+            boolean newValue) {
+    }
 }
