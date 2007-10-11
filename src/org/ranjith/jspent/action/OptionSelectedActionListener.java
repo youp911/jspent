@@ -24,7 +24,6 @@ public class OptionSelectedActionListener implements ListSelectionListener {
      */
     @Override
     public void valueChanged(ListSelectionEvent event) {
-        System.out.println("Called");
         JList list = (JList)event.getSource();
         int option = list.getSelectedIndex();
         switch(option) {

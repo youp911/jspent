@@ -26,7 +26,6 @@ public class RowSelectionActionListener implements ListSelectionListener {
      */
     @Override
     public void valueChanged(ListSelectionEvent listSelectionEvent) {
-        System.out.println(listSelectionEvent.getFirstIndex() );
         if(listSelectionEvent.getFirstIndex() >= 0) {
             application.setModfyToolBarButtonEnabled(true);
             application.setDeleteToolBarButtonEnabled(true);

@@ -7,7 +7,6 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.net.URL;
 import java.text.NumberFormat;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -63,7 +62,6 @@ public class JSpent extends JFrame {
     private JList optionsList;
     private JPanel filterPanel;
     JScrollPane tableScrollPane;
-    private static Map savingsPluginMap = new HashMap(1);
     public  static PluginManager pluginManager = PluginManager.getInstance();
     
     public static final String EXPENSES = "Expenses";
