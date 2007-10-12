@@ -55,7 +55,7 @@ public class QTableHeaderRenderer extends JPanel implements TableCellRenderer {
     public static final Color unselectedBottomStartColor = new Color(0xE8E8E8);
     public static final Color unselectedBottomEndColor = Color.WHITE;
 
-    public static final Color borderMiddleColor = new Color(0x666666);
+    public static final Color borderMiddleColor = SwingRConstants.LINE_COLOR;
     public static final Color borderVerticalColor = new Color(150, 150, 150,
             150);
 

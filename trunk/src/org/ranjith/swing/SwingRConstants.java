@@ -23,4 +23,5 @@ public class SwingRConstants {
     public static final Color DEFAULT_SELECTION_BACKGROUND_COLOR = new Color(0x3D80DF);
     public static final EmptyBorder EMPTY_BORDER = new EmptyBorder(0,0,0,0);
     public static final Color TABLE_GRID_COLOR = new Color(0xD9D9D9);
+    public static final Color LINE_COLOR = new Color(0x666666);
 }

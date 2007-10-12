@@ -104,7 +104,7 @@ public class JSpent extends JFrame {
         SimpleGradientPanel topGradientPanel = new SimpleGradientPanel();
         GridBagLayout gridBagLayout = new GridBagLayout();
         topGradientPanel.setLayout(gridBagLayout);
-        
+        topGradientPanel.setDrawBottomBorder(true);
         GlassToolBar toolBar = getToolBar();
         
         GridBagConstraints gbConstraints = new GridBagConstraints();
@@ -179,8 +179,8 @@ public class JSpent extends JFrame {
         splitPane.setDividerLocation(160);
         splitPane.add(scrollPane, JSplitPane.RIGHT);
         splitPane.add(categoryScrollPane, JSplitPane.LEFT);
-        //splitPane.setBorder(SwingRConstants.EMPTY_BORDER);
-        splitPane.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+        splitPane.setBackground(SwingRConstants.LINE_COLOR);
+        splitPane.setBorder(SwingRConstants.EMPTY_BORDER);
         return splitPane;
     }
 
@@ -199,6 +199,7 @@ public class JSpent extends JFrame {
 	    GridBagLayout gridBagLayout = new GridBagLayout();
         SimpleGradientPanel bottomPanel = new SimpleGradientPanel();       
         bottomPanel.setLayout(gridBagLayout);
+        bottomPanel.setDrawTopBorder(true);
         GridBagConstraints gbConstraints = new GridBagConstraints();
         gbConstraints.fill = GridBagConstraints.HORIZONTAL;
         gbConstraints.gridx = 1;

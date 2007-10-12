@@ -39,12 +39,30 @@ public class SimpleGradientPanel extends JPanel
      * The direction of the gradient
      */
     private int direction = VERTICAL;
+    
+    private boolean drawBottomBorder = false;
+    
+    private boolean drawTopBorder = false;
 
     // ------------------------------------------------------------------------------------------------------------------
     //  Constructors and getter/setter methods
     // ------------------------------------------------------------------------------------------------------------------
 
     /**
+	 * @return the drawBottomBorder
+	 */
+	public boolean isDrawBottomBorder() {
+		return drawBottomBorder;
+	}
+
+	/**
+	 * @param drawBottomBorder the drawBottomBorder to set
+	 */
+	public void setDrawBottomBorder(boolean drawBottomBorder) {
+		this.drawBottomBorder = drawBottomBorder;
+	}
+
+	/**
      * Create a default SimpleGradientPanel instance.
      */
     public SimpleGradientPanel()
@@ -52,6 +70,21 @@ public class SimpleGradientPanel extends JPanel
         this(SwingRConstants.PANEL_GRADIENT_START_COLOR,SwingRConstants.PANEL_GRADIENT_END_COLOR);
     }
 
+
+	/**
+	 * @return the drawTopBorder
+	 */
+	public boolean isDrawTopBorder() {
+		return drawTopBorder;
+	}
+
+	/**
+	 * @param drawTopBorder the drawTopBorder to set
+	 */
+	public void setDrawTopBorder(boolean drawTopBorder) {
+		this.drawTopBorder = drawTopBorder;
+	}
+	
     /**
      * Create a SimpleGradientPanel with the given start and end colors.
      *
@@ -168,6 +201,17 @@ public class SimpleGradientPanel extends JPanel
         {
             paintVerticalGradient(g2, inset.left, inset.top, vWidth, vHeight, dim.height);
         }
+        if(drawBottomBorder) {
+        	g2.setColor(SwingRConstants.LINE_COLOR);
+        	g2.drawLine(0,vHeight-1,vWidth,vHeight-1);
+        }
+        if(drawTopBorder) {
+        	//todo: refactor/draw float Line2D.Float
+        	g2.setColor(SwingRConstants.LINE_COLOR);
+        	g2.drawLine(0,0,vWidth,0);
+        	g2.setColor(Color.WHITE);
+        	g2.drawLine(0,1,vWidth,1);
+        }       
     }
 
     /**
@@ -187,5 +231,6 @@ public class SimpleGradientPanel extends JPanel
         g2.setPaint(new GradientPaint(x, 0, startColor, width, 0, endColor));
         g2.fillRect(x, y, w, h);
     }
+
 }
 
