@@ -41,8 +41,6 @@ public class QTableHeaderRenderer extends JPanel implements TableCellRenderer {
     public static final int LEFTJUSTIFICATION = 0;
     public static final int RIGHTJUSTIFICATION = 1;
 
-    public static final int SORTASC = 1;
-    public static final int SORTDESC = 2;
     private int sortDirection;
 
     public static final Color selectedTopStartColor = new Color(0xD0E0F4);
@@ -74,18 +72,9 @@ public class QTableHeaderRenderer extends JPanel implements TableCellRenderer {
         int sortedColumn = ((QTable) table).getSortedColumnIndex();
         this.isDrawingSortedColumn = (sortedColumn == column);
         if (this.isDrawingSortedColumn) {
-            if (sortedColumn == prevSortedColumn) {
-                sortDirection = toggle(sortDirection);
-            } else {
-                sortDirection = SORTASC;
-                prevSortedColumn = sortedColumn;
-            }
+        	sortDirection = ((QTable) table).getSortOrder();
         }
         return this;
-    }
-
-    private int toggle(int direction) {
-        return (direction == SORTDESC) ? SORTASC : SORTDESC;
     }
 
     public void paint(Graphics g) {
@@ -143,7 +132,7 @@ public class QTableHeaderRenderer extends JPanel implements TableCellRenderer {
     }
 
     private void paintIcon(Graphics2D g2, int width, int height) {
-        URL imageURL = (sortDirection == SORTDESC) ? this.getClass()
+        URL imageURL = (sortDirection == SwingRConstants.SORT_DESCENTING) ? this.getClass()
                 .getResource("images/sort_desc.png") : this.getClass()
                 .getResource("images/sort_asc.png");
 

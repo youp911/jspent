@@ -24,4 +24,6 @@ public class SwingRConstants {
     public static final EmptyBorder EMPTY_BORDER = new EmptyBorder(0,0,0,0);
     public static final Color TABLE_GRID_COLOR = new Color(0xD9D9D9);
     public static final Color LINE_COLOR = new Color(0x666666);
+    public static final int SORT_ASCENDING = 1;
+    public static final int SORT_DESCENTING = 2;
 }
