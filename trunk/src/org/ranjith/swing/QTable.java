@@ -42,6 +42,12 @@ public class QTable extends JTable {
     
     /** this field is used to track sorted column */
     private int sortedColumnIndex = -1; //nothing is sorted
+    
+    /** this file is used to track previously sorted column. Helpful to find sort order */
+    private int prevSortedColIndex = -2;
+    
+    private int sortOrder = SwingRConstants.SORT_ASCENDING;
+    
     /**
      * Empty constructor. Use this constructor only to initialize containers.
      * Provided for compatibility with actual swing component.
@@ -135,13 +141,27 @@ public class QTable extends JTable {
         this.getTableHeader().addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent evt) {
-                super.mouseClicked(evt);
                 JTable table = ((JTableHeader)evt.getSource()).getTable();
                 TableColumnModel colModel = table.getColumnModel();
-                setSortedColumnIndex(colModel.getColumnIndexAtX(evt.getX()));
+                int clickedCol = colModel.getColumnIndexAtX(evt.getX());
+                setSortOrder(clickedCol,getPrevSortedColIndex());
+                setSortedColumnIndex(clickedCol);
+                setPrevSortedColIndex(clickedCol);
+          
             }
         });
 	}
+	private void setSortOrder(int selectedColumn, int prevSelectedColumn) {
+		if(selectedColumn == prevSelectedColumn) {
+			if(sortOrder == SwingRConstants.SORT_ASCENDING) {
+				sortOrder = SwingRConstants.SORT_DESCENTING;
+			} else {
+				sortOrder = SwingRConstants.SORT_ASCENDING;
+			}
+		}else {
+			sortOrder = SwingRConstants.SORT_ASCENDING;
+		}
+ 	}	
 	
 	public void setSortedColumnIndex(int n){
 	    sortedColumnIndex = n;
@@ -264,5 +284,26 @@ public class QTable extends JTable {
         model.fireTableDataChanged();
         this.setSortedColumnIndex(-1);
     }
+
+	/**
+	 * @return the prevSortedColIndex
+	 */
+	public int getPrevSortedColIndex() {
+		return prevSortedColIndex;
+	}
+
+	/**
+	 * @param prevSortedColIndex the prevSortedColIndex to set
+	 */
+	public void setPrevSortedColIndex(int prevSortedColIndex) {
+		this.prevSortedColIndex = prevSortedColIndex;
+	}
+
+	/**
+	 * @return the sortOrder
+	 */
+	public int getSortOrder() {
+		return sortOrder;
+	}
     
 }
