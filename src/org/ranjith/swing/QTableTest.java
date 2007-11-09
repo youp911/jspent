@@ -40,7 +40,7 @@ public class QTableTest extends JFrame implements ActionListener{
 	public void actionPerformed(ActionEvent event) {
 		List employeeList = getEmployeeList();
 		QTableModel dataModel = new QTableModel(employeeList,new String[]{"Emp Id","Join Date","Name","Salary"},new String[] {"empNo","joinDate","name","salary"});
-		employeeTable.setQTableModel(dataModel);
+		//employeeTable.setQTableModel(dataModel);
 	}	
 	public static void main(String[] args) {
 		QTableTest test = new QTableTest();

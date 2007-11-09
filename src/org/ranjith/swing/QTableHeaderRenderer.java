@@ -13,11 +13,14 @@ import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.geom.Rectangle2D;
 import java.net.URL;
+import java.util.List;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.JTable;
+import javax.swing.SortOrder;
+import javax.swing.RowSorter.SortKey;
 import javax.swing.table.TableCellRenderer;
 
 /**
@@ -41,7 +44,7 @@ public class QTableHeaderRenderer extends JPanel implements TableCellRenderer {
     public static final int LEFTJUSTIFICATION = 0;
     public static final int RIGHTJUSTIFICATION = 1;
 
-    private int sortDirection;
+    private SortOrder sortDirection;
 
     public static final Color selectedTopStartColor = new Color(0xD0E0F4);
     public static final Color selectedTopEndColor = new Color(0x8FBBE8);
@@ -69,10 +72,15 @@ public class QTableHeaderRenderer extends JPanel implements TableCellRenderer {
         this.row = row;
         this.column = column;
         setFont(table.getFont());
-        int sortedColumn = ((QTable) table).getSortedColumnIndex();
-        this.isDrawingSortedColumn = (sortedColumn == column);
-        if (this.isDrawingSortedColumn) {
-        	sortDirection = ((QTable) table).getSortOrder();
+        //-- get the 'auto sorter's properties.
+        List sortKeys = ((QTable)table).getRowSorter().getSortKeys();
+        if(sortKeys != null && !sortKeys.isEmpty()) {
+        	SortKey sortKey = (SortKey) sortKeys.get(0);
+        	this.isDrawingSortedColumn = (column == sortKey.getColumn());
+        	sortDirection = sortKey.getSortOrder();
+        } else {
+        	this.isDrawingSortedColumn = false;
+        	sortDirection = SortOrder.UNSORTED;
         }
         return this;
     }
@@ -132,7 +140,7 @@ public class QTableHeaderRenderer extends JPanel implements TableCellRenderer {
     }
 
     private void paintIcon(Graphics2D g2, int width, int height) {
-        URL imageURL = (sortDirection == SwingRConstants.SORT_DESCENTING) ? this.getClass()
+        URL imageURL = (sortDirection == SortOrder.DESCENDING) ? this.getClass()
                 .getResource("images/sort_desc.png") : this.getClass()
                 .getResource("images/sort_asc.png");
 
