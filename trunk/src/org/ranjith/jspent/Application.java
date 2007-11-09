@@ -13,11 +13,14 @@ import org.ranjith.jspent.ui.JSpent;
 
 /**
  * The jSpent Application
- * 
+ * Calls the JSPent orchestrator class.
  * @author ranjith
  */
 public class Application {
+	/** Application Logger Name */
     private static final String APP_LOGGER = "Application";
+    
+    /** Application Logger */
     private static final Logger LOGGER = Logger.getLogger(APP_LOGGER);
     
     private static ResourceBundle bundle = null;
@@ -25,7 +28,11 @@ public class Application {
     public static void main(String[] args) {
         initAndRunUI();
     }
-
+    
+    /**
+     * Provides a universal resource bundle to other UI components.
+     * @return resource bundle.
+     */
     public static synchronized ResourceBundle getResourceBundle() {
         if(bundle == null) {
             bundle = ResourceBundle.getBundle("org.ranjith.jspent.messages");
