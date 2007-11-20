@@ -29,8 +29,8 @@ import javax.swing.event.ChangeListener;
 public class MonthSpinnerPanel extends JPanel {
     public static final JLabel MAX = new JLabel("September");
     private EmbossedLabel monthLabel;
-    private JLabel nextButton;
-    private JLabel prevButton;
+    private ModernButton nextButton;
+    private ModernButton prevButton;
     private int idx;
     public static final String[] MONTHS = new String[] { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
     
@@ -65,10 +65,14 @@ public class MonthSpinnerPanel extends JPanel {
     private void initButtons() {
         java.net.URL vUrl = this.getClass().getResource("images/resultset_next.png");
         ImageIcon vIcon = new ImageIcon(vUrl);
-        nextButton = new JLabel(vIcon);
+        nextButton = new ModernButton();
+        nextButton.setButtonStyle(ModernButton.RIGHT);
+        //nextButton.setIcon(vIcon);
         vUrl = this.getClass().getResource("images/resultset_previous.png");
         vIcon = new ImageIcon(vUrl);
-        prevButton = new JLabel(vIcon);
+        prevButton = new ModernButton();
+        prevButton.setButtonStyle(ModernButton.LEFT);
+        //prevButton.setIcon(vIcon);
     }
 
     private void validateMonth(int monthNumber) {

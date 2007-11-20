@@ -3,8 +3,10 @@
  */
 package org.ranjith.swing;
 
+import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Composite;
 import java.awt.Dimension;
 import java.awt.FontMetrics;
 import java.awt.GradientPaint;
@@ -19,6 +21,7 @@ import java.awt.geom.RoundRectangle2D;
 
 import javax.swing.AbstractButton;
 import javax.swing.ButtonModel;
+import javax.swing.Icon;
 import javax.swing.JComponent;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicButtonUI;
@@ -32,7 +35,8 @@ public class ModernButtonUI extends BasicButtonUI {
     private static final Color BORDER_COLOR = new Color(0x454545);
     private static final Color BORDER_HIGHTLIGHT = new Color(255, 255, 255, 150);
     private static final Color START_COLOR = Color.WHITE;
-    private static final Color END_COLOR = new Color(0xACACAC);
+    //private static final Color END_COLOR = new Color(0xACACAC);
+    private static final Color END_COLOR = new Color(0x838383);
 
     private static final Color PRESSED_START_COLOR = Color.GRAY;
     private static final Color PRESSED_END_COLOR = Color.WHITE;
@@ -149,6 +153,7 @@ public class ModernButtonUI extends BasicButtonUI {
          * g2.setPaint(vBottomPaint); g2.fillRect(x, y + h / 2, w, h / 2 - 1);
          */
         g2.setClip(vOldClip);
+        paintIcon(g2, button, isRollover, isSelected);
     }
 
     private void paintButtonBorder(Graphics2D g, int x, int y, int w, int h,
@@ -211,6 +216,49 @@ public class ModernButtonUI extends BasicButtonUI {
         return;
     }
     
+    private void paintIcon(Graphics2D g2, AbstractButton b, boolean isRollover,
+            boolean isSelected) {
+        int x;
+        int y;
+        Icon vIcon = null;
+
+        if (isSelected && isRollover)
+        {
+            vIcon = b.getRolloverSelectedIcon();
+        }
+        else if (isSelected)
+        {
+            vIcon = b.getSelectedIcon();
+        }
+        else if (isRollover)
+        {
+            vIcon = b.getRolloverIcon();
+        }
+
+        if (vIcon == null)
+        {
+            vIcon = b.getIcon();
+        }
+
+        if (vIcon != null)
+        {
+            x = (b.getWidth() - vIcon.getIconWidth()) / 2 + 1;
+            y = (b.getHeight() - vIcon.getIconHeight()) / 2;
+
+            Composite vComposite = g2.getComposite();
+            if (!b.isEnabled())
+            {
+                g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .5f));
+            }
+
+            vIcon.paintIcon(b, g2, x, y);
+
+            if (!b.isEnabled())
+            {
+                g2.setComposite(vComposite);
+            }
+        }
+    }
     //------------------------------------------------------------------------------------------------------------------
     //  Sizing Methods
     // ------------------------------------------------------------------------------------------------------------------
@@ -229,13 +277,13 @@ public class ModernButtonUI extends BasicButtonUI {
         javax.swing.Icon vIcon = b.getIcon();
         if (vIcon != null)
         {
-            w = vIcon.getIconHeight() + 5;
-            h = vIcon.getIconWidth() + 5;
+            w = vIcon.getIconWidth();
+            h = vIcon.getIconHeight() + 7;
         } else {
             return super.getPreferredSize(c);
         }
 
-        w += (h * 1);
+        w += (h * 0.5);
 
         return new Dimension(w, h);
     }
