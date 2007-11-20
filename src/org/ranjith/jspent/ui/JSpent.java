@@ -44,6 +44,7 @@ import org.ranjith.swing.EmbossedLabel;
 import org.ranjith.swing.GlassToolBar;
 import org.ranjith.swing.IconLabelListCellRenderer;
 import org.ranjith.swing.IconListItem;
+import org.ranjith.swing.ModernButton;
 import org.ranjith.swing.QTable;
 import org.ranjith.swing.QTableModel;
 import org.ranjith.swing.RoundButton;
@@ -59,9 +60,10 @@ import org.ranjith.swing.ToolBarButton;
 public class JSpent extends JFrame {
     private QTable table = null;
     private JSplitPane splitPane;
-    ToolBarButton addButton = new ToolBarButton(0);
-    ToolBarButton modifyButton = new ToolBarButton(1);
-    ToolBarButton deleteButton = new ToolBarButton(2);
+    //ToolBarButton addButton = new ToolBarButton(0);
+    ModernButton addButton = new ModernButton();
+    ModernButton modifyButton = new ModernButton();
+    ModernButton deleteButton = new ModernButton();
     private JList optionsList;
     private JPanel filterPanel;
     JScrollPane tableScrollPane;
@@ -155,12 +157,15 @@ public class JSpent extends JFrame {
         GlassToolBar toolBar = new GlassToolBar();
         URL resource = JSpent.class.getResource(bundle.getString("toolbar.add.new.icon"));
         addButton.setIcon(new ImageIcon(resource,bundle.getString("toolbar.add.new")));
+        addButton.setButtonStyle(ModernButton.BUTTONSTYLE_TOOLBAR_LEFT);
         addButton.addActionListener(new AddNewActionListener(this));
         resource = JSpent.class.getResource(bundle.getString("toolbar.modify.icon"));
         modifyButton.setIcon(new ImageIcon(resource,bundle.getString("toolbar.modify")));
+        modifyButton.setButtonStyle(ModernButton.BUTTONSTYLE_TOOLBAR_CENTER);
         modifyButton.addActionListener(new ModifyActionListener(this));
         resource = JSpent.class.getResource(bundle.getString("toolbar.delete.icon"));
         deleteButton.setIcon(new ImageIcon(resource,bundle.getString("toolbar.delete")));
+        deleteButton.setButtonStyle(ModernButton.BUTTONSTYLE_TOOLBAR_RIGHT);
         deleteButton.addActionListener(new DeleteActionListener(this));
         //Not enabled on start up. Enable only when table row is selected.
         modifyButton.setEnabled(false);
