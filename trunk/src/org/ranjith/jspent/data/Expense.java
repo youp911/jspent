@@ -13,7 +13,8 @@ import org.ranjith.util.DataTypeUtil;
  *
  */
 public class Expense {
-	private int id;
+
+    private int id;
 	private String category;
 	private String subCategory;
 	private Date date;
@@ -172,5 +173,17 @@ public class Expense {
 			return false;
 		return true;
 	}
-    
+	/* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        StringBuffer buff = new StringBuffer("[Expense id = ").append(id)
+                                .append(",Category=").append(category)
+                                .append(",SubCat=").append(subCategory)
+                                .append(",Date=").append(date)
+                                .append(",Amount=").append(amount)
+                                .append(",Notes=").append(notes).append("]");
+        return buff.toString();
+    }   
 }

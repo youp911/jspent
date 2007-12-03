@@ -28,7 +28,8 @@ public class AddNewActionListener implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		if(application.getCurrentContext().equals(JSpent.EXPENSES)) {
-			application.showExpenseForm();
+		    application.addNewRow();
+			//application.showExpenseForm();
 		}else if(application.getCurrentContext().equals(JSpent.INCOMES)) {
 			JOptionPane.showMessageDialog(application, "Not implemented yet");
 		}else if(application.getCurrentContext().equals(JSpent.SAVINGS)) {
