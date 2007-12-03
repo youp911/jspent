@@ -32,7 +32,9 @@ public class QTableModel extends AbstractTableModel {
 
     /** a local cache to quickly return column class without inspecting */
     private Class[] colClassesCache;
-
+    
+    /** Logger instance */
+    private static Logger LOG  = Logger.getLogger("QTableModel");
     /**
      * Create a quick table model based on specified list of data, array of
      * column headers and underlying object properties.
@@ -44,7 +46,10 @@ public class QTableModel extends AbstractTableModel {
      *                  colProps element.
      */
     public QTableModel(List rows, String[] colNames, String[] colProps) {
+        LOG.log(Level.INFO,"Creating qtable model");
+        
     	if(rows == null) {
+    	    LOG.severe("Cannot create qtable model with empty dataset");
     		throw new IllegalArgumentException("parameter for rows not initialized.");
     	}
         this.rows = rows;
@@ -199,7 +204,7 @@ public class QTableModel extends AbstractTableModel {
             colClassesCache[columnIndex] = DataTypeUtil.getWrapperType(PropertyUtils.getPropertyType(rows.get(0), colProps[columnIndex]));
             return colClassesCache[columnIndex];
         } catch (Exception ex) {
-            Logger.getLogger("global").log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, null, ex);
             return super.getColumnClass(columnIndex);
         }
     }

@@ -30,8 +30,8 @@ import javax.swing.plaf.basic.BasicButtonUI;
  * @author ranjith
  * 
  */
-public class ModernButtonUI extends BasicButtonUI {
-    private static final ModernButtonUI INSTANCE = new ModernButtonUI();
+public class ModernToggleButtonUI extends BasicButtonUI {
+    private static final ModernToggleButtonUI INSTANCE = new ModernToggleButtonUI();
     private static final Color BORDER_COLOR = new Color(0x454545);
     private static final Color BORDER_HIGHTLIGHT = new Color(255, 255, 255, 150);
     private static final Color START_COLOR = Color.WHITE;
@@ -63,7 +63,7 @@ public class ModernButtonUI extends BasicButtonUI {
         boolean isPressed = vButtonModel.isArmed() && vButtonModel.isPressed();
         boolean isRollover = vButtonModel.isRollover();
         boolean isSelected = vButtonModel.isSelected();
-        ModernButton mButton = (ModernButton) vButton;
+        ModernToggleButton mButton = (ModernToggleButton) vButton;
 
         int style = mButton.getButtonStyle();
 

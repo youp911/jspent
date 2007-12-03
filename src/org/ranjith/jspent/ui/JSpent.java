@@ -272,6 +272,7 @@ public class JSpent extends JFrame {
         return new ExpenseService().getExpenses(month);
     }
     
+   
     private void prepareUIForForm() {
     	setAddToolBarButtonEnabled(false);
     	setModfyToolBarButtonEnabled(false);
@@ -288,6 +289,10 @@ public class JSpent extends JFrame {
         showExpenseForm(null);
     }
 
+    public void addNewRow() {
+        //for expense.
+        ((JSpentTableModel)table.getQTableModel()).addEmptyRow();
+    }
     /**
      * This needs to be called when we have to edit an
      * expense data.
@@ -398,8 +403,8 @@ public class JSpent extends JFrame {
     
     public void clearTableSelection() {
         table.getSelectionModel().clearSelection();
-    } 
-    
+    }
+
     /**
      * updates expense table display for given month
      * @param month 1..12 indicating month

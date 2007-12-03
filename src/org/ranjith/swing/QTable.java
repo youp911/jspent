@@ -12,14 +12,17 @@ import java.awt.event.MouseEvent;
 import java.util.EventObject;
 import java.util.List;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.JViewport;
 import javax.swing.UIManager;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.JTableHeader;
+import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
+import javax.swing.text.JTextComponent;
 
 /**
  * QTable is a &quote;Quick table&quote; that can be used to 
@@ -226,6 +229,38 @@ public class QTable extends JTable {
         }
         return c;
     }
+    
+
+    /**
+     * @see javax.swing.JTable#changeSelection(int, int, boolean, boolean)
+     * Prepare for editing when the cell gains focus.
+     */
+    public void changeSelection(int row, int column, boolean toggle,
+            boolean extend) {
+        super.changeSelection(row, column, toggle, extend);
+
+        if (editCellAt(row, column))
+            getEditorComponent().requestFocusInWindow();
+    }
+   
+    /**
+     * @see javax.swing.JTable#prepareEditor(javax.swing.table.TableCellEditor, int, int)
+     * Select the text when the cell starts editing
+     * a) text will be replaced when you start typing in a cell
+     * b) text will be selected when you use F2 to start editing
+     * c) caret is placed at end of text when double clicking to start
+     * editing
+     */
+    public Component prepareEditor(TableCellEditor editor, int row,
+            int column) {
+        Component c = super.prepareEditor(editor, row, column);
+
+        if (c instanceof JTextComponent) {
+            ((JTextField) c).selectAll();
+        }
+
+        return c;
+    }         
     
     /**
      * Get underlying QTable Model.
