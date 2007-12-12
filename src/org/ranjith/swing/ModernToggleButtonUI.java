@@ -28,7 +28,7 @@ import javax.swing.plaf.basic.BasicButtonUI;
 
 /**
  * @author ranjith
- * 
+ * TODO: refactor/document.
  */
 public class ModernToggleButtonUI extends BasicButtonUI {
     private static final ModernToggleButtonUI INSTANCE = new ModernToggleButtonUI();

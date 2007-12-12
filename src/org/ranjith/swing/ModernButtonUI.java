@@ -28,6 +28,8 @@ import javax.swing.plaf.basic.BasicButtonUI;
 
 /**
  * @author ranjith
+ * A OSX modern toolbar button like Metal button.
+ * TODO: refactor
  * 
  */
 public class ModernButtonUI extends BasicButtonUI {
