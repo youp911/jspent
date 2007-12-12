@@ -1,21 +1,23 @@
 package org.ranjith.swing;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
-import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
-public class TestButtons extends JFrame implements ItemListener, ActionListener {
+public class MonthYearSpinnerPanel extends JPanel implements ItemListener, ActionListener {
     static String[] months = {"January","February","March","April","May","June",
         "July","August","September","October","November","December"};
     
@@ -25,13 +27,12 @@ public class TestButtons extends JFrame implements ItemListener, ActionListener 
     ModernButton prevButton;
     ModernButton nextButton;
     int monthIndex;
+    private List<ChangeListener> changeListenerList;
+    
     static final ModernButton refButton = new ModernButton("September");
-    public TestButtons() {
-        super("Test");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        SimpleGradientPanel panel = new SimpleGradientPanel();
-        
-        panel.setLayout(new BorderLayout());
+    public MonthYearSpinnerPanel() {
+    	this.setOpaque(false);
+    	this.setLayout(new BorderLayout());
         
         prevButton = getPrevButton();
         prevButton.addActionListener(this);
@@ -45,16 +46,11 @@ public class TestButtons extends JFrame implements ItemListener, ActionListener 
         nextButton = getNextButton();
         nextButton.addActionListener(this);
         
-        getContentPane().add(panel);
-        panel.add(new JLabel("TEST1"), BorderLayout.PAGE_START);
-        panel.add(prevButton, BorderLayout.LINE_START);
-
-        panel.add(getCenterPanel(), BorderLayout.CENTER);
-        panel.add(nextButton, BorderLayout.LINE_END);
-        //panel.add(mb2, BorderLayout.LINE_END);
-        panel.add(new JLabel("TEST1"), BorderLayout.PAGE_END);
-        pack();
-        setVisible(true);
+        
+        this.add(prevButton, BorderLayout.LINE_START);
+        this.add(getCenterPanel(), BorderLayout.CENTER);
+        this.add(nextButton, BorderLayout.LINE_END);
+        changeListenerList = new ArrayList<ChangeListener>();
     }
 
     private ModernButton getNextButton() {
@@ -69,7 +65,7 @@ public class TestButtons extends JFrame implements ItemListener, ActionListener 
     private ModernButton getButton(String imageURL, int style) {
         ModernButton button = new ModernButton(); 
         button.setButtonStyle(style);
-        button.setIcon(new ImageIcon(TestButtons.class.getResource(imageURL)));
+        button.setIcon(new ImageIcon(MonthYearSpinnerPanel.class.getResource(imageURL)));
         return button;
     }
 
@@ -106,13 +102,6 @@ public class TestButtons extends JFrame implements ItemListener, ActionListener 
         ModernToggleButton toggle = new ModernToggleButton(value);
         toggle.setButtonStyle(ModernButton.BUTTONSTYLE_TOOLBAR_CENTER);
         return toggle;
-    }
-
-    /**
-     * @param args
-     */
-    public static void main(String[] args) {
-        TestButtons t = new TestButtons();
     }
 
     @Override
@@ -166,5 +155,56 @@ public class TestButtons extends JFrame implements ItemListener, ActionListener 
             }
             
         }
+        fireStateChanged();
+    }
+    
+    private void fireStateChanged() {
+    	ChangeEvent event = new ChangeEvent(this);
+    	for (ChangeListener changeListener : changeListenerList) {
+			changeListener.stateChanged(event);
+		}
+	}
+
+	public void addChangeListener(ChangeListener changeListener) {
+    	this.changeListenerList.add(changeListener);
+    }
+    
+    public void removeChangeListener(ChangeListener cl) {
+    	this.changeListenerList.remove(cl);
+    }
+    
+    public Object getValue() {
+    	Calendar cal = Calendar.getInstance();
+    	cal.set(Calendar.MONTH, monthIndex);
+    	cal.set(Calendar.YEAR, Integer.parseInt(yearToggle.getText()));
+    	return cal;
+    }
+    
+    public static void main(String[] args) {
+		JFrame f = new JFrame("test");
+		f.getContentPane().add(new MonthYearSpinnerPanel());
+		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		f.pack();
+		f.setVisible(true);
+	}
+    
+    @Override
+    public Dimension getPreferredSize() {
+    	return getPrefSize();
+    }
+
+	private Dimension getPrefSize() {
+		return new Dimension(prevButton.getPreferredSize().width+ monthToggle.getPreferredSize().width + yearToggle.getPreferredSize().width + nextButton.getPreferredSize().width,
+    			prevButton.getPreferredSize().height);
+	}
+    
+    @Override
+    public Dimension getMaximumSize() {
+    	return getPreferredSize();
+    }
+    
+    @Override
+    public Dimension getMinimumSize() {
+    	return getPreferredSize();
     }
 }

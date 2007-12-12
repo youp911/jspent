@@ -7,12 +7,10 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.net.URL;
 import java.text.NumberFormat;
-import java.util.HashMap;
+import java.util.Calendar;
 import java.util.List;
-import java.util.Map;
 import java.util.ResourceBundle;
 
-import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
@@ -22,12 +20,9 @@ import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JSpinner;
 import javax.swing.JSplitPane;
 import javax.swing.JViewport;
-import javax.swing.SpinnerDateModel;
 import javax.swing.SwingUtilities;
-import javax.swing.JSpinner.DefaultEditor;
 
 import org.ranjith.jspent.Application;
 import org.ranjith.jspent.action.AddNewActionListener;
@@ -39,19 +34,17 @@ import org.ranjith.jspent.action.OptionSelectedActionListener;
 import org.ranjith.jspent.action.SaveExpenseActionListener;
 import org.ranjith.jspent.data.Expense;
 import org.ranjith.jspent.data.ExpenseService;
-import org.ranjith.plugin.PluginManager;
 import org.ranjith.swing.EmbossedLabel;
 import org.ranjith.swing.GlassToolBar;
 import org.ranjith.swing.IconLabelListCellRenderer;
 import org.ranjith.swing.IconListItem;
 import org.ranjith.swing.ModernButton;
+import org.ranjith.swing.MonthYearSpinnerPanel;
 import org.ranjith.swing.QTable;
 import org.ranjith.swing.QTableModel;
 import org.ranjith.swing.RoundButton;
 import org.ranjith.swing.SimpleGradientPanel;
-import org.ranjith.swing.SimpleRoundSpinner;
 import org.ranjith.swing.SwingRConstants;
-import org.ranjith.swing.ToolBarButton;
 
 /*
  * Main application class.
@@ -116,39 +109,15 @@ public class JSpent extends JFrame {
         gbConstraints.weightx = 0.5;
         gbConstraints.anchor = GridBagConstraints.PAGE_START;
         topGradientPanel.add(toolBar,gbConstraints);
-        JPanel spinnerPanel = new JPanel();
-        spinnerPanel.setLayout(new BorderLayout());
-        spinnerPanel.setOpaque(false);
-        SimpleRoundSpinner monthYearSpinner = getMonthYearSpinner();
-        spinnerPanel.add(monthYearSpinner,BorderLayout.CENTER);
-        spinnerPanel.add(new JLabel(" "),BorderLayout.LINE_END); //spacer
-        EmbossedLabel msgLabel = new EmbossedLabel("Expenses for :",EmbossedLabel.TRAILING);
-        msgLabel.setFont(SwingRConstants.DEFAULT_TEXT_FONT);   
-        
-        filterPanel = new JPanel(new BorderLayout());
-        filterPanel.setOpaque(false);
-        filterPanel.add(msgLabel,BorderLayout.CENTER);
-        filterPanel.add(spinnerPanel,BorderLayout.LINE_END);
-        gbConstraints.fill = GridBagConstraints.HORIZONTAL;
-        gbConstraints.gridx = 2;
-        gbConstraints.gridy = 0;
-        gbConstraints.anchor = GridBagConstraints.PAGE_END;
-        topGradientPanel.add(filterPanel,gbConstraints);
+ 
         topGradientPanel.setBorder(SwingRConstants.EMPTY_BORDER);
         return topGradientPanel;
     }
 
-	private SimpleRoundSpinner getMonthYearSpinner() {
-		SpinnerDateModel dateModel = new SpinnerDateModel();
-        SimpleRoundSpinner monthYearSpinner = new SimpleRoundSpinner(dateModel);
-        JSpinner.DateEditor dateEditor = new JSpinner.DateEditor(monthYearSpinner,"MMMMM, yyyy");
-        monthYearSpinner.setEditor(dateEditor);
-        monthYearSpinner.setFont(SwingRConstants.DEFAULT_TEXT_FONT);
-        monthYearSpinner.setOpaque(false);
-        monthYearSpinner.addChangeListener(new MonthYearChangeActionListener(this));
-        JSpinner.DefaultEditor editor = (DefaultEditor) monthYearSpinner.getEditor();
-        setCurrentMonth(MonthYearChangeActionListener.getMonth(monthYearSpinner));
-        editor.getTextField().setEditable(false);
+	private MonthYearSpinnerPanel getMonthYearSpinner() {
+		MonthYearSpinnerPanel monthYearSpinner = new MonthYearSpinnerPanel();
+		monthYearSpinner.addChangeListener(new MonthYearChangeActionListener(this));
+		currentMonth = ((Calendar)monthYearSpinner.getValue()).get(Calendar.MONTH)+1;
 		return monthYearSpinner;
 	}
 
@@ -174,7 +143,8 @@ public class JSpent extends JFrame {
         toolBar.add(addButton);
         toolBar.add(modifyButton);
         toolBar.add(deleteButton);
-        
+        toolBar.addSeparator(deleteButton.getPreferredSize());
+        toolBar.add(getMonthYearSpinner());
         return toolBar;
     }
 
@@ -208,11 +178,32 @@ public class JSpent extends JFrame {
         GridBagConstraints gbConstraints = new GridBagConstraints();
         gbConstraints.fill = GridBagConstraints.HORIZONTAL;
         gbConstraints.gridx = 1;
-        gbConstraints.gridy = 0;
+        gbConstraints.gridy = 1;
         gbConstraints.anchor = GridBagConstraints.CENTER;
         totalLabel = new EmbossedLabel("");
         totalLabel.setFont(SwingRConstants.DEFAULT_TEXT_FONT);
         bottomPanel.add(totalLabel,gbConstraints);
+        
+//        JPanel spinnerPanel = new JPanel();
+//        spinnerPanel.setLayout(new BorderLayout());
+//        spinnerPanel.setOpaque(false);
+//        MonthYearSpinnerPanel monthYearSpinner = getMonthYearSpinner();
+//        spinnerPanel.add(new JLabel(" "),BorderLayout.PAGE_START); //spacer
+//        spinnerPanel.add(monthYearSpinner,BorderLayout.CENTER);
+//        spinnerPanel.add(new JLabel(" "),BorderLayout.PAGE_END); //spacer
+//        EmbossedLabel msgLabel = new EmbossedLabel(" for ",EmbossedLabel.TRAILING);
+//        msgLabel.setFont(SwingRConstants.DEFAULT_TEXT_FONT);   
+//        
+//        filterPanel = new JPanel(new BorderLayout());
+//        filterPanel.setOpaque(false);
+//        filterPanel.add(msgLabel,BorderLayout.CENTER);
+//        filterPanel.add(spinnerPanel,BorderLayout.LINE_END);
+//        gbConstraints.fill = GridBagConstraints.HORIZONTAL;
+//        gbConstraints.gridx = 3;
+//        gbConstraints.gridy = 1;
+//        gbConstraints.anchor = GridBagConstraints.PAGE_END;
+//        bottomPanel.add(filterPanel,gbConstraints);
+        
         bottomPanel.setBorder(SwingRConstants.EMPTY_BORDER);
         return bottomPanel;
     }
@@ -341,7 +332,6 @@ public class JSpent extends JFrame {
             setDeleteToolBarButtonEnabled(false);
         }
         setAddToolBarButtonEnabled(true);
-        filterPanel.setVisible(true);
         splitPane.setDividerLocation(160);
         optionsList.setEnabled(true);
     }
@@ -441,8 +431,4 @@ public class JSpent extends JFrame {
     public void setCurrentMonth(int currentMonth) {
         this.currentMonth = currentMonth;
     }
-    
-
-
-
 }

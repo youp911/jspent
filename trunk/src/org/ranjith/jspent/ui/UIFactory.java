@@ -265,9 +265,10 @@ public class UIFactory {
                 LOG.info("Something changed on row: " + row + ", column: " + column );
                 if(row > 0) {
                     LOG.info("New value: " + table.getModel().getValueAt(row, column));
+                    table.setRowSelectionInterval(row, row);
                 }
                 table.setColumnSelectionInterval(column + 1, column + 1);
-                table.setRowSelectionInterval(row, row);
+                
             }
         }
     }

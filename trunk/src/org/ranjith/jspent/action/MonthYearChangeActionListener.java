@@ -11,6 +11,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import org.ranjith.jspent.ui.JSpent;
+import org.ranjith.swing.MonthYearSpinnerPanel;
 import org.ranjith.swing.SimpleRoundSpinner;
 
 /**
@@ -29,7 +30,7 @@ public class MonthYearChangeActionListener implements ChangeListener {
      */
     @Override
     public void stateChanged(ChangeEvent event) {
-        SimpleRoundSpinner source = (SimpleRoundSpinner) event.getSource();
+    	MonthYearSpinnerPanel source = (MonthYearSpinnerPanel) event.getSource();
         int month = getMonth(source);
         application.setCurrentMonth(month);
         application.refreshUI();
@@ -39,10 +40,8 @@ public class MonthYearChangeActionListener implements ChangeListener {
      * @param source
      * @return
      */
-    public static int getMonth(SimpleRoundSpinner source) {
-        Date date = (Date) source.getValue();
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
+    public static int getMonth(MonthYearSpinnerPanel source) {
+        Calendar cal = (Calendar) source.getValue();
         int month=cal.get(Calendar.MONTH) +1;
         return month;
     }
