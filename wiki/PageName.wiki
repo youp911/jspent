@@ -1,0 +1,13 @@
+#summary The application works on a database table. The table definition is available in src/hibernate.cfg.xml and src/expense.hbm.xml - you may require to modify this according to your environment.
+
+= Introduction =
+
+Add your content here.
+
+
+= Details =
+
+Add your content here.  Format your content with:
+  * Create a table in your embedded database.
+  * Headings, paragraphs, and lists
+  * Automatic links to other wiki pages
