@@ -9,12 +9,14 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import javax.swing.DefaultCellEditor;
-import javax.swing.GroupLayout;
+import org.jdesktop.layout.GroupLayout;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
@@ -24,7 +26,9 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
 
 import org.ranjith.jspent.Application;
+import org.ranjith.jspent.action.AddNewActionListener;
 import org.ranjith.jspent.action.BackActionListener;
+import org.ranjith.jspent.action.DeleteActionListener;
 import org.ranjith.jspent.action.RowSelectionActionListener;
 import org.ranjith.jspent.action.SavingsTypeListener;
 import org.ranjith.jspent.data.Expense;
@@ -51,10 +55,10 @@ public class UIFactory {
         Application.getResourceBundle().getString("table.col.subtype"),
         Application.getResourceBundle().getString("table.col.date"),
         Application.getResourceBundle().getString("table.col.amount"),
-        Application.getResourceBundle().getString("table.col.notes")
+        Application.getResourceBundle().getString("table.col.notes"),""
                                         };
     public static final String[] props = { "category", "subCategory", "date",
-            "amount", "notes" };
+            "amount", "notes","id" };
     private static UIFactory INSTANCE = null;
     
     private JSpent jSpent = null;
@@ -99,6 +103,7 @@ public class UIFactory {
         //TODO refactor.
         table.setSelectionModel(selectionModel);
         table.setSurrendersFocusOnKeystroke(true);
+
         return table;
     }
 
@@ -111,7 +116,7 @@ public class UIFactory {
         }
         tableModel.addTableModelListener(new InteractiveTableModelListener(table));
         table.setQTableModel(tableModel);
-        TableColumn hidden = table.getColumnModel().getColumn(4);
+        TableColumn hidden = table.getColumnModel().getColumn(JSpentTableModel.HIDDEN_INDEX);
         hidden.setMinWidth(2);
         hidden.setPreferredWidth(2);
         hidden.setMaxWidth(2);
@@ -142,16 +147,17 @@ public class UIFactory {
         jSpent.setButtonPanel(buttonPanel);
         GroupLayout gl = new GroupLayout(addSavingsForm);
         addSavingsForm.setLayout(gl);
-        gl.setHorizontalGroup(gl.createSequentialGroup().addGroup(
-                gl.createParallelGroup().addComponent(typeComboPanel)
-                        .addComponent(centerPanel).addComponent(buttonPanel)));
-        gl.setVerticalGroup(gl.createParallelGroup().addComponent(
-                typeComboPanel).addComponent(centerPanel).addComponent(
-                buttonPanel));
-        typeComboPanel.setOpaque(false);
-        JLabel label1 = new JLabel(Application.getResourceBundle().getString("prompt.choose.savingstype"));
-        // label1.setForeground(Color.WHITE);
-        typeComboPanel.add(label1);
+        gl.setHorizontalGroup(gl.createSequentialGroup().add(
+				gl.createParallelGroup().add(typeComboPanel)
+						.add(centerPanel).add(buttonPanel)));
+		gl.setVerticalGroup(gl.createParallelGroup().add(
+				typeComboPanel).add(centerPanel).add(
+				buttonPanel));
+		typeComboPanel.setOpaque(false);
+		JLabel label1 = new JLabel(Application.getResourceBundle().getString(
+				"prompt.choose.savingstype"));
+		// label1.setForeground(Color.WHITE);
+		typeComboPanel.add(label1);
 
         List pluginList = pluginManager.getPluginInfoList(PluginManager.PLUGIN_TYPE_SAVINGS_KEY);
 
@@ -230,8 +236,9 @@ public class UIFactory {
                 if ((tableModel.getRowCount() - 1) == row
                         && !tableModel.hasEmptyRow()) {
                     //TODO:refactor
+                	//update data in last row, add a new empty row.
                     Expense expense = (Expense) tableModel.getRows().get(row);
-                    ExpenseService.saveExpense(expense);
+                    ExpenseService.update(expense);
                     tableModel.addEmptyRow();
                     LOG.info("Validating and saving data at this point.");
                 }
@@ -279,5 +286,23 @@ public class UIFactory {
             super(new javax.swing.JComboBox(items));
         }
     }
+    
+    /**
+     * creates a returns a popup menu based on context passed.
+     * @param currentContext
+     * @param jSpent 
+     * @return popup menu object
+     */
+	public static JPopupMenu createPopupMenuFor(String currentContext, JSpent jSpent) {
+		JPopupMenu popupMenu = new JPopupMenu();
+		JMenuItem addItem = new JMenuItem("Add New");
+		addItem.addActionListener(new AddNewActionListener(jSpent));
+		JMenuItem removeItem = new JMenuItem("Delete");
+		removeItem.addActionListener(new DeleteActionListener(jSpent));
+		popupMenu.add(addItem);
+		popupMenu.addSeparator();
+		popupMenu.add(removeItem);
+		return popupMenu;
+	}
 
 }

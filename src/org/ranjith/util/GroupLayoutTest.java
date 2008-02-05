@@ -2,7 +2,7 @@ package org.ranjith.util;
 
 import java.awt.BorderLayout;
 
-import javax.swing.GroupLayout;
+import org.jdesktop.layout.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;

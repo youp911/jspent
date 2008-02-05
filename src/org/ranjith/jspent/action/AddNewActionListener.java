@@ -17,8 +17,8 @@ import org.ranjith.jspent.ui.JSpent;
  */
 public class AddNewActionListener implements ActionListener {
 	JSpent application;
-	public AddNewActionListener(JSpent testFrame) {
-		this.application = testFrame;
+	public AddNewActionListener(JSpent application) {
+		this.application = application;
 	}
 
 	/**
