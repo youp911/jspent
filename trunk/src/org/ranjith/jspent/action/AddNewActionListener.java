@@ -27,16 +27,16 @@ public class AddNewActionListener implements ActionListener {
 	 */
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		if(application.getCurrentContext().equals(JSpent.EXPENSES)) {
+		if(application.getCurrentContext().equals(JSpent.CTX_EXPENSES)) {
 		    application.addNewRow();
 			//application.showExpenseForm();
-		}else if(application.getCurrentContext().equals(JSpent.INCOMES)) {
+		}else if(application.getCurrentContext().equals(JSpent.CTX_INCOMES)) {
 			JOptionPane.showMessageDialog(application, "Not implemented yet");
-		}else if(application.getCurrentContext().equals(JSpent.SAVINGS)) {
+		}else if(application.getCurrentContext().equals(JSpent.CTX_SAVINGS)) {
 			application.showAddSavings();
-		}else if(application.getCurrentContext().equals(JSpent.LIABILITIES)) {
+		}else if(application.getCurrentContext().equals(JSpent.CTX_LIABILITIES)) {
 			JOptionPane.showMessageDialog(application, "Not implemented yet");
-		}else if(application.getCurrentContext().equals(JSpent.SUMMARY)) {
+		}else if(application.getCurrentContext().equals(JSpent.CTX_SUMMARY)) {
 			JOptionPane.showMessageDialog(application, "Not implemented yet");
 		}
 	}

@@ -3,18 +3,16 @@ package org.ranjith.jspent.ui;
 import java.awt.Color;
 import java.awt.Component;
 import java.text.NumberFormat;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Logger;
 
 import javax.swing.DefaultCellEditor;
-import org.jdesktop.layout.GroupLayout;
+import javax.swing.GroupLayout;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JTable;
@@ -147,11 +145,11 @@ public class UIFactory {
         jSpent.setButtonPanel(buttonPanel);
         GroupLayout gl = new GroupLayout(addSavingsForm);
         addSavingsForm.setLayout(gl);
-        gl.setHorizontalGroup(gl.createSequentialGroup().add(
-				gl.createParallelGroup().add(typeComboPanel)
-						.add(centerPanel).add(buttonPanel)));
-		gl.setVerticalGroup(gl.createParallelGroup().add(
-				typeComboPanel).add(centerPanel).add(
+        gl.setHorizontalGroup(gl.createSequentialGroup().addGroup(
+				gl.createParallelGroup().addComponent(typeComboPanel)
+						.addComponent(centerPanel).addComponent(buttonPanel)));
+		gl.setVerticalGroup(gl.createParallelGroup().addComponent(
+				typeComboPanel).addComponent(centerPanel).addComponent(
 				buttonPanel));
 		typeComboPanel.setOpaque(false);
 		JLabel label1 = new JLabel(Application.getResourceBundle().getString(
@@ -232,30 +230,56 @@ public class UIFactory {
                 int column) {
             Component c = super.getTableCellRendererComponent(table, value,
                     isSelected, hasFocus, row, column);
+            //save data if focus on interactive column(hidden for user)
             if (column == interactiveColumn && hasFocus) {
-                if ((tableModel.getRowCount() - 1) == row
-                        && !tableModel.hasEmptyRow()) {
-                    //TODO:refactor
-                	//update data in last row, add a new empty row.
-                    Expense expense = (Expense) tableModel.getRows().get(row);
-                    ExpenseService.update(expense);
-                    tableModel.addEmptyRow();
-                    LOG.info("Validating and saving data at this point.");
-                }
-                // TODO: refactor
+                saveData(row);
                 int lastrow = tableModel.getRowCount();
                 LOG.info("Last row was -  " + lastrow);
                 LOG.info("Column counted - " + tableModel.getColumnCount());
-                if (row == lastrow - 1) {
-                    table.setRowSelectionInterval(lastrow - 1, lastrow - 1);
-                } else {
-                    table.setRowSelectionInterval(row + 1, row + 1);
-                }
-
-                table.setColumnSelectionInterval(0, 0);
+                updateTableSelection(table, row, lastrow);
             }
 
             return c;
+        }
+
+        /**
+         * Sets the last row as highlighted row and cursor on first column.
+         * @param table
+         * @param row
+         * @param lastrow
+         */
+        private void updateTableSelection(JTable table, int row, int lastrow) {
+            //set next row as highlighted
+            if (row == lastrow - 1) {
+                table.setRowSelectionInterval(lastrow - 1, lastrow - 1);
+            } else {
+                table.setRowSelectionInterval(row + 1, row + 1);
+            }
+            //set cursor on first column
+            table.setColumnSelectionInterval(0, 0);
+        }
+
+        /**
+         * Saves data at specified row. If expense with 
+         * specified ID already exists in db, update the
+         * data. If not create new record.
+         * @param row
+         */
+        private void saveData(int row) {
+            LOG.info("Saving Data - for row : " + row);
+            if ((tableModel.getRowCount() - 1) == row
+                    && !tableModel.hasEmptyRow()) {
+            	//update data in last row, add a new empty row.
+                Expense expense = (Expense) tableModel.getRows().get(row);
+                if(ExpenseService.exists(expense)) {
+                    LOG.info("Saving Data - update");
+                    ExpenseService.update(expense);
+                } else{
+                    LOG.info("Saving Data - insert");
+                    ExpenseService.saveExpense(expense);
+                }
+                tableModel.addEmptyRow();
+            }
         }
     }
     
@@ -269,7 +293,7 @@ public class UIFactory {
             if (evt.getType() == TableModelEvent.UPDATE) {
                 int column = evt.getColumn();
                 int row = evt.getFirstRow();
-                LOG.info("Something changed on row: " + row + ", column: " + column );
+                LOG.info("Event on row: " + row + ", column: " + column );
                 if(row > 0) {
                     LOG.info("New value: " + table.getModel().getValueAt(row, column));
                     table.setRowSelectionInterval(row, row);
@@ -282,6 +306,8 @@ public class UIFactory {
     
     // ----------------------
     public class DropDownCellEditor extends DefaultCellEditor {
+        private static final long serialVersionUID = -6362341196914599484L;
+
         public DropDownCellEditor(String[] items) {
             super(new javax.swing.JComboBox(items));
         }
