@@ -25,7 +25,7 @@ public class ModifyActionListener implements ActionListener {
 	 */
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-	    if(application.getCurrentContext().equals(JSpent.EXPENSES)) {
+	    if(application.getCurrentContext().equals(JSpent.CTX_EXPENSES)) {
 	        application.showExpenseForm((Expense) application.getSelectedRowObject());
 	    }
 	}

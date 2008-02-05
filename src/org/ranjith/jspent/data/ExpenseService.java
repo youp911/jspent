@@ -72,4 +72,20 @@ public class ExpenseService {
     public static void update(Expense dataObject) {
         HibernateUtil.update(dataObject);
     }
+    
+    /**
+     * Checks if there is a record for given expense information.
+     * The expenseData must have ID field to check.
+     * @param expenseData
+     * @return
+     */
+    public static boolean exists(Expense expenseData) {
+        if(expenseData.getId() > 0) {
+            Map paramMap = new HashMap(1);
+            paramMap.put("id", expenseData.getId());
+            List list = HibernateUtil.getData("from org.ranjith.jspent.data.Expense where id=:id", paramMap);
+            return !(list == null || list.isEmpty());
+        }
+        return false;
+    }
 }
