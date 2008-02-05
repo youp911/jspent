@@ -19,6 +19,7 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JViewport;
@@ -27,6 +28,7 @@ import javax.swing.SwingUtilities;
 import org.ranjith.jspent.Application;
 import org.ranjith.jspent.action.AddNewActionListener;
 import org.ranjith.jspent.action.BackActionListener;
+import org.ranjith.jspent.action.ContextMenuListener;
 import org.ranjith.jspent.action.DeleteActionListener;
 import org.ranjith.jspent.action.ModifyActionListener;
 import org.ranjith.jspent.action.MonthYearChangeActionListener;
@@ -334,9 +336,10 @@ public class JSpent extends JFrame {
         setAddToolBarButtonEnabled(true);
         splitPane.setDividerLocation(160);
         optionsList.setEnabled(true);
+        table.addMouseListener(new ContextMenuListener(UIFactory.createPopupMenuFor(getCurrentContext(),this)));
     }
-    
-    /**
+
+	/**
      * Sets the main table in the application.
      * @param table
      */

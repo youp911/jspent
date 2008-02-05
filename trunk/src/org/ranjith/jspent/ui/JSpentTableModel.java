@@ -16,7 +16,7 @@ import org.ranjith.swing.QTableModel;
  *
  */
 public class JSpentTableModel extends QTableModel {
-    public static final int HIDDEN_INDEX = 4;
+    public static final int HIDDEN_INDEX = 5;
     static Logger LOG = Logger.getLogger("JSpentTableModel");
     
     public JSpentTableModel(List rows, String[] colNames, String[] colProps) {
@@ -47,7 +47,8 @@ public class JSpentTableModel extends QTableModel {
         }
         else return false;
     }
-
+    
+    //TODO: move this to expense service.
     private boolean isEmpty(Expense expense) {
         return (expense.getId() == 0 &&
                 expense.getAmount() == 0f &&

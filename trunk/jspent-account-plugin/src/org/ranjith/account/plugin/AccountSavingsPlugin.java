@@ -5,7 +5,7 @@ package org.ranjith.account.plugin;
 
 import java.util.Map;
 
-import javax.swing.GroupLayout;
+import org.jdesktop.layout.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
