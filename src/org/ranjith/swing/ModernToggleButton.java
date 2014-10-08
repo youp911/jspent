@@ -8,10 +8,6 @@ import java.awt.Color;
 import javax.swing.JToggleButton;
 import javax.swing.plaf.ComponentUI;
 
-/**
- * @author XR1CTSO
- *
- */
 public class ModernToggleButton extends JToggleButton {
     public static final int BUTTONSTYLE_TOOLBAR_STANDALONE = 0;
     public static final int BUTTONSTYLE_TOOLBAR_RIGHT = 1;
